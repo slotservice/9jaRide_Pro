@@ -33,7 +33,7 @@
     <div class="login-register">
         <div>
             <div class="login-logo text-center py-3">
-                <a href="{{ url('/') }}"><img src="{{ asset('images/9jaride-pro-logo.png') }}" class="dark-logo" style="max-width: 200px;"></a>
+                <a href="{{ url('/') }}" style="display:inline-block;background:#fff;border-radius:12px;padding:15px 25px;box-shadow:0 4px 15px rgba(0,0,0,0.15);"><img src="{{ asset('images/9jaride-pro-logo.png') }}?v=2" class="dark-logo" style="max-width:200px;display:block;border:none;"></a>
             </div>
             <div class="login-box card" style="margin-bottom:0%; min-width: 400px;">
                 <div class="card-body">

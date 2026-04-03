@@ -47,12 +47,19 @@
         background-color: #1B5E20;
         min-height: 100vh;
     }
-    .login-logo img {
-        max-width: 220px;
+    .login-logo a {
+        display: inline-block;
         background: #fff;
         border-radius: 12px;
         padding: 15px 25px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+    .login-logo img {
+        max-width: 200px;
+        display: block;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
     }
     .btn-primary,
     .btn-primary.disabled,
