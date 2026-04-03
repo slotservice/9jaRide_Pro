@@ -13,33 +13,6 @@ async function update() {
   });
 
   const landingHTML = `<div style="font-family:Poppins,sans-serif;">
-    <style>
-      @keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
-      @keyframes fadeInLeft { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
-      @keyframes fadeInRight { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
-      @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-      @keyframes scaleIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
-      @keyframes slideDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
-      .anim-hidden { opacity:0; }
-      .anim-fadeInUp { animation: fadeInUp 0.8s ease forwards; }
-      .anim-fadeInLeft { animation: fadeInLeft 0.8s ease forwards; }
-      .anim-fadeInRight { animation: fadeInRight 0.8s ease forwards; }
-      .anim-fadeIn { animation: fadeIn 1s ease forwards; }
-      .anim-scaleIn { animation: scaleIn 0.6s ease forwards; }
-      .anim-delay-1 { animation-delay: 0.15s; }
-      .anim-delay-2 { animation-delay: 0.3s; }
-      .anim-delay-3 { animation-delay: 0.45s; }
-      .anim-delay-4 { animation-delay: 0.6s; }
-      .feature-card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important; }
-      .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-      .gold-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
-      .gold-btn { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-      .nav-link:hover { color: #D4AF37 !important; }
-      .vision-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important; }
-      .vision-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-      .step-circle:hover { transform: scale(1.15); }
-      .step-circle { transition: transform 0.3s ease; }
-    </style>
 
     <!-- HERO: img2 - align right -->
     <section style="background:#d5f0d0;padding:0;overflow:hidden;">
@@ -157,28 +130,6 @@ async function update() {
       <p style="color:#666;font-size:15px;margin-bottom:20px;">@9jarideproofficial</p>
       <a href="#" class="gold-btn" style="background:#D4AF37;color:#fff;padding:15px 40px;border-radius:30px;text-decoration:none;font-size:16px;font-weight:600;display:inline-block;">Download the App</a>
     </section>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var animElements = document.querySelectorAll('.anim-hidden');
-        var animations = ['anim-fadeInUp','anim-fadeInLeft','anim-fadeInRight','anim-scaleIn'];
-        var observer = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry, i) {
-            if (entry.isIntersecting) {
-              var el = entry.target;
-              var siblings = el.parentElement.querySelectorAll('.anim-hidden');
-              var idx = Array.from(siblings).indexOf(el);
-              var anim = animations[idx % animations.length];
-              el.style.animationDelay = (idx * 0.15) + 's';
-              el.classList.add(anim);
-              el.classList.remove('anim-hidden');
-              observer.unobserve(el);
-            }
-          });
-        }, { threshold: 0.15 });
-        animElements.forEach(function(el) { observer.observe(el); });
-      });
-    </script>
   </div>`;
 
   await db.collection("settings").doc("landingPageTemplate").set({
