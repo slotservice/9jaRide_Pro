@@ -276,25 +276,41 @@
         });
     });
 
-    // Kill Switch buttons
+    // Kill Switch buttons - update Firestore directly
     $('#lockBtn').on('click', function() {
-        $.ajax({
-            url: '/api/kill-switch/' + driverId + '/lock',
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            data: { reason: 'Manual lock from admin panel' },
-            success: function() { Swal.fire('Locked!', 'Driver locked out.', 'success').then(function() { location.reload(); }); },
-            error: function() { Swal.fire('Error', 'Failed to lock driver.', 'error'); }
+        Swal.fire({
+            title: 'Lock Driver?',
+            text: 'This will prevent the driver from accepting new rides.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e6294b',
+            confirmButtonText: 'Yes, Lock'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                database.collection('driver_users').doc(driverId).update({
+                    isActive: false,
+                    appLocked: true,
+                    lockReason: 'Manual lock from admin panel',
+                    lockedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(function() {
+                    Swal.fire('Locked!', 'Driver locked out.', 'success').then(function() { location.reload(); });
+                }).catch(function(err) {
+                    Swal.fire('Error', 'Failed to lock: ' + err.message, 'error');
+                });
+            }
         });
     });
 
     $('#unlockBtn').on('click', function() {
-        $.ajax({
-            url: '/api/kill-switch/' + driverId + '/unlock',
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            success: function() { Swal.fire('Unlocked!', 'Driver unlocked.', 'success').then(function() { location.reload(); }); },
-            error: function() { Swal.fire('Error', 'Failed to unlock driver.', 'error'); }
+        database.collection('driver_users').doc(driverId).update({
+            isActive: true,
+            appLocked: false,
+            lockReason: '',
+            unlockedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(function() {
+            Swal.fire('Unlocked!', 'Driver unlocked.', 'success').then(function() { location.reload(); });
+        }).catch(function(err) {
+            Swal.fire('Error', 'Failed to unlock: ' + err.message, 'error');
         });
     });
 </script>

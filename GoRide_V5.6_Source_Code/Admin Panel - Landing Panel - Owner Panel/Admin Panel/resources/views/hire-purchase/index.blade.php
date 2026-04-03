@@ -197,17 +197,15 @@
             confirmButtonText: 'Yes, Lock Driver'
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    url: '/api/kill-switch/' + driverId + '/lock',
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                    data: { reason: 'HP payment overdue - Red status' },
-                    success: function(response) {
-                        Swal.fire('Locked!', 'Driver has been locked out.', 'success').then(() => location.reload());
-                    },
-                    error: function() {
-                        Swal.fire('Error', 'Failed to activate kill switch.', 'error');
-                    }
+                database.collection('driver_users').doc(driverId).update({
+                    isActive: false,
+                    appLocked: true,
+                    lockReason: 'HP payment overdue - Red status',
+                    lockedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(function() {
+                    Swal.fire('Locked!', 'Driver has been locked out.', 'success').then(() => location.reload());
+                }).catch(function(err) {
+                    Swal.fire('Error', 'Failed to activate kill switch: ' + err.message, 'error');
                 });
             }
         });
