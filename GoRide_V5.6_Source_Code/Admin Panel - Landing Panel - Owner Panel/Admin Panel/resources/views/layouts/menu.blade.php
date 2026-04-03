@@ -202,6 +202,20 @@
 
         @endif
 
+        @if(in_array('hire-purchase', $role_has_permission))
+            <li class="nav-subtitle"><span class="nav-subtitle-span">HIRE PURCHASE</span></li>
+            <li>
+                <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false">
+                    <i class="mdi mdi-car"></i>
+                    <span class="hide-menu">Hire Purchase</span>
+                </a>
+                <ul aria-expanded="false" class="collapse">
+                    <li><a href="{!! url('hire-purchase') !!}">HP Dashboard</a></li>
+                    <li><a href="{!! url('hire-purchase/settings') !!}">HP Settings</a></li>
+                </ul>
+            </li>
+        @endif
+
         @if(in_array('reports', $role_has_permission))
             <li>
                 <a class="has-arrow waves-effect waves-dark report_menu" href="#" aria-expanded="false">

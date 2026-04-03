@@ -478,3 +478,19 @@ Route::middleware(['permission:users,users.chat'])->group(function () {
 Route::middleware(['permission:supportHistory,supportHistory.list'])->group(function () {
         Route::get('/support', [App\Http\Controllers\SupportHistoryController::class, 'index'])->name('users.support');
 });
+
+// Hire Purchase Module
+Route::middleware(['permission:hire-purchase,hp.list'])->group(function () {
+    Route::get('/hire-purchase', [App\Http\Controllers\HirePurchaseController::class, 'index'])->name('hire-purchase');
+});
+Route::middleware(['permission:hire-purchase,hp.settings'])->group(function () {
+    Route::get('/hire-purchase/settings', [App\Http\Controllers\HirePurchaseController::class, 'settings'])->name('hire-purchase.settings');
+});
+Route::middleware(['permission:hire-purchase,hp.view'])->group(function () {
+    Route::get('/hire-purchase/driver/{id}', [App\Http\Controllers\HirePurchaseController::class, 'driverHP'])->name('hire-purchase.driver');
+});
+
+// Kill Switch API
+Route::post('/api/kill-switch/{driverId}/lock', [App\Http\Controllers\KillSwitchController::class, 'lock'])->name('kill-switch.lock');
+Route::post('/api/kill-switch/{driverId}/unlock', [App\Http\Controllers\KillSwitchController::class, 'unlock'])->name('kill-switch.unlock');
+Route::get('/api/kill-switch/{driverId}/status', [App\Http\Controllers\KillSwitchController::class, 'status'])->name('kill-switch.status');

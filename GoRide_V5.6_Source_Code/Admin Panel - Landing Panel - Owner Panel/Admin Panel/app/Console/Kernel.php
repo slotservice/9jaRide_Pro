@@ -35,6 +35,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('ride:auto-cancel')->everyMinute();
         $schedule->command('app:send-scheduled-ride-notification')->everyMinute();
+        $schedule->command('hp:process-deductions')->daily();
 
 
     }
