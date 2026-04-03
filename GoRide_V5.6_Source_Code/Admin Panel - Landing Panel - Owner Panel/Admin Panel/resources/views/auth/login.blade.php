@@ -42,6 +42,14 @@
     }
     .login-register {
         background-color: #1B5E20;
+        min-height: 100vh;
+    }
+    .login-logo img {
+        max-width: 220px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 15px 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     }
     .btn-dark, .btn-primary {
         background-color: #D4AF37 !important;
@@ -57,7 +65,7 @@
     <div class="login-register">
         <div class="login-logo text-center py-3">
             <a href="#"><img
-                        src="{{ asset('images/9jaride-pro-logo.png') }}" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.png') }}';" class="dark-logo"> </a>
+                        src="{{ asset('images/9jaride-pro-logo.png') }}?v=2" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.png') }}?v=2';" class="dark-logo"> </a>
         </div>
         <div class="login-box card" style="margin-bottom:0%;">
             <div class="card-body">

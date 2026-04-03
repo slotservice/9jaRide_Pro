@@ -363,3 +363,17 @@ a:hover {
 .btn-block {
   border-radius: 5px;
 }
+
+/* ==================== HEADER LOGO ==================== */
+.topbar .navbar-header .navbar-brand .dark-logo,
+.topbar .navbar-header .navbar-brand .light-logo {
+  max-height: 45px;
+  background: #fff;
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+.topbar .navbar-header {
+  width: 265px;
+  display: flex;
+  align-items: center;
+}
