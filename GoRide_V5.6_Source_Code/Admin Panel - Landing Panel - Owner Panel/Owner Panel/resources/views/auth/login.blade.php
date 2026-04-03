@@ -166,7 +166,7 @@ foreach ($countries as $keycountry => $valuecountry) {
     <div class="login-register">
         <div class="login-logo text-center py-3">
             <a href="#">
-                <img src="{{ asset('images/9jaride-pro-logo.png') }}?v=2" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.png') }}?v=2';" class="dark-logo"> 
+                <img src="{{ asset('images/9jaride-pro-logo.svg') }}?v=2" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.svg') }}?v=2';" class="dark-logo"> 
             </a>
         </div>
         <div class="login-box card" style="margin-bottom:0%;">
@@ -262,8 +262,8 @@ foreach ($countries as $keycountry => $valuecountry) {
     
     globalLogoRef.get().then(async function (snapshots) {
         var globalLogoSetting = snapshots.data();
-        appLogo = (globalLogoSetting.appLogo) ? globalLogoSetting.appLogo : "{{ asset('images/9jaride-pro-logo.png') }}";
-        ownerPanelLogo = (globalLogoSetting.ownerPanelLogo) ? globalLogoSetting.ownerPanelLogo : "{{ asset('images/9jaride-pro-logo.png') }}";
+        appLogo = (globalLogoSetting.appLogo) ? globalLogoSetting.appLogo : "{{ asset('images/9jaride-pro-logo.svg') }}";
+        ownerPanelLogo = (globalLogoSetting.ownerPanelLogo) ? globalLogoSetting.ownerPanelLogo : "{{ asset('images/9jaride-pro-logo.svg') }}";
         appFavIconLogo = (globalLogoSetting.appFavIconLogo) ? globalLogoSetting.appFavIconLogo : "{{ asset('images/favicon.png') }}";
         $("#favicon").attr("href", appFavIconLogo)
         $(".dark-logo").attr("src", ownerPanelLogo);

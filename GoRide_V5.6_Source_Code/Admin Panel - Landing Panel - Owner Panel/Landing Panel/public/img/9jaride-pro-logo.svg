@@ -1,0 +1,12 @@
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <rect width="500" height="500" fill="none"/>
+
+  <circle cx="250" cy="250" r="200" stroke="#D4AF37" stroke-width="12" fill="none" opacity="0.8"/>
+
+  <path d="M220 180C220 157.909 237.909 140 260 140C282.091 140 300 157.909 300 180V320C300 342.091 282.091 360 260 360H200"
+        stroke="#D4AF37" stroke-width="25" stroke-linecap="round" fill="none"/>
+  <circle cx="260" cy="180" r="40" stroke="#D4AF37" stroke-width="20" fill="none"/>
+
+  <text x="250" y="440" font-family="Arial, sans-serif" font-size="42" font-weight="bold" fill="#D4AF37" text-anchor="middle" letter-spacing="2">9JARIDE PRO</text>
+  <text x="250" y="475" font-family="Arial, sans-serif" font-size="18" fill="#D4AF37" text-anchor="middle" letter-spacing="5" opacity="0.7">LIMITED</text>
+</svg>

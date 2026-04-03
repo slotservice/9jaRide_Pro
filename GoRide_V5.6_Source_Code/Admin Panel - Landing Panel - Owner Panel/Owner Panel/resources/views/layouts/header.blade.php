@@ -4,11 +4,11 @@
 
         <b>
 
-            <img src="{{ asset('images/9jaride-pro-logo.png') }}" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.png') }}';" alt="homepage" class="dark-logo" width="100%"
+            <img src="{{ asset('images/9jaride-pro-logo.svg') }}" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.svg') }}';" alt="homepage" class="dark-logo" width="100%"
 
                  id="logo_web"> 
 
-            <img src="{{ asset('images/9jaride-pro-logo.png') }}" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.png') }}';"  alt="homepage" class="light-logo">
+            <img src="{{ asset('images/9jaride-pro-logo.svg') }}" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.svg') }}';"  alt="homepage" class="light-logo">
 
         </b>
 
