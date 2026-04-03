@@ -43,6 +43,14 @@
     .login-register {
         background-color: #1B5E20;
     }
+    .btn-dark, .btn-primary {
+        background-color: #1B5E20 !important;
+        border-color: #1B5E20 !important;
+    }
+    .btn-dark:hover, .btn-primary:hover {
+        background-color: #145218 !important;
+        border-color: #145218 !important;
+    }
 </style>
 <section id="wrapper">
     <div class="login-register">

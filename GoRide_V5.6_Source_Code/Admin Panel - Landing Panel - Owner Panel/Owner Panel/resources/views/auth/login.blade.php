@@ -43,6 +43,16 @@
         margin: auto;
         height: 20px;
     }
+    .login-register {
+        background-color: #1B5E20;
+    }
+    .btn-primary,
+    .btn-primary.disabled,
+    .btn-primary:hover,
+    .btn-primary.disabled:hover {
+        background: #1B5E20;
+        border: 1px solid #1B5E20;
+    }
     <?php if (isset($_COOKIE['owner_panel_color'])) { ?>
 
         <style type="text/css">
