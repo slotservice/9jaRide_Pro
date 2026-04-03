@@ -14,14 +14,14 @@ async function update() {
 
   const landingHTML = `<div style="font-family:Poppins,sans-serif;">
 
-    <!-- HERO: img2 is 1280x995 - center it, never stretch beyond natural size -->
-    <section style="background:#e8f5e9;text-align:center;padding:0;">
-      <img src="${BASE}/img2.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin:0 auto;" alt="Welcome to 9jaRide Pro">
+    <!-- HERO: img2 is 1280x995 - align right, bg matches image light green -->
+    <section style="background:#d5f0d0;padding:0;overflow:hidden;">
+      <img src="${BASE}/img2.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin-left:auto;margin-right:0;" alt="Welcome to 9jaRide Pro">
     </section>
 
-    <!-- PARTNERSHIP: img1 is 1280x576 - wide banner, center it -->
-    <section style="background:#0F2B15;text-align:center;padding:0;">
-      <img src="${BASE}/img1.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin:0 auto;" alt="9jaRide Pro x OFMECH Partnership">
+    <!-- PARTNERSHIP: img1 is 1280x576 - align left, bg matches image darker tone -->
+    <section style="background:#c8dcc5;padding:0;overflow:hidden;">
+      <img src="${BASE}/img1.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin-left:0;margin-right:auto;" alt="9jaRide Pro x OFMECH Partnership">
     </section>
 
     <!-- FEATURES -->
