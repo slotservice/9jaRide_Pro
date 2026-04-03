@@ -84,7 +84,7 @@
 
                             <div class="u-text">
 
-                                <h4>{{ Auth::user()->name ?? '' }}</h4>
+                                <h4>{{ Auth::check() ? Auth::user()->name : '' }}</h4>
 
                                 <p class="text-muted">{{ session('user_role') }}</p>
 
