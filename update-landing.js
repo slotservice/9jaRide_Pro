@@ -9,16 +9,16 @@ const BASE = "http://148.230.120.40:8081/img";
 async function update() {
 
   await db.collection("settings").doc("headerTemplate").set({
-    headerTemplate: '<nav style="background:#1B5E20;padding:12px 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.15);"><div style="display:flex;align-items:center;gap:10px;"><img src="' + BASE + '/9jaride-pro-logo.svg" style="height:40px;" alt="9jaRide Pro"></div><div style="display:flex;align-items:center;gap:20px;"><a href="#features" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">Features</a><a href="#about" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">About</a><a href="#event" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">Events</a><a href="#contact" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">Contact</a><a href="#" style="background:#D4AF37;color:#fff;padding:8px 20px;border-radius:25px;text-decoration:none;font-weight:600;font-size:14px;">Download App</a></div></nav>'
+    headerTemplate: '<nav style="background:#1B5E20;padding:12px 30px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.15);"><div style="display:flex;align-items:center;gap:12px;"><div style="background:#fff;padding:6px 14px;border-radius:8px;"><img src="' + BASE + '/9jaride-pro-logo.svg" style="height:32px;display:block;" alt="9jaRide Pro"></div><span style="color:#D4AF37;font-size:18px;font-weight:700;">9jaRide Pro</span></div><div style="display:flex;align-items:center;gap:20px;"><a href="#features" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">Features</a><a href="#about" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">About</a><a href="#event" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">Events</a><a href="#contact" style="color:#fff;text-decoration:none;font-weight:500;font-size:15px;">Contact</a><a href="#" style="background:#D4AF37;color:#fff;padding:8px 20px;border-radius:25px;text-decoration:none;font-weight:600;font-size:14px;">Download App</a></div></nav>'
   });
 
   const landingHTML = `<div style="font-family:Poppins,sans-serif;">
-    <section style="position:relative;overflow:hidden;">
-      <img src="${BASE}/img2.jpeg" style="width:100%;height:auto;display:block;" alt="Welcome to 9jaRide Pro">
+    <section style="position:relative;overflow:hidden;max-height:500px;">
+      <img src="${BASE}/img2.jpeg" style="width:100%;height:auto;display:block;object-fit:cover;max-height:500px;" alt="Welcome to 9jaRide Pro">
     </section>
 
-    <section style="background:#0F2B15;">
-      <img src="${BASE}/img1.jpeg" style="width:100%;height:auto;display:block;" alt="9jaRide Pro x OFMECH Partnership">
+    <section style="background:#0F2B15;max-height:300px;overflow:hidden;">
+      <img src="${BASE}/img1.jpeg" style="width:100%;height:auto;display:block;object-fit:cover;max-height:300px;" alt="9jaRide Pro x OFMECH Partnership">
     </section>
 
     <section id="features" style="padding:60px 30px;background:#f5f7f5;">
