@@ -64,7 +64,7 @@ a {
 }
 
 .border-primary {
-    border-color: #e23844!important;
+    border-color: #1B5E20!important;
 }
 
 .w-300 {
@@ -127,7 +127,7 @@ color: #000000; position: relative; padding:8px 0;}
 
 .scroll{color:#fff; margin-top:100px;}
 
-#toTopBtn {position: fixed;bottom: 26px;right: 39px;z-index: 98;padding: 21px;background-color: #FFC700;}
+#toTopBtn {position: fixed;bottom: 26px;right: 39px;z-index: 98;padding: 21px;background-color: #D4AF37;}
 
 .js .cd-top--fade-out {  opacity: .5;}
 
@@ -188,7 +188,7 @@ position: relative;padding-top: 280px !important;}
 .hwit-detail p{color: #E3E3E3;font-size: 15px;font-family: Poppins;font-style: normal;font-weight: 400;line-height: 30px;letter-spacing: 0.75px;}
 
 .sec-title h2{margin-bottom: 20px;color: #FFF;font-size: 36px;font-family: Poppins;font-style: normal;font-weight: 600;line-height: normal;letter-spacing: 1.08px;}
-.sec-title h5{font-size: 16px;letter-spacing: 0.5px;color: #00b761;font-weight: 700;font-family: "Poppins";margin-bottom: 4px !important;}
+.sec-title h5{font-size: 16px;letter-spacing: 0.5px;color: #1B5E20;font-weight: 700;font-family: "Poppins";margin-bottom: 4px !important;}
 .sec-title p{font-size: 15px;color: #ffffff;font-weight: 300;}
 .howitwork-block{position: relative;padding: 0 70px;}
 
@@ -436,7 +436,7 @@ color: #FFFFFF;}
 }
 
 .c-t-order li a.active i {
-    background: #e23844;
+    background: #1B5E20;
     color: #fff !important;
     border-color: transparent;
 }

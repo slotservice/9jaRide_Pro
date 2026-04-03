@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title id="app_name">{{ config('app.name', 'GoRide') }}</title>
+    <title id="app_name">{{ config('app.name', '9jaRide Pro') }}</title>
     <link rel="icon" id="favicon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -147,7 +147,7 @@ foreach ($countries as $keycountry => $valuecountry) {
 <section id="wrapper">
     <div class="login-register">
         <div class="login-logo text-center py-3">
-            <a href="#"><img  src="{{ asset('images/goride-logo.png') }}" onerror="this.onerror=null; this.src='{{ asset('images/goride-logo.png') }}';" class="dark-logo"> </a>
+            <a href="#"><img  src="{{ asset('images/9jaride-pro-logo.png') }}" onerror="this.onerror=null; this.src='{{ asset('images/9jaride-pro-logo.png') }}';" class="dark-logo"> </a>
         </div>
         <div class="login-box card" style="margin-bottom:0%;">
             <div class="card-body">

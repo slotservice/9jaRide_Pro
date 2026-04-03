@@ -23,7 +23,7 @@
         <div class="container-fluid">
              <div class="card">
                 <div class="card-header bg-white text-right ">
-                    <a href="https://goride-landing.siswebapp.com/" target="_blank" class="btn btn-primary view-page">{{trans('lang.view_landing_page')}}</a>
+                    <a href="#" target="_blank" class="btn btn-primary view-page">{{trans('lang.view_landing_page')}}</a>
                 </div>
                 <div class="card-body">
 

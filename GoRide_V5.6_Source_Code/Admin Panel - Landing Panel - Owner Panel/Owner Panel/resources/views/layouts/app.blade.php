@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name', 'GoRide') }}</title>
+        <title>{{ config('app.name', '9jaRide Pro') }}</title>
         <link rel="icon" id="favicon" type="image/x-icon" href="">
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">

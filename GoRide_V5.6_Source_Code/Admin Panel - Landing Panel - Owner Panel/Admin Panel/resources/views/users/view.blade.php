@@ -29,7 +29,7 @@
                                     <div class="card card-block p-card">
                                         <div class="profile-box">
                                             <div class="profile-card rounded">
-                                                <img src="https://goride.siswebapp.com/images/default_user.png" alt="profile-bg" class="avatar-100 d-block mx-auto img-fluid mb-3  avatar-rounded user-image">
+                                                <img src="{{ asset('images/default_user.png') }}" alt="profile-bg" class="avatar-100 d-block mx-auto img-fluid mb-3  avatar-rounded user-image">
                                                 <h3 class="font-600 text-white text-center user-name"></h3>
                                                 <div class="font-600 text-white text-center mb-3 user-total-ratings"></div>
                                                 <h3 class="font-600 text-white text-center mb-5 user-wallet"></h3>
