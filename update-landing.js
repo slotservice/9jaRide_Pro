@@ -13,33 +13,60 @@ async function update() {
   });
 
   const landingHTML = `<div style="font-family:Poppins,sans-serif;">
+    <style>
+      @keyframes fadeInUp { from { opacity:0; transform:translateY(40px); } to { opacity:1; transform:translateY(0); } }
+      @keyframes fadeInLeft { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
+      @keyframes fadeInRight { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
+      @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+      @keyframes scaleIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+      @keyframes slideDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
+      .anim-hidden { opacity:0; }
+      .anim-fadeInUp { animation: fadeInUp 0.8s ease forwards; }
+      .anim-fadeInLeft { animation: fadeInLeft 0.8s ease forwards; }
+      .anim-fadeInRight { animation: fadeInRight 0.8s ease forwards; }
+      .anim-fadeIn { animation: fadeIn 1s ease forwards; }
+      .anim-scaleIn { animation: scaleIn 0.6s ease forwards; }
+      .anim-delay-1 { animation-delay: 0.15s; }
+      .anim-delay-2 { animation-delay: 0.3s; }
+      .anim-delay-3 { animation-delay: 0.45s; }
+      .anim-delay-4 { animation-delay: 0.6s; }
+      .feature-card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0,0,0,0.12) !important; }
+      .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+      .gold-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
+      .gold-btn { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+      .nav-link:hover { color: #D4AF37 !important; }
+      .vision-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.1) !important; }
+      .vision-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+      .step-circle:hover { transform: scale(1.15); }
+      .step-circle { transition: transform 0.3s ease; }
+    </style>
 
-    <!-- HERO: img2 is 1280x995 - align right, bg matches image light green -->
+    <!-- HERO: img2 - align right -->
     <section style="background:#d5f0d0;padding:0;overflow:hidden;">
-      <img src="${BASE}/img2.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin-left:auto;margin-right:0;" alt="Welcome to 9jaRide Pro">
+      <img src="${BASE}/img2.jpeg" class="anim-hidden anim-fadeIn" style="max-width:1280px;width:100%;height:auto;display:block;margin-left:auto;margin-right:0;" alt="Welcome to 9jaRide Pro">
     </section>
 
-    <!-- PARTNERSHIP: img1 is 1280x576 - align left, bg matches image darker tone -->
+    <!-- PARTNERSHIP: img1 - align left -->
     <section style="background:#c8dcc5;padding:0;overflow:hidden;">
-      <img src="${BASE}/img1.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin-left:0;margin-right:auto;" alt="9jaRide Pro x OFMECH Partnership">
+      <img src="${BASE}/img1.jpeg" class="anim-hidden" style="max-width:1280px;width:100%;height:auto;display:block;margin-left:0;margin-right:auto;" alt="9jaRide Pro x OFMECH Partnership">
     </section>
 
     <!-- FEATURES -->
     <section id="features" style="padding:60px 30px;background:#f5f7f5;">
-      <h2 style="text-align:center;color:#1B5E20;margin-bottom:15px;font-size:32px;font-weight:700;">Why Choose 9jaRide Pro?</h2>
-      <p style="text-align:center;color:#666;margin-bottom:40px;font-size:16px;">Your Trusted Journey Partner</p>
+      <h2 class="anim-hidden" style="text-align:center;color:#1B5E20;margin-bottom:15px;font-size:32px;font-weight:700;">Why Choose 9jaRide Pro?</h2>
+      <p class="anim-hidden" style="text-align:center;color:#666;margin-bottom:40px;font-size:16px;">Your Trusted Journey Partner</p>
       <div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;max-width:1000px;margin:0 auto;">
-        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;">
+        <div class="feature-card anim-hidden" style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;cursor:default;">
           <div style="font-size:40px;margin-bottom:15px;">&#128176;</div>
           <h3 style="color:#1B5E20;margin-bottom:10px;">Competitive Bidding</h3>
           <p style="color:#666;line-height:1.6;">Drivers bid on your ride request. You choose the best price and highest-rated driver.</p>
         </div>
-        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;">
+        <div class="feature-card anim-hidden" style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;cursor:default;">
           <div style="font-size:40px;margin-bottom:15px;">&#128205;</div>
           <h3 style="color:#1B5E20;margin-bottom:10px;">Real-time Tracking</h3>
           <p style="color:#666;line-height:1.6;">Track your driver live on the map from pickup to destination. Stay informed every step.</p>
         </div>
-        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;">
+        <div class="feature-card anim-hidden" style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;cursor:default;">
           <div style="font-size:40px;margin-bottom:15px;">&#128274;</div>
           <h3 style="color:#1B5E20;margin-bottom:10px;">Safe &amp; Secure</h3>
           <p style="color:#666;line-height:1.6;">Guardian AI safety, panic button, trip monitoring, and vehicle kill switch for maximum security.</p>
@@ -49,20 +76,20 @@ async function update() {
 
     <!-- HOW IT WORKS -->
     <section style="padding:60px 30px;background:#1B5E20;text-align:center;">
-      <h2 style="color:#D4AF37;margin-bottom:40px;font-size:32px;">How It Works</h2>
+      <h2 class="anim-hidden" style="color:#D4AF37;margin-bottom:40px;font-size:32px;">How It Works</h2>
       <div style="display:flex;justify-content:center;gap:50px;flex-wrap:wrap;max-width:900px;margin:0 auto;">
-        <div style="flex:1;min-width:200px;">
-          <div style="background:#D4AF37;color:#fff;width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin-bottom:15px;">1</div>
+        <div class="anim-hidden" style="flex:1;min-width:200px;">
+          <div class="step-circle" style="background:#D4AF37;color:#fff;width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin-bottom:15px;cursor:default;">1</div>
           <h4 style="color:#fff;margin-bottom:8px;">Request a Ride</h4>
           <p style="color:rgba(255,255,255,0.7);font-size:14px;">Enter your pickup and destination</p>
         </div>
-        <div style="flex:1;min-width:200px;">
-          <div style="background:#D4AF37;color:#fff;width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin-bottom:15px;">2</div>
+        <div class="anim-hidden" style="flex:1;min-width:200px;">
+          <div class="step-circle" style="background:#D4AF37;color:#fff;width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin-bottom:15px;cursor:default;">2</div>
           <h4 style="color:#fff;margin-bottom:8px;">Receive Bids</h4>
           <p style="color:rgba(255,255,255,0.7);font-size:14px;">Nearby drivers compete for your ride</p>
         </div>
-        <div style="flex:1;min-width:200px;">
-          <div style="background:#D4AF37;color:#fff;width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin-bottom:15px;">3</div>
+        <div class="anim-hidden" style="flex:1;min-width:200px;">
+          <div class="step-circle" style="background:#D4AF37;color:#fff;width:60px;height:60px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin-bottom:15px;cursor:default;">3</div>
           <h4 style="color:#fff;margin-bottom:8px;">Choose &amp; Ride</h4>
           <p style="color:rgba(255,255,255,0.7);font-size:14px;">Pick your preferred driver and enjoy</p>
         </div>
@@ -72,10 +99,10 @@ async function update() {
     <!-- ABOUT: img3 is 1280x995 - use at natural size, side by side with text -->
     <section id="about" style="padding:60px 30px;background:#fff;">
       <div style="display:flex;gap:40px;flex-wrap:wrap;max-width:1100px;margin:0 auto;align-items:center;">
-        <div style="flex:1;min-width:300px;max-width:500px;">
+        <div class="anim-hidden" style="flex:1;min-width:300px;max-width:500px;">
           <img src="${BASE}/img3.jpeg" style="max-width:500px;width:100%;height:auto;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);" alt="Accreditation Point">
         </div>
-        <div style="flex:1;min-width:300px;">
+        <div class="anim-hidden" style="flex:1;min-width:300px;">
           <h2 style="color:#1B5E20;margin-bottom:15px;font-size:28px;">About 9jaRide Pro</h2>
           <p style="color:#666;line-height:1.8;font-size:15px;margin-bottom:15px;">9jaRide Pro Limited is a registered liability company in Nigeria, trademarked under 9jaRide Pro Limited. We are a technology-driven transportation solutions provider, built to serve you.</p>
           <p style="color:#666;line-height:1.8;font-size:15px;margin-bottom:15px;">In partnership with OFMECH Mobility Solutions, we are at the forefront of Africa's Electric Vehicle Revolution - integrating electric vehicles, renewable energy, and smart infrastructure.</p>
@@ -94,15 +121,15 @@ async function update() {
           <h2 style="color:#1B5E20;margin-bottom:20px;font-size:28px;">Our Vision</h2>
           <p style="color:#666;line-height:1.8;font-size:15px;margin-bottom:20px;">When we come together we unlock endless possibilities and create solutions that drive us all forward.</p>
           <div style="display:flex;gap:20px;flex-wrap:wrap;">
-            <div style="flex:1;min-width:180px;background:#fff;padding:20px;border-radius:10px;border-left:3px solid #D4AF37;">
+            <div class="vision-card anim-hidden" style="flex:1;min-width:180px;background:#fff;padding:20px;border-radius:10px;border-left:3px solid #D4AF37;cursor:default;">
               <h4 style="color:#1B5E20;margin-bottom:5px;">Hire Purchase</h4>
               <p style="color:#666;font-size:13px;">Own your vehicle through our flexible HP program</p>
             </div>
-            <div style="flex:1;min-width:180px;background:#fff;padding:20px;border-radius:10px;border-left:3px solid #D4AF37;">
+            <div class="vision-card anim-hidden" style="flex:1;min-width:180px;background:#fff;padding:20px;border-radius:10px;border-left:3px solid #D4AF37;cursor:default;">
               <h4 style="color:#1B5E20;margin-bottom:5px;">Kill Switch</h4>
               <p style="color:#666;font-size:13px;">Advanced vehicle security and fleet management</p>
             </div>
-            <div style="flex:1;min-width:180px;background:#fff;padding:20px;border-radius:10px;border-left:3px solid #D4AF37;">
+            <div class="vision-card anim-hidden" style="flex:1;min-width:180px;background:#fff;padding:20px;border-radius:10px;border-left:3px solid #D4AF37;cursor:default;">
               <h4 style="color:#1B5E20;margin-bottom:5px;">2.5% Royalty</h4>
               <p style="color:#666;font-size:13px;">Transparent commission on every ride</p>
             </div>
@@ -113,8 +140,8 @@ async function update() {
 
     <!-- EVENT: img5 is 1280x1072 - constrain to 550px max -->
     <section id="event" style="padding:60px 30px;background:#0F2B15;text-align:center;">
-      <h2 style="color:#D4AF37;margin-bottom:30px;font-size:28px;">Upcoming Event</h2>
-      <div style="max-width:550px;margin:0 auto;">
+      <h2 class="anim-hidden" style="color:#D4AF37;margin-bottom:30px;font-size:28px;">Upcoming Event</h2>
+      <div class="anim-hidden" style="max-width:550px;margin:0 auto;">
         <img src="${BASE}/img5.jpeg" style="max-width:550px;width:100%;height:auto;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.3);" alt="Demo Presentation">
         <p style="color:rgba(255,255,255,0.7);margin-top:20px;font-size:15px;">Join us for the official demo presentation of 9jaRide Pro</p>
         <p style="color:#D4AF37;font-weight:600;font-size:18px;margin-top:10px;">Saturday, 11th April 2026 | 9:00 AM</p>
@@ -128,8 +155,30 @@ async function update() {
       <p style="color:#666;font-size:16px;margin-bottom:10px;">Ready to ride with us?</p>
       <p style="color:#666;font-size:15px;margin-bottom:5px;">www.9jaridepro.com</p>
       <p style="color:#666;font-size:15px;margin-bottom:20px;">@9jarideproofficial</p>
-      <a href="#" style="background:#D4AF37;color:#fff;padding:15px 40px;border-radius:30px;text-decoration:none;font-size:16px;font-weight:600;display:inline-block;">Download the App</a>
+      <a href="#" class="gold-btn" style="background:#D4AF37;color:#fff;padding:15px 40px;border-radius:30px;text-decoration:none;font-size:16px;font-weight:600;display:inline-block;">Download the App</a>
     </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var animElements = document.querySelectorAll('.anim-hidden');
+        var animations = ['anim-fadeInUp','anim-fadeInLeft','anim-fadeInRight','anim-scaleIn'];
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry, i) {
+            if (entry.isIntersecting) {
+              var el = entry.target;
+              var siblings = el.parentElement.querySelectorAll('.anim-hidden');
+              var idx = Array.from(siblings).indexOf(el);
+              var anim = animations[idx % animations.length];
+              el.style.animationDelay = (idx * 0.15) + 's';
+              el.classList.add(anim);
+              el.classList.remove('anim-hidden');
+              observer.unobserve(el);
+            }
+          });
+        }, { threshold: 0.15 });
+        animElements.forEach(function(el) { observer.observe(el); });
+      });
+    </script>
   </div>`;
 
   await db.collection("settings").doc("landingPageTemplate").set({
