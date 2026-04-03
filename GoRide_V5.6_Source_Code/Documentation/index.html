@@ -1,0 +1,1642 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+	<meta charset="utf-8">
+	<title>GORIDE | InDriver Clone | Flutter Complete Taxi Booking Solution with Bidding Option </title>
+	<meta name="description" content="Author: Siddhi Infosoft, Support: info@siddhiinfosoft.com">
+	<meta name="author" content="Siddhi Infosoft">
+	<meta name="copyright" content="Siddhi Infosoft">
+	<meta name="generator" content="Documenter v2.0 http://rxa.li/documenter">
+	<META NAME="robots" CONTENT="noindex,nofollow">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800,900" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/documenter_style.css" media="all">
+	<link rel="stylesheet" href="assets/js/google-code-prettify/prettify.css" media="screen">
+	<script src="assets/js/google-code-prettify/prettify.js"></script>
+	<script src="assets/js/jquery.js"></script>
+	<script src="assets/js/jquery.scrollTo.js"></script>
+	<script src="assets/js/jquery.easing.js"></script>
+	<script>document.createElement('section'); var duration = '500', easing = 'swing';</script>
+	<script src="assets/js/script.js"></script>
+	<style>
+		html {
+			background-color: #FFFFFF;
+			color: #12223B;
+			font-family: 'Poppins', sans-serif;
+		}
+
+		::-moz-selection {
+			background: #000;
+			color: #fff;
+		}
+
+		::selection {
+			background: #000;
+			color: #fff;
+		}
+
+		#documenter_sidebar #documenter_logo {
+			background-image: url(assets/images/logo.png);
+			background-size: auto 80%;
+		}
+
+		a {
+			color: #e11f19;
+		}
+
+		.btn {
+			border-radius: 3px;
+		}
+
+		hr {
+			border-top: 1px solid #e2e2e2;
+			border-bottom: 1px solid #fff;
+		}
+
+		#documenter_sidebar,
+		#documenter_sidebar ul a {
+			background-color: #000000;
+			color: #fff;
+		}
+
+		#documenter_sidebar ul a {
+			-webkit-text-shadow: 1px 1px 0px #000000;
+			-moz-text-shadow: 1px 1px 0px #444;
+			text-shadow: 1px 1px 0px #6B5344;
+		}
+
+		#documenter_sidebar ul {
+			border-top: 1px solid #30251F;
+		}
+
+		#documenter_sidebar ul a {
+			border-top: 1px solid #ffffff20;
+			color: #F7F7F7;
+		}
+
+		#documenter_sidebar ul a:hover {
+			background: #86E837;
+			color: #fff;
+			border-top: 1px solid #ffffff20;
+		}
+
+		#documenter_sidebar ul a.current {
+			background: #86E837;
+			color: #fff;
+			border-top: 1px solid #ffffff20;
+		}
+
+		#documenter_copyright {
+			display: block !important;
+			visibility: visible !important;
+			width: 210px !important;
+		}
+	</style>
+</head>
+
+<body class="documenter-project-folder">
+	<div id="documenter_sidebar">
+		<a href="#documenter_cover" id="documenter_logo"></a>
+		<ul id="documenter_nav">
+			<li><a class="current" href="#documenter_cover" title="Home">Home</a></li>
+			<li><a href="#introduction" title="Introduction">Introduction</a></li>
+			<li class="submenu-items"><a href="#app_documentation" title="App Documentation">App Documentation</a>
+				<ol class="submenu">
+					<li><a href="#setting_up_flutter" title="Setting up Flutter">Setting up Flutter</a></li>
+					<li><a href="#flutter_android_setup" title="Flutter Android Setup">Flutter Android Setup</a></li>
+					<li><a href="#flutter_ios_setup" title="Flutter IOS setup">Flutter IOS setup</a></li>
+					<li><a href="#flutter_firebase_setup" title="Flutter Firebase setup">Flutter Firebase setup</a></li>
+					<li><a href="#faq" title="FAQ">FAQ</a></li>
+				</ol>
+			</li>
+			<li class="submenu-items"><a href="#web_documentation" title="Web Documentation">Web Documentation</a>
+				<ol class="submenu">
+					<li><a href="#server_requirement" title="Server Requirement">Server Requirement</a></li>
+					<li><a href="#setup_firebase_project" title="Setup Firebase Project">Setup Firebase Project</a></li>
+					<li><a href="#admin_panel_setup" title="Admin Panel Setup (Laravel)">Admin Panel Setup (Laravel)</a>
+					</li>
+					<li><a href="#admin_panel_menus_overviews" title="Deploy Firebase Cloud Functions">Admin Panel Menus
+							Overview</a></li>
+					<li><a href="#firestore_database_collection" title="Firestore Database Collection">Firestore
+							Database Collection Import / Export</a></li>
+					<li><a href="#firebase_cloud_functions" title="Deploy Firebase Cloud Functions">Deploy Firebase
+							Cloud Functions</a></li>
+					<li><a href="#firestore_database_indexing" title="Firestore Database Indexing">Firestore Database
+							Indexing</a></li>
+					<li><a href="#owner_panel_setup" title="Owner Panel Setup">Owner Panel Setup</a></li>
+					<li><a href="#landing_panel_setup" title="Landing Panel Setup">Landing Panel Setup</a></li>
+					<li><a href="#create_google_map_api_key" title="Create Google Map API Key">Create Google Map API
+							Key</a></li>
+					<li><a href="#admin_panel_update" title="Admin Panel Update">Admin Panel Update</a></li>
+				</ol>
+			</li>
+		</ul>
+		<div id="documenter_copyright">© 2023-2025 GoRide. All Rights Reserved.</div>
+	</div>
+	<div id="documenter_content">
+		<section id="documenter_cover">
+			<h1>GORIDE | InDriver Clone | Flutter Complete Taxi Booking Solution with Bidding Option </h1>
+			<hr>
+			<ul>
+				<li><b>Author:</b> Siddhi Infosoft</li>
+				<li><b>Author Site:</b> <a href="https://www.siddhiinfosoft.com/"
+						title="Siddhi Infosoft">https://www.siddhiinfosoft.com/</a></li>
+				<li><b>Support Email:</b> <a href="mailto:info@siddhiinfosoft.com">info@siddhiinfosoft.com</a></li>
+			</ul>
+		</section>
+		<section id="introduction">
+			<div class="page-header">
+				<h2>Introduction</h2>
+				<hr class="notop">
+			</div>
+			<p>GoRide is an advanced and scalable taxi booking application designed with secure, modern technologies:
+			</p>
+			<ul>
+				<li>Flutter for Android & iOS mobile applications</li>
+				<li>Laravel/PHP Framework for the powerful Admin Panel</li>
+			</ul>
+			<p>
+				The online cab booking service providers care the price of travelling based on the distance of travel
+				trip and type of car, traffic, and waiting prices. There are numerous apps available in the android play
+				store and apple app store for cab booking in India. Selecting the greatest taxi booking apps in India is
+				tough, which may vary from town to town.
+			</p>
+
+		</section>
+
+		<section id="app_documentation">
+			<section id="setting_up_flutter">
+				<div class="page-header">
+					<h2>Setting up Flutter</h2>
+					<hr class="notop">
+				</div>
+				<h3>Setup Setting up Flutter involves several steps. </h3>
+				<p>Ensure your system meets the minimum requirements for Flutter development. Flutter supports
+					development on Windows, macOS, and Linux. Make sure your system has the necessary hardware and
+					software requirements as specified by Flutter documentation.</p>
+				<h4>2.1. Install Flutter SDK:</h4>
+				<p>Download the Flutter SDK from the <a href="https://docs.flutter.dev/get-started/install"
+						target="_blank" rel="noopener">official Flutter website</a>.</p>
+				<p>Extract the downloaded file to a location on your system. For example, on macOS or Linux, you can
+					extract it to <code>/usr/local</code> and on Windows to <code>C:\</code>.</p>
+				<p>Add the Flutter <code>bin</code> directory to your system PATH to run Flutter commands from the
+					command line. This step is important for executing Flutter commands globally in your system.</p>
+				<h4>2.2. Install Development Tools:</h4>
+				<p>For Android: Install Android Studio and configure the Flutter plugin. Android Studio provides the
+					Android SDK, which Flutter uses to develop for Android. Ensure you have the Android SDK and the
+					necessary tools installed through Android Studio.</p>
+				<p>For iOS: You need a macOS system with Xcode installed to develop and deploy Flutter apps for iOS.</p>
+				<h4>2.3. Set up Android Emulator or iOS Simulator:</h4>
+				<p>For Android development, set up an Android Virtual Device (AVD) using Android Studio's AVD Manager.
+				</p>
+				<p>For iOS development, use the iOS Simulator provided by Xcode.</p>
+				<p>Run <code>flutter doctor</code>:</p>
+				<p>Open a terminal and run <code>flutter doctor</code>. This command checks your system for any
+					dependencies needed for Flutter development.</p>
+				<p>It will provide feedback on any missing or outdated components and instructions on how to resolve
+					them.</p>
+				<h4>2.4. Install Flutter and Dart plugins for your preferred IDE:</h4>
+				<p>If you’re using VS Code, install the Flutter and Dart plugins to enhance your development experience.
+				</p>
+				<p>Android Studio also has built-in support for Flutter, but make sure to install the Flutter plugin if
+					it’s not already installed.</p>
+				<h4>2.5. Create your first Flutter project:</h4>
+				<p>Use the <code>flutter create</code> command to create a new Flutter project.</p>
+				<p>Navigate to the project directory and explore the file structure. You’ll find the main Dart file
+					<code>(main.dart)</code> in the <code>lib</code> directory, where you’ll write your Flutter code.
+				</p>
+				<h4>2.6. Run your Flutter app:</h4>
+				<p>Connect a device or start an emulator/simulator.</p>
+				<p>Navigate to your Flutter project directory in the terminal and run <code>flutter run</code>.</p>
+				<p>This will compile your Flutter app and launch it on the connected device or<br>
+					emulator.</p>
+				<h4>2.7. Start Developing:</h4>
+				<p>Once your app is running, you can start developing your Flutter UI and logic. Flutter’s hot reload
+					feature allows you to see your changes instantly without restarting the app.</p>
+				<h4>2.8. Learn and Explore:</h4>
+				<p>Flutter has an extensive set of widgets and libraries. Explore the official Flutter documentation and
+					community resources to learn more about Flutter development.</p>
+			</section>
+
+
+			<section id="flutter_android_setup">
+				<div class="page-header">
+					<h2>Flutter Android Setup</h2>
+					<hr class="notop">
+				</div>
+				<p>Navigate to the <code>android</code> directory within your Flutter project.</p>
+				<p>Open the <code>AndroidManifest.xml</code> file located in the <code>app/src/main</code> directory.
+				</p>
+				<p><strong>File Location: "project/android/app/src/main/AndroidManifest.xml"</strong></p>
+				<p>Find the <code>package</code> attribute in the <code></code> tag and change its value to your desired
+					package name.</p>
+				<p><img src="assets/images/image001.png"></p>
+				<h4>3. Update Android source code references:</h4>
+				<p>Open the <code>MainActivity.java</code> file located in
+					<code>android/app/src/main/java/com/your_old_package_name.</code></p>
+				<p>Replace occurrences of the old package name with the new package name.</p>
+				<span class="content-image">
+					<img src="assets/images/image003.png">
+				</span>
+				<h4>4. Prepare Your New Icons:</h4>
+				<p>First, prepare the new launcher icon images in the required sizes. Android and iOS have different
+					size requirements. You typically need icons in various sizes to support different screen densities.
+				</p>
+				<p>For Android, you need to replace the existing launcher icon files with your new ones. The launcher
+					icons for Android are stored in the mipmap folders inside the <code> android/app/src/main/res</code>
+					directory.</p>
+				<p>Replace the existing icon files <code>(ic_launcher.png)</code> in the mipmap folders with your new
+					icon files. Make sure to maintain the same file names and sizes.</p>
+				<p>You may need to replace icons in various drawable folders for different screen densities
+					<code> (e.g., mipmap-hdpi, mipmap-mdpi, mipmap-xhdpi, mipmap-xxhdpi, mipmap-xxxhdpi)</code>.</p>
+				<span class="content-image">
+					<img src="assets/images/image005.png">
+				</span>
+				<ul>
+					<li>Navigate to your Flutter project's android/app/src/main/AndroidManifest.xml file.</li>
+					<li>Inside the <application> element, locate the <meta-data> tag with the name
+								com.google.android.geo.API_KEY.</li>
+					<li>Replace the android:value attribute with your new Google Maps API key.</li>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/code-img.png">
+				</span>
+				<span class="content-image">
+					<img src="assets/images/image007.png">
+				</span>
+				<pre>keytool -genkey -v -keystore ~/my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias</pre>
+				<ul>
+					<li>-keystore: The path where the .jks file will be created (~/my-release-key.jks for Unix/macOS,
+						C:\Users\YourName\my-release-key.jks for Windows).</li>
+					<li>-keyalg RSA: Algorithm used.</li>
+					<li>-keysize 2048: Key length.</li>
+					<li>-validity 10000: Validity in days (~27 years).</li>
+					<li>-alias my-key-alias: Name of the key within the keystore.</li>
+					<li>Keystore password</li>
+					<li>Key password</li>
+					<li>Your name, organization, city, state, and country code</li>
+					<li>Create a file: android/key.properties</li>
+				</ul>
+				<pre>storePassword=your-store-password<br> keyPassword=your-key-password<br> keyAlias=my-key-alias<br> storeFile=/Users/yourusername/my-release-key.jks</pre>
+				<span class="content-image">
+					<img src="assets/images/image009.png">
+				</span>
+				<ul>
+					<li><strong>Using Keytool:</strong></li>
+					<ul>
+						<li>Navigate to your JDK's bin directory in the command line.</li>
+						<li>Execute the following command to generate the SHA-1 key:</li>
+					</ul>
+					<pre>keytool -list -v -keystore path-to-your-keystore-file -alias your-alias-name</pre>
+					<ul>
+						<li>Replace <code>path-to-your-keystore-file</code> with the path to your keystore file (usually
+							<code>debug.keystore</code> for debug builds and a custom keystore for release builds) and
+							your-alias-name with the alias name used to generate the keystore.</li>
+						<li>Similarly, execute the following command to generate the SHA-256 key:</li>
+					</ul>
+					<pre>keytool -list -v -keystore path-to-your-keystore-file -alias your-alias-name -storetype PKCS12 -keyalg RSA</pre>
+				</ul>
+				<ul>
+					<li><strong>Using Gradle (Android Studio):</strong></li>
+					<ul>
+						<li>Open your Flutter project in Android Studio.</li>
+						<li>In the Android view, navigate to
+							<code>app -> Gradle Scripts -> build.gradle (Module: app)</code>.</li>
+						<li>Add the following lines to the <code>android</code> block</li>
+					</ul>
+				</ul>
+				<pre>
+					android {
+							signingConfigs {
+								debug {
+									storeFile file('path-to-debug.keystore')
+									storePassword 'password'
+									keyAlias 'key-alias'
+									keyPassword 'password'
+								}
+							}
+						}
+				</pre>
+				<ul>
+					<li>
+						<ul>
+							<li class="unstyled">Replace path-to-debug.keystore, password, and key-alias with your
+								keystore file path, password, and key alias respectively.</li>
+							<li>Sync your project to apply changes.</li>
+							<li>Run the following Gradle task in the terminal to get the SHA-1 and SHA-256 keys</li>
+						</ul>
+					</li>
+				</ul>
+				<pre>./gradlew signingReport</pre>
+				<ul>
+					<li>Adding Keys to Firebase Console:</li>
+					<ul>
+						<li><a href="https://console.firebase.google.com/?pli=1">Firebase Console.</a></li>
+						<li>Select your project.</li>
+					</ul>
+				</ul>
+				<ul>
+					<li><strong>For Android:</strong></li>
+					<p>Click on the Android icon to add an Android app.<br> Follow the setup instructions, including
+						adding the <code> google-services.json</code> file to your Flutter project's
+						<code>android/app</code> directory.</p>
+					<p>During setup, you'll be asked for your SHA-1 key. Paste the SHA-1 key you generated earlier.</p>
+					<p>After setup is complete, you'll have the option to download the google-services.json file again.
+						Replace the existing file in your project if needed.</p>
+				</ul>
+				<ul>
+					<li><strong>For IOS:</strong></li>
+					<p>Click on the iOS icon to add an iOS app.</p>
+					<p>Follow the setup instructions, including downloading the <code>GoogleService-Info.plist</code>
+						file.</p>
+					<p>There's no need to add SHA-1 or SHA-256 keys for iOS. Add the downloaded
+						<code>GoogleService-Info.plist</code> file to your Flutter project's <code> ios/Runner</code>
+						directory.</p>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/image012.gif">
+				</span>
+
+			</section>
+			<section id="flutter_ios_setup">
+				<div class="page-header">
+					<h2>Flutter IOS setup</h2>
+					<hr class="notop">
+				</div>
+				<h4>5. Change the iOS bundle identifier:</h4>
+				<p>Navigate to the <code>ios</code> directory within your Flutter project.</p>
+				<p>Open the <code>Runner.xcodeproj</code> project file using Xcode.</p>
+				<p>In Xcode, select the <code>Runner</code> project from the project navigator.</p>
+				<p>Go to the <code>Runner</code> target's settings.</p>
+				<p>Under the <code>General</code> tab, find the <code>Bundle Identifier</code> field and change it to
+					your desired bundle identifier.</p>
+				<span class="content-image">
+					<img src="assets/images/image013.png">
+				</span>
+				<ul>
+					<li>For iOS, you need to replace the existing icon files with your new ones. The icons for iOS are
+						stored in the <code>Assets.xcassets</code> directory in the <code>ios/Runner</code> directory.
+					</li>
+					<li>Open your Flutter project in Xcode by navigating to the <code>ios</code> directory and opening
+						the <code>.xcworkspace</code> file with Xcode.</li>
+					<li>In Xcode, navigate to <code>Runner > Assets.xcassets</code>.</li>
+					<li>Replace the existing AppIcon with your new icon files. You'll typically find different sizes
+						labelled for various devices (e.g., iPhone, iPad).</li>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/image015.png">
+				</span>
+				<span class="content-image">
+					<img src="assets/images/code-img1.png">
+				</span>
+				<ul>
+					<li>Open your Flutter project in a text editor or IDE.</li>
+					<li>Navigate to the ios/Runner directory within your Flutter project.</li>
+					<li>Locate the AppDelegate.swift file.</li>
+					<li>In the didFinishLaunchingWithOptions method, set the Google Maps API key.</li>
+				</ul>
+				<pre>
+					import UIKit
+						import Flutter
+						import GoogleMaps // Import GoogleMaps framework
+
+						@UIApplicationMain
+						@objc class AppDelegate: FlutterAppDelegate {
+							override func application(
+								_ application: UIApplication,
+								didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+							) -> Bool {
+								// Add your Google Maps API key here
+								GMSServices.provideAPIKey("YOUR_API_KEY_HERE")
+								
+								// Rest of your code...
+								
+								return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+							}
+						}
+				</pre>
+				<span class="content-image">
+					<img src="assets/images/image0017.png">
+				</span>
+			</section>
+
+			<section id="flutter_firebase_setup">
+				<div class="page-header">
+					<h2>Flutter Firebase Setup</h2>
+					<hr class="notop">
+				</div>
+				<h4>6. Flutter Firebase Setup</h4>
+				<p>First, you need to install the Firebase CLI if you haven't already. You can install it via npm (Node
+					Package Manager) by running the following command in your terminal or command prompt:</p>
+				<pre>npm install -g firebase-tools</pre>
+				<p><strong>6.0.1 Login to Firebase:</strong></p>
+				<p>After installing the Firebase CLI, log in to your Firebase account by running the following command:
+				</p>
+				<pre>firebase login</pre>
+				<p>This will open a browser window prompting you to log in to your Google account associated with
+					Firebase.</p>
+				<p><strong>6.0.2 Create a Firebase Project:</strong></p>
+				<p>If you haven't already created a Firebase project, you can create one using the Firebase CLI by
+					running:</p>
+				<pre>firebase projects:create</pre>
+				<p>Follow the prompts to create a new project.</p>
+				<p><strong>6.0.3 Initialize Firebase in Your Flutter Project:</strong></p>
+				<p>Navigate to your Flutter project directory in the terminal.</p>
+				<p>Initialize Firebase in your project by running:</p>
+				<pre>firebase init</pre>
+				<p>This command will prompt you to select the Firebase features you want to set up. Choose the Firebase
+					services you intend to use, such as Authentication, Firestore, etc.</p>
+				<p><strong>6.0.4 Configure Firebase:</strong></p>
+				<p>During the initialization process (firebase init), you'll be asked to select the Firebase project you
+					created or configured earlier. Choose the appropriate project from the list.</p>
+				<p><strong>6.0.5 Install Required Dependencies:</strong></p>
+				<p>After selecting the Firebase features, Firebase CLI will generate the necessary configuration files
+					for your project.</p>
+				<p>Next, you need to install the required Firebase packages in your Flutter project. You can do this by
+					adding the dependencies to your <code>pubspec.yaml</code> file:</p>
+				<pre>
+					dependencies:
+					firebase_core: latest_version
+					firebase_auth: latest_version  # (if you need Firebase Authentication)
+					cloud_firestore: latest_version  # (if you need Cloud Firestore)
+					# Add other Firebase plugins as needed
+				  </pre>
+				<p>Replace <code>latest_version</code> with the actual version numbers of the Firebase plugins you want
+					to use. You can find the latest versions on pub.dev.</p>
+				<p><strong> 6.0.6 Initialize Firebase in Your Flutter App:</strong></p>
+				<pre>
+					import 'package:firebase_core/firebase_core.dart';
+
+					void main() async {
+					WidgetsFlutterBinding.ensureInitialized();
+					await Firebase.initializeApp();
+					runApp(MyApp());
+					}
+				 </pre>
+				<p><strong>6.0.7 Using Firebase Services:</strong></p>
+				<p>Now you can use Firebase services in your Flutter app. Import the necessary Firebase packages and
+					follow the respective documentation for each service you want to use (e.g., Firebase Authentication,
+					Cloud Firestore).</p>
+				<p><strong> 6.0.8 Testing:</strong></p>
+				<p>Run your Flutter app on a device or emulator to verify that Firebase services are correctly
+					integrated and working.</p>
+				<p>Go to the Firebase Console: <a
+						href="https://console.firebase.google.com/">https://console.firebase.google.com/</a></p>
+				<p>Click on "Add Project" and follow the instructions to create a new project.</p>
+				<p>Once your project is created, you'll be redirected to the project dashboard.</p>
+				<p><strong>6.0.9 Add an App to Your Firebase Project:</strong></p>
+				<p>In the Firebase console, select your project.</p>
+				<p>Click on the "Add app" button (usually represented by an Android or iOS icon).</p>
+				<p>Follow the setup instructions to register your app with Firebase.</p>
+				<p>Download the <code>google-services.json</code> file for Android or
+					<code>GoogleService-Info.plist</code> file for iOS. These files contain your Firebase project
+					configuration details.</p>
+				<span class="content-image">
+					<img src="assets/images/image-019.png">
+				</span>
+				<p><strong>6.1.0 Flutter Project Setup:</strong></p>
+				<p>Open your Flutter project in your preferred editor.</p>
+				<p>Navigate to the <code>android/app</code> directory for Android or <code>ios/Runner</code> directory
+					for iOS, and paste the <code>google-services.json</code> (for Android) or
+					<code>GoogleService-Info.plist</code> (for iOS) file that you downloaded earlier.</p>
+				<span class="content-image">
+					<img src="assets/images/image021.png">
+				</span>
+				<span class="content-image">
+					<img src="assets/images/image--023.png">
+				</span>
+				<p><strong>6.1.1 Add Firebase SDK to Your Flutter Project:</strong></p>
+				<p>Open your Flutter project's <code>pubspec.yaml</code> file.</p>
+				<p>Add the following dependencies:</p>
+				<pre>
+					dependencies:
+					flutter:
+						sdk: flutter
+					firebase_core: latest_version
+					firebase_auth: latest_version  # (if you need Firebase Authentication)
+					cloud_firestore: latest_version  # (if you need Cloud Firestore)
+					# Add other Firebase plugins as needed
+				</pre>
+				<ul>
+					<li>Replace <code>latest_version</code> with the latest version numbers of the Firebase plugins you
+						want to use. You can find the latest versions on pub.dev.</li>
+				</ul>
+				<p><strong>6.1.2 Using Firebase Services:</strong></p>
+				<p>You can now use Firebase services in your Flutter app. Import the necessary Firebase packages and
+					follow the respective documentation for each service you want to use (e.g., Firebase Authentication,
+					Cloud Firestore).</p>
+				<p><strong>6.1.3 Testing:</strong></p>
+				<p>Run your Flutter app on a device or emulator to verify that Firebase services are correctly
+					integrated and working.</p>
+			</section>
+
+			<section id="faq">
+				<div class="page-header">
+					<h2>FAQ</h2>
+					<hr class="notop">
+				</div>
+				<h4> What should I do if I get the error message “Missing project_info object” in my Flutter project?
+				</h4>
+				<p><img src="assets/images/9_1__what_should.png"></p>
+				<p>The error message you’re encountering, “Missing project_info object,” typically arises in Flutter
+					projects when there’s a misconfiguration or missing information related to Firebase services. Here’s
+					how you can troubleshoot and potentially resolve this issue.</p>
+				<h4>Solution :</h4>
+				<ul class="disc-list">
+					<li> Check <code>google-services.json</code>: If you’re using Firebase services in your Flutter app,
+						ensure that you have the <code>google-services.json </code>file placed in the correct location
+						within your Android project. This file contains important configuration information for Firebase
+						services. It should be located in the <code>android/app</code> directory of your Flutter
+						project.</li>
+					<li> Verify Firebase Setup: Double-check that you’ve completed all the necessary steps to set up
+						Firebase for your Flutter project. This includes adding your app to the Firebase project using
+						the Firebase Console, downloading and adding the <code>google-services.json</code> file to your
+						Android project, and configuring Firebase services in your Flutter app’s code (if applicable).
+					</li>
+					<li> Update Google Services Plugin: Ensure that you’re using the latest version of the Google
+						Services Gradle plugin in your Android project. You can check the latest version on the Google
+						Services Gradle Plugin page and update the version number in your
+						<code>android/build.gradle</code> file accordingly.</li>
+					<li> Check Flutter and Firebase Versions Compatibility: Make sure that you’re using compatible
+						versions of Flutter and Firebase. Sometimes, using outdated versions of either can lead to
+						compatibility issues. Refer to the Firebase Flutter documentation and ensure compatibility with
+						your Flutter version.</li>
+					<li> Sync Gradle Files: After making any changes to your Android project configuration, such as
+						updating the <code>google-services.json</code> file or modifying the Gradle build files, make
+						sure to sync your Gradle files in Android Studio. This can be done by clicking on the “Sync
+						Project with Gradle Files” button.</li>
+					<li> Rebuild the Project: After ensuring all configurations are correct, try rebuilding your Flutter
+						project. You can do this by running <code>flutter clean</code> followed by
+						<code>flutter pub</code> get and then rebuilding the project (<code>flutter run</code> or
+						<code>flutter build</code>).</li>
+					<li> Check for Error Logs: Look for more detailed error messages or stack traces in the console
+						output or build logs. These can provide additional clues about the underlying issue causing the
+						“Missing project_info object” error.</li>
+				</ul>
+			</section>
+
+
+		</section>
+
+		<section id="web_documentation">
+			<div class="page-header">
+				<h2>Web Documentation</h2>
+				<hr class="notop">
+			</div>
+			<h2>1. Introduction</h2>
+			<div class="colum">
+				<p><strong>GoRide | InDriver Clone | Flutter Complete Taxi Booking Solution with Bidding Option</strong>
+				</p>
+			</div>
+			<p>GoRide is an advanced and scalable taxi booking application designed with secure, modern technologies:
+			</p>
+			<ul>
+				<li><strong>Flutter</strong> for Android & iOS mobile applications</li>
+				<li><strong>Laravel/PHP Framework</strong> for the powerful Admin Panel</li>
+			</ul>
+
+			<section id="server_requirement">
+				<div class="page-header">
+					<h2>Server Requirement</h2>
+					<hr class="notop">
+				</div>
+				<h3>2. Server Requirement</h3>
+				<p>To run <strong>GoRide</strong> smoothly, your server must meet the following minimum requirements:
+				</p>
+				<div class="Prerequisites">
+					<p><strong>2.1 : Prerequisites</strong></p>
+					<ul>
+						<li><strong>Web Server:</strong> Apache or NGINX</li>
+						<li><strong>PHP: </strong>Version <strong>8.0 or above</strong></li>
+						<li><strong>Database:</strong>MySQL 5.7+ </li>
+						<li><strong>Composer: </strong> : For managing PHP dependencies</li>
+						<li><strong>Domain:</strong> Specify your domain name (e.g., example.com) for the application to
+							function properly.</li>
+						<li><strong>SSL Certificate: </strong> Required for secure connections (HTTPS)</li>
+						<li><strong>FTP: </strong> Used for transferring files between local and server environments.
+						</li>
+						<li><strong>Cron Job: </strong>Required for running Laravel scheduled tasks automatically.</li>
+					</ul>
+				</div>
+				<p><strong>2.2. APIs & External Services</strong></p>
+				<ul>
+					<li><strong>Google Maps API Key for Accurate Search Result</strong> <br>Required for map display,
+						geolocation, and business search Enable Places, Maps JavaScript, and Geocoding APIs</li>
+				</ul>
+
+			</section>
+
+			<section id="setup_firebase_project">
+				<div class="page-header">
+					<h2>Setup Firebase Project</h2>
+					<hr class="notop">
+				</div>
+				<h3>3. Setup Firebase Project</h3>
+				<p><strong>3.1 :</strong> Go to firebase console through this link: <a
+						href="https://firebase.google.com" target="_blank"
+						rel="noopener">https://firebase.google.com</a></p>
+				<p><strong>3.2 </strong>: Click on “Go to console” in the top right corner.</p>
+				<p><img src="assets/images/3_2_click_on_img1.png"></p>
+				<p><strong>3.3 </strong>: Click on “Add project”, it will redirect you to the new project creation page
+					Enter your project name and click on “Continue” again click on “Continue” after that select “Default
+					Account fo firebase” and then click on “Create Project”</p>
+				<p><img src="assets/images/3_3_click_on.png"></p>
+				<p><strong>3.4 </strong>: After successfully creating a new project, you will be directed to the
+					overview page. From there, simply navigate to the icons link to proceed further.</p>
+				<p><img src="assets/images/3_4_after_successfuilly_img1.png"></p>
+				<p>Upon redirection, you’ll land on the ‘Add Firebase to your web app’ page. Here, input your app’s
+					nickname and proceed by clicking ‘Register app’. Afterward, scroll down to find detailed information
+					as outlined below.</p>
+				<p><img src="assets/images/3_4_after_successfuilly_img2.png"></p>
+				<p>All of these details will be incorporated into both the app and admin panel documentation for
+					comprehensive reference and seamless integration.</p>
+				<p><strong>3.5 </strong>: Next, navigate to ‘Firestore Database’ in the left sidebar. Select your
+					project name from the drop-down menu, and then proceed by clicking on ‘Create database’.</p>
+				<p><img src="assets/images/3_5_next.png"></p>
+				<p><strong>3.6 </strong>: Choose your preferred option and click on the ‘Next’ button. Subsequently,
+					proceed by clicking on “Enable”</p>
+				<p><strong>3.7 </strong>: Following that, locate “Realtime Database” in the left sidebar. Select your
+					project name from the drop-down menu, and proceed by clicking on “Create Database”</p>
+				<p><img src="assets/images/3_7_following.png"></p>
+				<p><strong>3.8 </strong>: Choose your preferred option and proceed by clicking the “Next” button, then
+					click on “Enable” to activate the selected feature.</p>
+				<p><strong>3.9 </strong>: Firstore Database Rules Update.</p>
+				<p><img src="assets/images/goride_rules.png"></p>
+				<div class="warning-box info-box">
+					<h5>Important Notes:</h5>
+					<p>Please update the following rules in your firestore database.</p>
+				</div>
+				<pre>rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+</pre>
+				<h4>Step 10: Upgrade your firebase plan.</h4>
+				<p><img src="assets/images/step10_upgrade.png"></p>
+
+				<h4>See Video:</h4>
+				<div class="video-box">
+					<a href="https://www.youtube.com/watch?v=wwPvmg-KXoo" target="_blank">
+						<img src="assets/images/video-1.png">
+						<span class="video-icon">
+							<img src="assets/images/video-icon.png">
+						</span>
+					</a>
+				</div>
+			</section>
+
+			<section id="admin_panel_setup">
+				<div class="page-header">
+					<h2>Admin Panel Setup (Laravel)</h2>
+					<hr class="notop">
+				</div>
+				<h3>4. Admin Panel Setup (Laravel)</h3>
+				<p>Ensure that your server meets the requirements outlined in the documentation's Server Requirement
+					section. Upon downloading the code, upload the admin zip file to your server and extract it. The
+					admin panel can be installed on either a domain or a subdomain.</p>
+				<h3>4.1 Connect to FTP and Setup</h3>
+				<p>Follow these instructions to connect to your server using FTP and complete the application setup:</p>
+				<p><strong>4.1.1. Connect to the server using FTP: </strong> Use an FTP client like FileZilla to connect
+					to your server. Enter the server's IP address, username, and password. Use port 21 for FTP or port
+					22 for SFTP.</p>
+				<p><strong>4.1.2. Transfer the ZIP file: </strong>Upload your admin panel’s ZIP file to the server’s
+					local path (e.g., /var/www/html).</p>
+				<p><strong>4.1.3. Unzip the file: </strong> Navigate to the file's location on the server and run the
+					following command to extract the ZIP file: "sudo unzip your-application.zip" or you can do it from
+					cpanel directly.</p>
+				<p><strong>4.1.4. Update the .env file with your configuration: </strong> Modify the database and
+					application settings which are mentioned in the .env file. Below is an example configuration:</p>
+				<span class="content-image">
+					<img src="assets/images/image017.png">
+				</span>
+				<p><strong>4.1.5.</strong> Run the following command from the root directory of your admin panel
+					terminal to install Firebase dependency modules required for scheduler functions.</p>
+				<p class="comman-code">
+					<span>npm <span class="colored">install</span></span>
+				</p>
+				<p><strong>4.1.6.</strong> Setup Node Js Path</p>
+				<span class="content-image">
+					<img src="assets/images/image019.png">
+				</span>
+				<p>To get the Node path from the terminal, you typically want to determine the location of Node.js or a
+					specific file related to Node. Here are common ways to do this from the terminal:</p>
+				<p>To find out where Node.js is installed on your system, you can use the which command (on
+					Linux/macOS):</p>
+				<p class="comman-code">
+					<span>which node</span>
+				</p>
+				<p>This will return the full path to the Node.js binary. For example:</p>
+				<p class="green"><strong>/usr/local/bin/node</strong></p>
+				<p>See this example: In our case, the Node.js path is something like the one below.</p>
+				<span class="content-image">
+					<img src="assets/images/image022.jpg">
+				</span>
+				<p><strong>Copy this path and update it in your NODE_PATH variable.</strong></p>
+
+				<h3>4.2. CRON Job Setup</h3>
+				<p>A cron job is a scheduled task in Unix-based operating systems that runs scripts or commands at
+					specified intervals. Here's how to set up a cron job on a server:</p>
+				<p><strong>Steps to Set Up a Cron Job:</strong></p>
+				<p><strong>4.2.1.</strong> Log in to cPanel or in your web server</p>
+				<p><strong>4.2.2. </strong> Navigate to the "Cron Jobs" Section</p>
+				<p><strong>4.2.3.</strong> Add a New Cron Job</p>
+				<p>In the command field, enter the command or the path to the script you want to run. </p>
+				<p>For example: Run a script every minutes:</p>
+				<pre>
+							<span>* * * * * /usr/local/bin/php /home/username/public_html/artisan schedule:run >> /dev/null 2>&1</span>
+						</pre>
+				<p>For example: Run a script every day at midnight:</p>
+				<pre>
+							<span>0 0 * * * /usr/local/bin/php /home/username/public_html/artisan schedule:run >> /dev/null 2>&1</span>
+						</pre>
+				<p><strong>4.2.4:</strong> Save the Cron Job</p>
+				<p><strong>Please Note:</strong> Ensure the script you’re running has the correct permissions and is
+					executable. You need to specify the correct PHP path (/usr/local/bin/php is common but may vary
+					depending on your server setup) and please use your admin panel path in the CRON JOB command.</p>
+				<h3>4.3 Map Configuration</h3>
+				<p>Please choose your preferred map by navigating to the Admin Panel > General Settings > Map Tracking
+					Options.</p>
+				<span class="content-image">
+					<img src="assets/images/image023.png">
+				</span>
+				<p><strong>Note: Recommended Google Map for accurate location and mapping results.</strong></p>
+				<h3>4.4 Notifications Settings</h3>
+				<p>To work firebase push notification feature functions correctly, please upload your Firebase
+					credentials file in the Admin Panel by navigating to General Settings > Notifications Settings.</p>
+				<span class="content-image">
+					<img src="assets/images/image024.jpg">
+				</span>
+				<p>Navigate to your Firebase Project Settings > Cloud Messaging. Under Firebase Cloud Messaging API, you
+					will find the Sender ID.</p>
+				<p>Go to Firebase Project Settings > Service accounts, scroll down and click on the 'Generate new
+					private key' button. A JSON file will be downloaded.</p>
+				<p><strong>Steps to Configure:</strong></p>
+				<p>To enable <strong>real-time push notifications</strong> for customers and drivers, you need to
+					connect your application with <strong>Firebase Cloud Messaging (FCM)</strong>.</p>
+				<ul>
+					<li><strong>Generate Firebase Credentials File</strong></li>
+					<ul>
+						<li>Go to the Firebase Console.</li>
+						<li>Select your project.</li>
+						<li>Navigate to <strong> Project Settings > Service Accounts.</strong></li>
+						<li>Click <strong>Generate New Private Key</strong> <span class="green">
+								firebase-adminsdk-xxxxx.json</span>.</li>
+						<li>Keep this file safe, as it contains your Firebase API keys and credentials.</li>
+					</ul>
+				</ul>
+				<ul>
+					<li><strong>Upload Firebase Credentials in Admin Panel</strong></li>
+					<ul>
+						<li>Log in to your <strong>GoRide Admin Panel</strong></li>
+						<li>Go to <strong>General Settings > Notifications Settings.</strong></li>
+						<li>Upload the JSON file you downloaded from Firebase</li>
+					</ul>
+				</ul>
+				<ul>
+					<li><strong>Save & Apply Settings</strong></li>
+					<ul>
+						<li>Once uploaded, click <strong>Save/Update Settings</strong></li>
+						<li>The system will now connect to Firebase for sending push notifications.</li>
+					</ul>
+				</ul>
+				<ul>
+					<li>Verify Push Notifications</li>
+					<ul>
+						<li>Test by creating a new booking from the user app.</li>
+						<li>The assigned driver should instantly receive a <strong> push notification</strong>.</li>
+						<li>Customers will also get updates (ride accepted, driver arriving, ride started, ride
+							completed).</li>
+					</ul>
+				</ul>
+				<h3>4.5 Accessing the Admin Panel</h3>
+				<p>Default Admin User Credentials</p>
+				<p><strong>URL:</strong> Your desired URL where the admin panel is set up.</p>
+				<p><strong>Email:</strong> admin@goride.com</p>
+				<p><strong>Password: </strong> 12345678</p>
+
+			</section>
+
+
+			<section id="admin_panel_menus_overviews">
+				<div class="page-header">
+					<h2>Admin Panel Menus Overview</h2>
+					<hr class="notop">
+				</div>
+				<h3>5. Admin Panel Menus Overview</h3>
+				<p><strong>5.1. Dashboard</strong></p>
+				<p>Provides an at-a-glance overview of the business. Displays analytics such as total customers,
+					registered drivers, completed rides, latest rides, top drivers, and overall earnings overview. Helps
+					admins quickly monitor performance.</p>
+				<span class="content-image">
+					<img src="assets/images/image027.png">
+				</span>
+				<p><strong>5.2. Live Monitoring</strong></p>
+				<p><strong>Live Tracking</strong></p>
+				<p>Monitor drivers and vehicles in real time on the map. Useful for managing rides, ensuring driver
+					accountability, and providing live support.</p>
+				<p><strong>Zone</strong></p>
+				<p>Service zones allow you to define the exact areas where your platform operates, such as specific
+					cities, regions, or neighborhoods. Within each zone, Additionally, zone-based policies give you
+					flexibility to apply different operational rules for each area, ensuring a more accurate, efficient,
+					and localized service experience.</p>
+				<span class="content-image">
+					<img src="assets/images/image029.png">
+				</span>
+				<span class="content-image">
+					<img src="assets/images/image031.png">
+				</span>
+				<span class="content-image">
+					<img src="assets/images/image033.png">
+				</span>
+				<p><strong>Surge Zone</strong></p>
+				<p>Surge zones allow you to define specific areas where dynamic pricing adjustments can be applied based on demand and supply conditions. By configuring surge zones, you can increase or decrease pricing surge within selected locations during peak hours, high traffic, or limited availability of service providers. This helps maintain service balance, optimize resource allocation, and ensure better operational efficiency while delivering a responsive and localized user experience.</p>
+				<span class="content-image">
+					<img src="assets/images/surge_zone.png">
+				</span>
+				<p>You can configure surge zone settings by navigating to Settings > Global Settings.</p>
+				<span class="content-image">
+					<img src="assets/images/surge_zone_setting.png">
+				</span>
+				<p><strong>5.3. Access Management</strong></p>
+				<p><strong>Access Control</strong></p>
+				<p>Create and manage admin permission groups (e.g., Super Admin, Editor, Dispatcher). Control what each
+					admin role can view or edit within the system.</p>
+				<span class="content-image">
+					<img src="assets/images/image035.png">
+				</span>
+				<p><strong>5.4. Account Management</strong></p>
+				<p><strong>Users</strong></p>
+				<p>The Customers page allows administrators to view and manage all customer accounts registered through
+					the mobile application. Each profile displays essential details such as personal information,
+					contact data, and account status. Admins can review a customer’s complete ride history, including
+					completed, canceled, and ongoing bookings, to monitor activity and resolve issues quickly. Ensuring
+					better coordination and customer support. This page also provides the ability to edit or deactivate
+					accounts, helping maintain a secure and well-managed user base.</p>
+				<span class="content-image">
+					<img src="assets/images/image037.png">
+				</span>
+				<p><strong>Drivers</strong></p>
+				<p>The Drivers page provides administrators with full control over managing individual driver accounts
+					on the platform. Each driver profile displays personal details, uploaded documents, and verification
+					status to ensure compliance and safety. From this page, admins can review and approve driver
+					applications, track their current availability, and monitor active or completed trips. The system
+					also offers insights into driver earnings, commission deductions, and payout history for transparent
+					financial management. Additionally, admins can update driver information, suspend accounts if
+					necessary, and maintain a reliable pool of professional drivers for smooth operations.</p>
+				<span class="content-image">
+					<img src="assets/images/image039.png">
+				</span>
+				<p><strong>Fleet Drivers</strong></p>
+				<p>The Fleet Drivers page is designed to manage drivers who are associated with registered fleet owners.
+					Unlike independent drivers, these drivers operate under a specific owner’s fleet, allowing for
+					organized group management. Administrators can view detailed profiles of fleet-linked drivers,
+					including assigned vehicles, and ride activity. This page also provides visibility into each
+					driver’s earnings and commission, ensuring accurate revenue tracking between drivers, fleet owners,
+					and the platform. By centralizing fleet-based driver management, the page helps maintain
+					accountability and smooth coordination within larger transportation networks.</p>
+				<span class="content-image">
+					<img src="assets/images/image041.png">
+				</span>
+				<p><strong>Owners</strong></p>
+				<p>The Owners page allows administrators to manage fleet owners who register and oversee multiple
+					drivers and vehicles within the platform. Each owner profile includes essential details such as
+					contact information, registered vehicles, and assigned drivers. Admins can monitor the performance
+					of each fleet, including trip activity, availability, and vehicle status. The page also provides a
+					breakdown of owner earnings, platform commission, and payout history, ensuring financial
+					transparency. With this centralized view, administrators can easily track fleet operations, resolve
+					issues, and maintain strong relationships with fleet partners.</p>
+				<span class="content-image">
+					<img src="assets/images/image043.png">
+				</span>
+				<p><strong>Documents</strong></p>
+				<p>The Driver Documents page allows administrators to <strong> define and manage the documents required
+						for verification</strong> of individual drivers and fleet owners. Admins can add new document
+					types, such as Aadhaar Card, PAN Card, Driver License, or other ID proofs, and specify which
+					documents must be uploaded during verification. This ensures that all necessary documentation is
+					collected to maintain compliance, authenticity, and safety on the platform.</p>
+				<span class="content-image">
+					<img src="assets/images/image045.png">
+				</span>
+				<p><strong>Reports</strong></p>
+				<p>The Reporting and Analytics section in the admin panel provides comprehensive insights into platform
+					activity, allowing administrators to monitor performance, make data-driven decisions, and identify
+					trends. Reports can be customized using various filters and options to generate precise and
+					actionable information. Key options include:</p>
+				<p><strong>Status: </strong> Filter reports by the status of rides, trips, or transactions (e.g.,
+					completed, canceled, ongoing).</p>
+				<p><strong>Date Options:</strong> Quickly generate reports based on preset time frames like Today, This
+					Week, This Month, or This Year.</p>
+				<p><strong>File Format: </strong>Export reports in multiple formats such as XLS, CSV, or PDF for offline
+					analysis, record-keeping, or sharing with stakeholders.</p>
+				<p><strong>User Reports</strong></p>
+				<p>The User Reports page generates detailed reports on customer activity. Administrators can track
+					metrics such as ride history, active and canceled bookings, wallet usage, and promotional coupon
+					redemptions. This helps identify user engagement patterns, monitor retention, and address issues
+					impacting the customer experience.</p>
+				<span class="content-image">
+					<img src="assets/images/image047.png">
+				</span>
+				<p><strong>Driver Reports</strong></p>
+				<p>The Driver Reports page focuses on driver performance analytics. Admins can review completed trips,
+					acceptance and cancellation rates, earnings, ratings, and feedback. These reports help evaluate
+					driver efficiency, reward top performers, and take corrective actions for underperforming drivers,
+					ensuring high service quality.</p>
+				<span class="content-image">
+					<img src="assets/images/image049.png">
+				</span>
+				<p><strong>Ride Reports</strong></p>
+				<p>The Travel Reports page consolidates analytics across all service types — rides. It provides insights
+					into total revenue, number of trips, cancellations, average trip distance, and peak usage times.
+					This data helps in resource planning, optimizing service availability, and identifying high-demand
+					periods to enhance operational efficiency.</p>
+				<span class="content-image">
+					<img src="assets/images/image051.png">
+				</span>
+				<p><strong>Intercity Reports</strong></p>
+				<p>The Intercity Ride Reports page consolidates analytics specific to outstation trips. It provides
+					insights into total intercity revenue, number of completed trips, cancellations, average trip
+					distance, driver performance, and most popular city-to-city routes. This data helps in demand
+					forecasting, optimizing route availability, adjusting pricing strategies, and ensuring better driver
+					allocation for long-distance travel.</p>
+				<span class="content-image">
+					<img src="assets/images/image053.png">
+				</span>
+				<p><strong>Transaction Reports</strong></p>
+				<p>The Transaction Reports page provides a comprehensive view of all financial activities across the
+					platform. It tracks completed payments, pending transactions, refunds, discounts, commissions, and
+					wallet activity. This data helps in monitoring revenue flow, reconciling accounts, identifying
+					payment trends, and ensuring financial transparency between riders, drivers, and the platform.</p>
+				<span class="content-image">
+					<img src="assets/images/image055.png">
+				</span>
+				<p><strong>5.5. Business Setup</strong></p>
+				<p><strong>Subscription Plan</strong></p>
+				<p>The Subscription Plan page allows administrators to create and manage subscription packages for
+					drivers and fleet owners. These plans define recurring fees that drivers or owners pay to access the
+					platform’s services, replacing or supplementing commission-based models. Each plan can include
+					details such as pricing, billing cycle (weekly, monthly, yearly), benefits, and usage limits. Admins
+					can track which drivers or owners are subscribed, monitor their subscription history & payment
+					status.</p>
+				<span class="content-image">
+					<img src="assets/images/image057.png">
+				</span>
+				<p><strong>5.6. Ride Management</strong></p>
+				<p><strong>Rides > Services</strong></p>
+				<p>The services page allows administrators to define and manage multiple ride categories such as Car,
+					Rickshaw, and Bike. It provides flexibility to add, edit, or disable service types based on market
+					demand. This helps in offering diverse transportation options to riders, ensuring better coverage of
+					customer needs, and optimizing fleet allocation for each service category.</p>
+				<span class="content-image">
+					<img src="assets/images/image059.png">
+				</span>
+				<p><strong>Rides > Ride Orders</strong></p>
+				<p>The Ride Orders page provides a detailed view of all ride bookings made through the platform. It
+					includes essential information such as booking ID, rider details, driver assignment, trip status,
+					fare amount, payment method, and timestamps. Administrators can monitor active, completed, and
+					cancelled rides in real-time, resolve disputes, and ensure smooth ride operations. This helps in
+					maintaining transparency, improving service quality, and optimizing the overall ride management
+					process.</p>
+				<span class="content-image">
+					<img src="assets/images/image061.png">
+				</span>
+				<p><strong>Intercity > Intercity Service</strong></p>
+				<p>Services page enables administrators to manage different outstation service categories such as
+					Freight, Parcel, Private Ride, and Shared Ride. Each service type can be customized with specific
+					pricing models, vehicle requirements, and availability settings. This flexibility allows businesses
+					to cater to diverse customer needs—whether it’s transporting goods, sending parcels, booking
+					exclusive private rides, or offering cost-effective shared travel options across cities.</p>
+				<span class="content-image">
+					<img src="assets/images/image063.png">
+				</span>
+				<p><strong>Intercity > Intercity Orders</strong></p>
+				<p>The Intercity Orders page provides a comprehensive overview of all outstation trip bookings. It
+					displays booking ID, passenger details, selected service type (Freight, Parcel, Private Ride, or
+					Shared Ride), driver assignment, trip status, fare breakdown, and payment information.
+					Administrators can track ongoing, completed, and cancelled intercity rides in real-time, manage
+					disputes, and ensure reliable service delivery. This module helps maintain transparency, optimize
+					long-distance operations, and improve customer satisfaction for intercity travel.</p>
+				<span class="content-image">
+					<img src="assets/images/image065.png">
+				</span>
+				<p><strong>Freight</strong></p>
+				<p>Freight Vehicle management enables administrators to define and oversee vehicles used for
+					transporting goods. It includes details like vehicle type, load capacity, size specifications,
+					availability, and driver assignment. This ensures efficient allocation of resources, optimized
+					freight operations, and reliable service for businesses and customers needing goods transport.</p>
+				<span class="content-image">
+					<img src="assets/images/image067.png">
+				</span>
+				<p><strong>Airports</strong></p>
+				<p>The Airports feature allows administrators to manage airport-related ride services. It includes
+					adding airport locations, defining pick-up and drop-off points, and configuring fare rules for
+					airport transfers. This helps ensure seamless airport rides, optimized driver allocation, and a
+					smooth experience for passengers traveling to and from airports.</p>
+				<span class="content-image">
+					<img src="assets/images/image069.png">
+				</span>
+				<p><strong>Driver Rules</strong></p>
+				<p>Driver Rules define the specific guidelines that passengers must follow during a ride. This can
+					include rules such as “Pets Allowed,” “No Alcohol,” “No Smoking,” or any custom conditions set by
+					the driver. These rules help ensure a safe, comfortable, and respectful experience for both drivers
+					and passengers while maintaining service quality and compliance.</p>
+				<span class="content-image">
+					<img src="assets/images/image071.png">
+				</span>
+
+				<p><strong>5.7. App Management</strong></p>
+				<p><strong>CMS Pages</strong></p>
+				<p>The CMS Pages section allows administrators to create, edit, and manage static content pages within
+					the app, such as About Us, FAQs, Terms & Conditions, Privacy Policy, and more. Each page can include
+					text, images, and links, ensuring that essential information is clearly presented to users. Admins
+					can update content anytime to reflect changes in policies, services, or company information. This
+					page ensures that the app provides accurate and up-to-date information, improving transparency and
+					user trust.</p>
+				<span class="content-image">
+					<img src="assets/images/image073.png">
+				</span>
+				<p><strong>Banners</strong></p>
+				<p>The Banners page allows administrators to create, manage, and display promotional or informational
+					banners within the customer mobile application. Each banner can include images, text, links, or
+					call-to-action buttons to highlight offers, updates, or important announcements. Admins can control
+					the order, duration, and visibility of banners for different user segments, ensuring relevant and
+					engaging content. This page helps enhance user experience, promote services effectively, and drive
+					customer engagement through visually appealing notifications.</p>
+				<span class="content-image">
+					<img src="assets/images/image075.png">
+				</span>
+				<p><strong>On Boarding</strong></p>
+				<p>The On Boarding page allows administrators to configure the introductory screens shown to new users
+					when they first open the mobile application. These screens can highlight key app features, explain
+					how to use services, and provide tips for a smooth experience. Admins can add images, text, and
+					interactive elements to make the onboarding process engaging and informative. This page ensures that
+					new users quickly understand the app’s functionality, enhancing user adoption and reducing confusion
+					during initial use.</p>
+				<span class="content-image">
+					<img src="assets/images/image077.png">
+				</span>
+				<p><strong>FAQ</strong></p>
+				<p>The FAQ feature provides a centralized section for frequently asked questions by users. It allows
+					administrators to add, edit, or remove questions and answers, covering topics such as booking
+					procedures, payment methods, ride policies, and service guidelines. This helps improve user
+					experience, reduce support requests, and ensure passengers and drivers have quick access to
+					important information.</p>
+				<span class="content-image">
+					<img src="assets/images/image079.png">
+				</span>
+				<p><strong>SOS</strong></p>
+				<p>The SOS page enables administrators to monitor and manage emergency alerts raised by drivers or
+					customers in real time. Each alert provides critical information such as the location, type of
+					emergency, and the user involved. Admins can quickly track and respond to these SOS events, ensuring
+					prompt assistance and intervention. This page helps improve safety across the platform by enabling
+					rapid coordination, documenting incidents, and maintaining records for follow-up and preventive
+					measures.</p>
+				<span class="content-image">
+					<img src="assets/images/image081.png">
+				</span>
+				<p><strong>Help & Support</strong></p>
+				<p>The Help & Support feature enables real-time communication between users and administrators. It
+					includes a chat system where users can submit queries, report issues, or request assistance, and
+					admins can respond promptly. This ensures timely support, enhances user satisfaction, and helps
+					resolve ride-related or account issues efficiently.</p>
+				<span class="content-image">
+					<img src="assets/images/image083.png">
+				</span>
+
+				<h3><strong>5.8. Setting Management</strong></h3>
+				<p><strong>Tax Settings</strong></p>
+				<p>The Tax Settings page allows administrators to configure taxes applicable across all services. Admins
+					can define tax types such as GST, VAT, or other local taxes and specify rates for each service
+					category. This page ensures that all fare calculations include accurate tax amounts, maintains
+					compliance with local tax regulations, and provides transparency for customers and drivers. Proper
+					tax configuration also helps in generating accurate financial reports and simplifies accounting and
+					regulatory reporting.</p>
+				<span class="content-image">
+					<img src="assets/images/image085.png">
+				</span>
+				<p><strong>Coupons</strong></p>
+				<p>The Coupons page enables administrators to create, manage, and monitor discount coupons and
+					promotional codes that customers can apply during bookings. Each coupon can be configured with
+					specific details such as discount type (percentage or fixed amount), validity dates, and maximum
+					usage limits per customer or overall. Admins can also define which coupon applies to rides and allow
+					for targeted promotions. This page provides visibility into coupon performance, including redemption
+					counts and customer usage, helping businesses run effective marketing campaigns while controlling
+					discounts and revenue impact.</p>
+				<span class="content-image">
+					<img src="assets/images/image087.png">
+				</span>
+				<p><strong>Currency</strong></p>
+				<p>The Currency page allows administrators to define and manage the currencies supported by the
+					platform. Admins can set default currencies, add additional currencies for global operations, and
+					configure exchange rates to ensure accurate pricing and billing across regions. This page helps
+					maintain consistency in financial transactions, supports multi-currency operations, and ensures that
+					both customers and drivers see correct amounts in their local currency.</p>
+				<span class="content-image">
+					<img src="assets/images/image089.png">
+				</span>
+				<p><strong>Languages</strong></p>
+				<p>The Languages page allows administrators to manage the languages available in the admin panel. Admins
+					can add new languages, edit existing translations, and update labels or messages to ensure the
+					interface is accessible to a diverse team. This page helps maintain consistency across the admin
+					panel, supports multi-lingual operations, and ensures that administrators can efficiently manage the
+					platform in their preferred language.</p>
+				<span class="content-image">
+					<img src="assets/images/image091.png">
+				</span>
+				<p><strong>Payments</strong></p>
+				<p>The Payments section provides a comprehensive view and management of all financial transactions
+					within the platform. It includes:</p>
+				<ul>
+					<li><strong>Payout Requests:</strong> Tracks and manages withdrawal requests from drivers or service
+						providers, ensuring timely and accurate payouts.</li>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/image093.png">
+				</span>
+				<ul>
+					<li><strong>Owner Wallet Transactions: </strong> Monitors all credit and debit activities in the
+						platform owner’s wallet, including commissions, refunds, and adjustments.</li>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/image095.png">
+				</span>
+				<ul>
+					<li><strong>Driver Wallet Transactions: </strong> Records earnings, incentives, and deductions for
+						drivers, providing transparency and easy reconciliation.</li>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/image097.png">
+				</span>
+				<ul>
+					<li><strong>User Wallet Transactions: </strong>Displays top-ups, payments, refunds, and promotional
+						credits for users, ensuring smooth and secure financial operations.</li>
+				</ul>
+				<span class="content-image">
+					<img src="assets/images/image099.png">
+				</span>
+				<p>This section helps administrators maintain transparency, manage finances efficiently, and ensure
+					accurate tracking of all monetary activities across the platform.</p>
+				<p><strong>Settings</strong></p>
+				<p><strong>Global Settings</strong></p>
+				<p>The Global Settings page allows administrators to configure all core settings for the app, web panel,
+					and overall platform operations. These settings ensure the platform runs smoothly, maintains
+					consistent branding, and meets operational requirements.</p>
+				<p>Admins can define the basic platform appearance and identity:</p>
+				<ul>
+					<li><strong>Title & Footer: </strong> Customize the platform’s name and footer text.</li>
+					<li><strong>App Color, Admin Panel Colors: </strong>: Set color schemes for both mobile app and
+						admin panel for consistent branding.</li>
+					<li><strong>Radius: </strong> Configure service coverage radius for rides.</li>
+					<li><strong>Logo: </strong> Upload platform or company logo for display across app and admin panel.
+					</li>
+					<li><strong>etc.</strong></li>
+				</ul>
+				<p><strong>Business Model Settings</strong></p>
+				<p>The Business Model Settings page allows administrators to define how the platform generates revenue
+					from drivers and fleet owners. Admins can choose between different earning models:</p>
+				<ul>
+					<li><strong>Commission Model: </strong> The platform earns a percentage of each completed ride
+						transaction.</li>
+					<li><strong>Subscription Model: </strong> Drivers or fleet owners pay a recurring subscription fee
+						to access the platform’s services.</li>
+					<li><strong>Hybrid Model: </strong> Combines both commission and subscription-based earnings,
+						allowing flexible revenue strategies.</li>
+				</ul>
+				<p>This page ensures that the platform’s revenue model aligns with business objectives and provides
+					flexibility to adapt to market demands or strategic changes. Administrators can adjust settings
+					easily to implement the chosen model across all services.</p>
+				<span class="content-image">
+					<img src="assets/images/image101.png">
+				</span>
+				<p><strong>Schedule Notification Settings</strong></p>
+				<p>Schedule Notification Settings allow administrators to configure automated notifications for upcoming
+					rides. They can set the timing of alerts to be sent to users and drivers, such as 1 day, several
+					hours, or minutes before the ride. This ensures timely reminders, reduces missed bookings, and
+					enhances overall communication and service reliability.</p>
+				<span class="content-image">
+					<img src="assets/images/image103.png">
+				</span>
+				<p><strong>Payment Method</strong></p>
+				<p>The Payment Methods page allows administrators to configure and manage the payment options available
+					on the platform. Admins can enable or disable various gateways, including <strong>Cash, Stripe,
+						PayPal, Razorpay, and Wallet</strong> payments, ensuring flexibility for both customers and
+					drivers. This page ensures secure and seamless transactions, helps accommodate user preferences, and
+					provides control over which payment methods are active for rides. Proper configuration also enables
+					smooth reconciliation of payments and supports accurate financial reporting.</p>
+				<span class="content-image">
+					<img src="assets/images/image105.png">
+				</span>
+				<p><strong>Landing Page Template</strong></p>
+				<p>The Landing Page Template page allows administrators to manage and customize the public-facing
+					landing page of the GoRide platform. Admins can update banners, text content, images, and branding
+					elements to reflect current promotions, company identity, or seasonal campaigns. This page provides
+					control over the look and feel of the landing page, ensuring it is visually appealing, informative,
+					and aligned with marketing objectives. It helps attract new users, communicate key messages
+					effectively, and maintain a professional online presence.</p>
+				<span class="content-image">
+					<img src="assets/images/image107.png">
+				</span>
+				<p><strong>Header Template</strong></p>
+				<p>Header Template allows administrators to customize the top section of the web application. This
+					includes configuring the logo, navigation menus, links, and other elements visible to users. It
+					ensures a consistent, branded interface and provides easy access to key pages and features of the
+					website.</p>
+				<span class="content-image">
+					<img src="assets/images/image109.png">
+				</span>
+				<p><strong>Footer Template</strong></p>
+				<p>Footer Template allows administrators to customize the bottom section of the web application. This
+					includes configuring links, contact information, social media icons, copyright text, and other
+					elements visible to users. It ensures a consistent, branded interface and provides easy access to
+					important information and resources across the website.</p>
+				<span class="content-image">
+					<img src="assets/images/image111.png">
+				</span>
+				<p><strong>Privacy Policy</strong></p>
+				<p>The Privacy Policy page allows administrators to create, update, and maintain the privacy policy
+					content displayed to users within the app. Admins can ensure the policy complies with regulations
+					such as GDPR and local data protection laws, clearly explaining how user data is collected, stored,
+					and used. This page helps build trust with users, maintain legal compliance, and provide
+					transparency regarding data privacy and security practices.</p>
+				<span class="content-image">
+					<img src="assets/images/image113.png">
+				</span>
+				<p><strong>Terms & Conditions</strong></p>
+				<p>The Terms & Conditions page allows administrators to create, update, and maintain the legal
+					agreements displayed to users within the app. Admins can edit content to reflect company policies,
+					service rules, and regulatory requirements, ensuring that users are informed about their rights and
+					obligations. This page helps maintain legal compliance, provides transparency, and protects both the
+					platform and its users by clearly communicating the terms of service.</p>
+				<span class="content-image">
+					<img src="assets/images/image115.png">
+				</span>
+			</section>
+
+			<section id="firestore_database_collection">
+				<div class="page-header">
+					<h2>Firestore Database Collection Import / Export</h2>
+					<hr class="notop">
+				</div>
+				<h3>6. Firestore Database Collection Import / Export</h3>
+				<p><strong>To perform Firebase Collection Import Export, follow these straightforward steps:</strong>
+				</p>
+				<p><strong>6.1 </strong>: To set up NPM on your computer, download Node.js from the following link:<a
+						href="https://nodejs.org/en/download/" target="_blank"
+						rel="noopener">https://nodejs.org/en/download/</a></p>
+				<p><strong>6.2 </strong>: Unzip the source code file named "Firebase Import Export Collections.zip"</p>
+				<p><strong>6.3 </strong>: If you haven't already created a Firebase project, set it up now.</p>
+				<p><strong>6.4 </strong>: Configure the <span class="green">credentials.json</span> file, which you can
+					obtain from your Firebase Project settings. Then navigate to the Service account, then select
+					Node.js. Generate a new private key and wait until the key is created. It will automatically
+					download and replace the current credentials.json file.</p>
+				<p><strong>6.5 </strong>: Navigate to the extracted <span class="green">Firebase Import Export
+						Collections</span> zip file path and then press and hold the Ctrl+Shift buttons. While holding
+					them, right-click the mouse button, and select "Open PowerShell window here" from the context menu.
+					This will open a PowerShell window where you can run the import/export command.</p>
+				<p><strong>6.6 </strong>: Execute the following commands to perform import/export operations for
+					collections:</p>
+				<p>To import all collections, execute the following command:</p>
+				<p class="comman-code">
+					<span>npx -p node-firestore-import-export firestore-import -a credentials.json -b
+						collections.json</span>
+				</p>
+				<p>To export all collections, execute the following command:</p>
+				<p class="comman-code">
+					<span>npx -p node-firestore-import-export firestore-export -a credentials.json -b
+						collections.json</span>
+				</p>
+				<p>Once the export command is executed, the collections.json file will be downloaded.</p>
+				<div class="warning-box info-box info--box">
+					<p>Please Note: Prior to executing the above command, ensure that you have correctly updated your
+						Firebase credentials in the credentials.json file.</p>
+				</div>
+				<h4>See Video:</h4>
+				<div class="video-box">
+					<a href="https://www.youtube.com/watch?v=HgRgWNJiFhw&feature=youtu.be" target="_blank">
+						<img src="assets/images/video-10.png">
+						<span class="video-icon">
+							<img src="assets/images/video-icon.png">
+						</span>
+					</a>
+				</div>
+			</section>
+
+			<section id="firebase_cloud_functions">
+				<div class="page-header">
+					<h2>Deploy Firebase Cloud Functions</h2>
+					<hr class="notop">
+				</div>
+				<h3>7. Deploy Firebase Cloud Functions</h3>
+				<p>All the necessary Firebase Functions have been initially coded by us, you just need to deploy these
+					functions to your own Firebase account. This means that you need to upload the source code inside
+					the Firebase Functions folder to your account. If a Firebase account has been created, find a
+					Firebase project, and 2 apps (iOS and Android)</p>
+				<h3>7.1. Setting up Node.js and the Firebase CLI </h3>
+				<p>For comprehensive guidance, refer to the official Firebase documentation on getting started: "Write,
+					test, and deploy your first functions" in Cloud Functions for Firebase.</p>
+				<p>You'll need Node.js and the Firebase CLI to write functions and deploy them to Cloud Functions.</p>
+				<p>To set up NPM on your computer, download Node.js from the following link: Node.js download. Once
+					Node.js is installed, proceed to install the Firebase CLI.</p>
+				<p>Use the following command to install the CLI via npm:</p>
+				<p class="comman-code">
+					<span>npm install -g firebase-tools</span>
+				</p>
+				<p>If you've already set up the Firebase tools, you can simply run the following command:</p>
+				<p class="comman-code">
+					<span>npm install</span>
+				</p>
+				<p>These steps will ensure you're ready to start writing and deploying functions with Firebase. If you
+					encounter any issues, consult the Firebase documentation for troubleshooting assistance.</p>
+				<h3>7.2. Initialize your project </h3>
+				<p>To initialize the project, authenticate the Firebase tool by running the following command. You'll be
+					prompted to log in to your account via your web browser:</p>
+				<p class="comman-code">
+					<span>firebase login</span>
+				</p>
+				<h3>7.3. Implementing Cloud Functions </h3>
+				<p>Since we're providing the complete source code for your Firebase Cloud Functions:</p>
+				<p>Extract the zip file <span class="green">Firebase Cloud Functions.zip.</span></p>
+				<p>Fill in the necessary credentials in the following files located within the zip:</p>
+				<p>1. <span class="green">firebaserc</span> (Add your Firestore Project ID)</p>
+				<p>2. <span class="green">index.js</span> (Add your Firestore database URL)</p>
+				<p>3. <span class="green">serviceAccountKey.json</span> (Add your Firebase service account credentials)
+				</p>
+				<p>With these steps, you've successfully set up the required credentials.</p>
+				<h3>7.4. Deploy Firebase Functions </h3>
+				<p>Simply run the following command in the <span class="green"> Firebase Cloud Functions >
+						functions</span> directory.</p>
+				<p class="comman-code">
+					<span>firebase deploy --only functions</span>
+				</p>
+				<p>Now you can go to your Firebase Console and check, as the functions have been deployed. It is
+					possible to see the logs for each function, understand the output, and know when it gets called.</p>
+				<h4>See Video:</h4>
+				<div class="video-box">
+					<a href="https://www.youtube.com/watch?v=8KcnQXzrLPc&feature=youtu.be" target="_blank">
+						<img src="assets/images/video-10.png">
+						<span class="video-icon">
+							<img src="assets/images/video-icon.png">
+						</span>
+					</a>
+				</div>
+			</section>
+
+			<section id="firestore_database_indexing">
+				<div class="page-header">
+					<h2>Firestore Database Indexing</h2>
+					<hr class="notop">
+				</div>
+				<h3>8. Firestore Database Indexing</h3>
+				<p>To perform Firebase indexing, follow these straightforward steps:</p>
+				<p><strong>8.1 </strong>: To set up NPM on your computer, download Node.js from the following link:<a
+						href="https://nodejs.org/en/download/" target="_blank"
+						rel="noopener">https://nodejs.org/en/download/</a></p>
+				<p><strong>8.2</strong> Unzip the source code file named "Firebase Indexing.zip" here.</p>
+				<p><strong>8.3</strong> Navigate to the extracted directory of "Firebase Indexing" zip file. Press and
+					hold the ctrl+shift buttons, then right-click the mouse button. From the context menu, select "Open
+					PowerShell window here" to launch Windows PowerShell and execute import/export commands.</p>
+				<p><strong>8.4</strong> Execute the command <span class="comman-code"><span class="green">firebase
+							login</span></span> to log in to Firebase, if you haven't already done so.</p>
+				<p><strong>8.5</strong> Execute the command <span class="comman-code"><span class="green">firebase
+							init</span></span></p>
+				<p><strong>8.6</strong> Proceed with Y and press the enter button.</p>
+				<p><strong>8.7</strong> Choose the Option > Firestore: Configure security rules and index files for
+					Firestore. </p>
+				<div class="warning-box info-box info--box">
+					<p>Please Note: Choose the arrow down key to navigate and select options, and press the space button
+						to confirm your selection.</p>
+				</div>
+				<p><strong>8.8</strong> Choose the Option > Use an existing project </p>
+				<p><strong>8.9</strong> Choose your project</p>
+				<p><strong>8.10</strong> Press Enter > ? What file should be used for Firestore Rules? firestore.rules
+				</p>
+				<p><strong>8.11</strong> Press Enter > ? What file should be used for Firestore indexes?
+					(firestore.indexes.json)</p>
+				<p><strong>8.12</strong> ow, the <span class="green">firestore.indexes.json</span> file will be
+					downloaded. Open this file and copy all the code from <span
+						class="green">firestore_indexes.json</span> file, then paste it into <span
+						class="green">firestore.indexes.json file.</span></p>
+				<p><strong>8.13</strong> Now execute the command <span class="comman-code"><span
+							class="green">firebase</span><span> deploy </span><span class="green">--only
+							firestore:indexes</span></span> to import indexing in firestore.</p>
+				<h4>See Video:</h4>
+				<div class="video-box">
+					<a href="https://www.youtube.com/watch?v=DeWVR5sNaFg" target="_blank">
+						<img src="assets/images/video-10.png">
+						<span class="video-icon">
+							<img src="assets/images/video-icon.png">
+						</span>
+					</a>
+				</div>
+			</section>
+			<section id="owner_panel_setup">
+				<div class="page-header">
+					<h2>Owner Panel Setup</h2>
+					<hr class="notop">
+				</div>
+				<h3>9. Owner Panel Setup</h3>
+				<h3>9.1 Connect to FTP and Setup</h3>
+				<p>Follow these instructions to connect to your server using FTP and complete the application setup:</p>
+				<p><strong>9.1.1. Connect to the server using FTP: </strong> Use an FTP client like FileZilla to connect
+					to your server. Enter the server's IP address, username, and password. Use port 21 for FTP or port
+					22 for SFTP.</p>
+				<p><strong>9.1.2. Transfer the ZIP file: </strong> Upload your owner panel’s ZIP file to the server’s
+					local path (e.g., /var/www/html).</p>
+				<p><strong>9.1.3. Unzip the file: </strong> Navigate to the file's location on the server and run the
+					following command to extract the ZIP file: "sudo unzip your-application.zip" or you can do it from
+					cpanel directly.</p>
+				<p><strong>9.1.4. Update the .env file with your configuration</strong> Modify the database and
+					application settings which are mentioned in the .env file. Below is an example configuration:</p>
+				<span class="content-image">
+					<img src="assets/images/image117.jpg">
+				</span>
+				<p>Note: Add Your Google Client ID for Google Login Functionality To enable Google login, you need to provide your <strong>Google Client ID</strong>.</p>
+					<p><strong>Steps to find your Google Client ID:</strong></p>
+					<ul>
+						<li>1. Go to your Firebase Project in the Firebase Console.</li>
+						<li>2. Navigate to Authentication > Sign-in Method.</li>
+						<li>3. Click on Google under the list of providers.</li>
+						<li>4. Scroll down to Web SDK configuration.</li>
+						<li>5. Copy the Web Client ID.</li>
+						<li>6. Paste this Client ID in the env file of the restaurant panel.</li>
+					</ul>
+					<div class="image">
+						<img src="assets/images/google_clinet_id.png">
+					</div>
+					<p><strong>Steps to Check/Add Authorized Domains for OAuth 2.0 Client ID</strong></p>
+					<ul>
+						<li>1. Go to Google Cloud Console.</li>
+						<li>2. Navigate to APIs & Services > Credentials.</li>
+						<li>3. Open your OAuth 2.0 Client ID (Web application type).</li>
+						<li>4. Ensure the following are added:</li>
+						<ul>
+							<li><strong>Authorized JavaScript Origins  e.g.</strong></li>
+							<ul>
+								<li>https://owner.yourdomain.com</li>
+							</ul>
+							<li><strong>Authorized Redirect URIs  e.g.</strong></li>
+							<ul>
+								<li>https://owner.yourdomain.com/__/auth/handler</li>
+							</ul>
+						</ul>
+					</ul>
+				<p>Now you can access your owner panel at your desired domain For ex: <a
+						href="https://owner.yourdomain.com/">https://owner.yourdomain.com/</a></p>
+				<h3>9.2 Owner Panel Menus Overview</h3>
+				<p><strong>9.2.1. Dashboard</strong></p>
+				<p>Provides an at-a-glance overview of the owner’s business operations. Displays analytics such as total
+					drivers, active rides, completed rides, ongoing rides, latest bookings, top-performing drivers, and
+					overall earnings summary. Helps owners quickly monitor performance, track fleet efficiency, and make
+					informed operational decisions.</p>
+				<span class="content-image">
+					<img src="assets/images/owner_dashboard.png">
+				</span>
+				<p><strong>9.2.2. Document Verification</strong></p>
+				<p>Document Verification allows owners to securely upload and submit required documentation for
+					approval. This can include identity proof, business licenses, vehicle registration, and other
+					necessary certificates. The system ensures that all submitted documents are verified before
+					activating the owner’s account, helping maintain compliance, safety, and trust on the platform.</p>
+				<span class="content-image">
+					<img src="assets/images/image120.png">
+				</span>
+				<p><strong>9.2.3. Drivers</strong></p>
+				<p>The Drivers menu allows owners to manage all drivers in their fleet. It includes adding new drivers,
+					viewing driver profiles, tracking ride assignments, and monitoring performance metrics. This helps
+					owners efficiently allocate drivers, oversee ongoing operations, and ensure smooth service delivery
+					across all bookings.</p>
+				<span class="content-image">
+					<img src="assets/images/image122.png">
+				</span>
+				<p><strong>9.2.4. Ride Orders</strong></p>
+				<p>The Ride Orders section provides owners with a detailed view of all rides booked under their fleet.
+					It displays booking details, rider information, assigned driver, trip status, fare breakdown, and
+					payment method. This helps owners track active, completed, and cancelled rides, monitor fleet
+					performance, and ensure timely service delivery..</p>
+				<span class="content-image">
+					<img src="assets/images/image125.jpg">
+				</span>
+				<p><strong>9.2.5. Intercity Orders</strong></p>
+				<p>The Intercity Orders section provides owners with a comprehensive view of all outstation trips under
+					their fleet. It includes booking details, passenger information, selected service type (Freight,
+					Parcel, Private Ride, or Shared Ride), assigned driver, trip status, fare breakdown, and payment
+					method. This helps owners monitor ongoing, completed, and cancelled intercity rides, optimize
+					long-distance operations, and ensure reliable service for passengers.</p>
+				<span class="content-image">
+					<img src="assets/images/image126.png">
+				</span>
+				<p><strong>9.2.6. My Subscriptions</strong></p>
+				<p>The My Subscriptions section allows owners to view and manage their active subscription plans on the
+					platform. It displays details such as subscription type, start and expiry dates, features included,
+					payment history, and renewal options. This helps owners keep track of their plan benefits, ensure
+					uninterrupted access to platform services, and manage upgrades or renewals efficiently.</p>
+				<span class="content-image">
+					<img src="assets/images/image128.png">
+				</span>
+				<p><strong>9.2.7. Change Subscription</strong></p>
+				<p>The Change Subscription feature allows owners to upgrade, downgrade, or switch their current
+					subscription plan. It provides details of available plans, pricing, features, and renewal options.
+					This helps owners select the most suitable plan for their business needs, ensuring access to desired
+					features and optimal platform usage.</p>
+				<span class="content-image">
+					<img src="assets/images/image130.png">
+				</span>
+				<p><strong>9.2.8. My Wallet Transactions</strong></p>
+				<p>The My Wallet Transactions section provides owners with a detailed record of all wallet activities.
+					It includes credits, debits, payouts, refunds, and adjustments related to their account. This helps
+					owners track financial activity, monitor earnings, reconcile transactions, and maintain transparency
+					in platform-related finances.</p>
+				<span class="content-image">
+					<img src="assets/images/image132.png">
+				</span>
+				<p><strong>9.2.9. Payouts</strong></p>
+				<p>The Payouts section allows owners to view and manage withdrawal requests from their platform wallet.
+					It displays details such as requested amount, request date, payment method, and status of the
+					payout. This helps owners track earnings, ensure timely withdrawals, and maintain clear financial
+					records for their business.</p>
+				<span class="content-image">
+					<img src="assets/images/image134.png">
+				</span>
+			</section>
+
+			<section id="landing_panel_setup">
+				<div class="page-header">
+					<h2>Landing Panel Setup</h2>
+					<hr class="notop">
+				</div>
+				<h3>10. Landing Panel Setup</h3>
+				<h3>10.1 Connect to FTP and Setup</h3>
+				<p>Follow these instructions to connect to your server using FTP and complete the application setup:</p>
+				<p><strong>10.1.1. Connect to the server using FTP: </strong> Use an FTP client like FileZilla to
+					connect to your server. Enter the server's IP address, username, and password. Use port 21 for FTP
+					or port 22 for SFTP.</p>
+				<p><strong>10.1.2. Transfer the ZIP file: </strong> Upload your landing panel’s ZIP file to the server’s
+					local path (e.g., /var/www/html).</p>
+				<p><strong>10.1.3. Unzip the file: </strong> Navigate to the file's location on the server and run the
+					following command to extract the ZIP file: "sudo unzip your-application.zip" or you can do it from
+					cpanel directly</p>
+				<p><strong>10.1.4. Update the .env file with your configuration: </strong> Modify the database and
+					application settings which are mentioned in the .env file. Below is an example configuration:</p>
+				<span class="content-image">
+					<img src="assets/images/image136.jpg">
+				</span>
+				<div class="warning-box info-box info--box">
+					<p>Notes: Please use the same Firebase credentials for the owner and landing panel setup that you
+						will also add in the <span class="green">.env</span> file for the admin panel setup</p>
+				</div>
+				<p>Now you can access your landing page at your desired domain For ex: <a
+						href="http://landing.yourdomain.com/"> http://landing.yourdomain.com/</a></p>
+			</section>
+
+			<section id="create_google_map_api_key">
+				<div class="page-header">
+					<h2>Create Google Map API Key</h2>
+					<hr class="notop">
+				</div>
+				<h3>11. Create Google Map API Key</h3>
+				<p><strong>11.1</strong>. Go to the <a href="https://mapsplatform.google.com/" target="_blank"
+						rel="noopener">Google Maps Platform</a></p>
+				<p><strong>11.2</strong>. Click the Get Started button in the middle of the screen.</p>
+				<p><strong>11.3</strong>. Click on the Google Cloud Platform home in the upper left corner.</p>
+				<p><strong>11.4</strong>. Click on Billing to make sure your billing details are up-to-date. If they are
+					not, your Google Maps will not work properly.</p>
+				<p><strong>11.5</strong>. Once you’ve confirmed your billing is up-to-date, click on the Google Cloud
+					Platform home in the upper left corner again.</p>
+				<p><strong>11.6</strong>. Hover to APIs &amp; Services and go to Credentials.</p>
+				<p><strong>11.7</strong>. If you want to use an existing project, please select it from the list.
+					Otherwise, select ‘Create a new project’ and enter a project name.</p>
+				<p><strong>11.8</strong>. Click Create credentials and select API key. You will see a new dialog that
+					displays the newly created API key.</p>
+				<p><img src="assets/images/image137.png"></p>
+				<p><strong>11.9</strong>. Click the Close button in the API key dialogue. Your new API key will be
+					listed on the Credentials page under API keys</p>
+
+			</section>
+
+			<section id="admin_panel_update">
+				<div class="page-header">
+					<h2>Admin Panel - Update</h2>
+					<hr class="notop">
+				</div>
+				<h3>12. Admin Panel – Update</h3>
+				<p>To update the admin panel just upload our latest source code zip file in your project root folder and
+					extract it. </p>
+				<p>If you customized something on the code and want to update to our latest version then you can follow
+					any one option from following this.</p>
+				<p><strong>12.1</strong>. First push your code on a git branch then download our latest version source
+					code from codecanyon and push it to another branch. And then you can merge the changes between
+					current version and previous version code and merge both branches and it is possible to get
+					conflicts on branches. </p>
+				<p><strong>12.2</strong>. Download the our latest version source code from codecanyon and apply.</p>
+			</section>
+		</section>
+
+
+	</div>
+</body>
+
+</html>
