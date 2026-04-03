@@ -50,8 +50,9 @@
     .btn-primary.disabled,
     .btn-primary:hover,
     .btn-primary.disabled:hover {
-        background: #1B5E20;
-        border: 1px solid #1B5E20;
+        background: #D4AF37;
+        border: 1px solid #D4AF37;
+        color: #fff;
     }
     <?php if (isset($_COOKIE['owner_panel_color'])) { ?>
 

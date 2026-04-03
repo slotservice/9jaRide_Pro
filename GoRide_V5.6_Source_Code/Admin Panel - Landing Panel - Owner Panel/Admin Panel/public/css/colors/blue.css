@@ -191,39 +191,41 @@ a.link:hover, a.link:focus {
 }
 
 /* ==================== BUTTONS ==================== */
+/* Client requirement: Gold (#D4AF37) as accent/button color */
+
 .btn-themecolor,
 .btn-themecolor.disabled {
-  background: #1B5E20;
+  background: #D4AF37;
   color: #ffffff;
-  border: 1px solid #1B5E20;
+  border: 1px solid #D4AF37;
 }
 .btn-themecolor:hover,
 .btn-themecolor.disabled:hover {
-  background: #145218;
-  border: 1px solid #145218;
+  background: #c9a130;
+  border: 1px solid #c9a130;
   color: #ffffff;
 }
 .btn-themecolor.active, .btn-themecolor:focus,
 .btn-themecolor.disabled.active,
 .btn-themecolor.disabled:focus {
-  background: #D4AF37;
-  border-color: #D4AF37;
+  background: #1B5E20;
+  border-color: #1B5E20;
 }
 
-/* Primary buttons */
+/* Primary buttons - Gold */
 .btn-primary {
-  background-color: #1B5E20 !important;
-  border-color: #1B5E20 !important;
+  background-color: #D4AF37 !important;
+  border-color: #D4AF37 !important;
   color: #fff !important;
 }
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
-  background-color: #145218 !important;
-  border-color: #145218 !important;
+  background-color: #c9a130 !important;
+  border-color: #c9a130 !important;
 }
 
-/* Success buttons */
+/* Success buttons - Green (for confirm/approve actions) */
 .btn-success {
   background-color: #1B5E20 !important;
   border-color: #1B5E20 !important;
@@ -233,17 +235,17 @@ a.link:hover, a.link:focus {
   border-color: #145218 !important;
 }
 
-/* Dark buttons override */
+/* Dark buttons - Gold */
 .btn-dark {
-  background-color: #1B5E20 !important;
-  border-color: #1B5E20 !important;
+  background-color: #D4AF37 !important;
+  border-color: #D4AF37 !important;
 }
 .btn-dark:hover {
-  background-color: #145218 !important;
-  border-color: #145218 !important;
+  background-color: #c9a130 !important;
+  border-color: #c9a130 !important;
 }
 
-/* Info buttons to gold accent */
+/* Info buttons - Gold */
 .btn-info {
   background-color: #D4AF37 !important;
   border-color: #D4AF37 !important;

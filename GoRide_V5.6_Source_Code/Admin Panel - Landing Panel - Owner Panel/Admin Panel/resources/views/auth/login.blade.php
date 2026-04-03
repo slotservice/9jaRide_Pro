@@ -44,12 +44,13 @@
         background-color: #1B5E20;
     }
     .btn-dark, .btn-primary {
-        background-color: #1B5E20 !important;
-        border-color: #1B5E20 !important;
+        background-color: #D4AF37 !important;
+        border-color: #D4AF37 !important;
+        color: #fff !important;
     }
     .btn-dark:hover, .btn-primary:hover {
-        background-color: #145218 !important;
-        border-color: #145218 !important;
+        background-color: #c9a130 !important;
+        border-color: #c9a130 !important;
     }
 </style>
 <section id="wrapper">
