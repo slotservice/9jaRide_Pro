@@ -222,12 +222,14 @@ foreach ($countries as $keycountry => $valuecountry) {
                         </div>
                     </div>
                     
-                    <div class="mt-2 text-center">  
+                    @if(env('GOOGLE_CLIENT_ID'))
+                    <div class="mt-2 text-center">
                         <div id="googleBtn"></div>
                     </div>
                     <div class="or-line mb-4 ">
-                        <span>{{trans('lang.or')}}</span>                                
+                        <span>{{trans('lang.or')}}</span>
                     </div>
+                    @endif
                     <a href="{{ route('register.phone') }}"
                         class="btn btn-dark btn-lg btn-block text-uppercase waves-effect waves-light btn btn-primary"
                         id="signup_phone">
