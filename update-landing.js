@@ -13,29 +13,33 @@ async function update() {
   });
 
   const landingHTML = `<div style="font-family:Poppins,sans-serif;">
-    <section style="position:relative;overflow:hidden;max-height:500px;">
-      <img src="${BASE}/img2.jpeg" style="width:100%;height:auto;display:block;object-fit:cover;max-height:500px;" alt="Welcome to 9jaRide Pro">
+
+    <!-- HERO: img2 is 1280x995 - center it, never stretch beyond natural size -->
+    <section style="background:#e8f5e9;text-align:center;padding:0;">
+      <img src="${BASE}/img2.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin:0 auto;" alt="Welcome to 9jaRide Pro">
     </section>
 
-    <section style="background:#0F2B15;max-height:300px;overflow:hidden;">
-      <img src="${BASE}/img1.jpeg" style="width:100%;height:auto;display:block;object-fit:cover;max-height:300px;" alt="9jaRide Pro x OFMECH Partnership">
+    <!-- PARTNERSHIP: img1 is 1280x576 - wide banner, center it -->
+    <section style="background:#0F2B15;text-align:center;padding:0;">
+      <img src="${BASE}/img1.jpeg" style="max-width:1280px;width:100%;height:auto;display:block;margin:0 auto;" alt="9jaRide Pro x OFMECH Partnership">
     </section>
 
+    <!-- FEATURES -->
     <section id="features" style="padding:60px 30px;background:#f5f7f5;">
       <h2 style="text-align:center;color:#1B5E20;margin-bottom:15px;font-size:32px;font-weight:700;">Why Choose 9jaRide Pro?</h2>
       <p style="text-align:center;color:#666;margin-bottom:40px;font-size:16px;">Your Trusted Journey Partner</p>
-      <div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;max-width:1100px;margin:0 auto;">
-        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:280px;text-align:center;border-top:3px solid #D4AF37;">
+      <div style="display:flex;justify-content:center;gap:30px;flex-wrap:wrap;max-width:1000px;margin:0 auto;">
+        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;">
           <div style="font-size:40px;margin-bottom:15px;">&#128176;</div>
           <h3 style="color:#1B5E20;margin-bottom:10px;">Competitive Bidding</h3>
           <p style="color:#666;line-height:1.6;">Drivers bid on your ride request. You choose the best price and highest-rated driver.</p>
         </div>
-        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:280px;text-align:center;border-top:3px solid #D4AF37;">
+        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;">
           <div style="font-size:40px;margin-bottom:15px;">&#128205;</div>
           <h3 style="color:#1B5E20;margin-bottom:10px;">Real-time Tracking</h3>
           <p style="color:#666;line-height:1.6;">Track your driver live on the map from pickup to destination. Stay informed every step.</p>
         </div>
-        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:280px;text-align:center;border-top:3px solid #D4AF37;">
+        <div style="background:#fff;padding:35px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.08);flex:1;min-width:260px;max-width:320px;text-align:center;border-top:3px solid #D4AF37;">
           <div style="font-size:40px;margin-bottom:15px;">&#128274;</div>
           <h3 style="color:#1B5E20;margin-bottom:10px;">Safe &amp; Secure</h3>
           <p style="color:#666;line-height:1.6;">Guardian AI safety, panic button, trip monitoring, and vehicle kill switch for maximum security.</p>
@@ -43,6 +47,7 @@ async function update() {
       </div>
     </section>
 
+    <!-- HOW IT WORKS -->
     <section style="padding:60px 30px;background:#1B5E20;text-align:center;">
       <h2 style="color:#D4AF37;margin-bottom:40px;font-size:32px;">How It Works</h2>
       <div style="display:flex;justify-content:center;gap:50px;flex-wrap:wrap;max-width:900px;margin:0 auto;">
@@ -64,10 +69,11 @@ async function update() {
       </div>
     </section>
 
+    <!-- ABOUT: img3 is 1280x995 - use at natural size, side by side with text -->
     <section id="about" style="padding:60px 30px;background:#fff;">
       <div style="display:flex;gap:40px;flex-wrap:wrap;max-width:1100px;margin:0 auto;align-items:center;">
-        <div style="flex:1;min-width:300px;">
-          <img src="${BASE}/img3.jpeg" style="width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);" alt="Accreditation Point">
+        <div style="flex:1;min-width:300px;max-width:500px;">
+          <img src="${BASE}/img3.jpeg" style="max-width:500px;width:100%;height:auto;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);" alt="Accreditation Point">
         </div>
         <div style="flex:1;min-width:300px;">
           <h2 style="color:#1B5E20;margin-bottom:15px;font-size:28px;">About 9jaRide Pro</h2>
@@ -78,12 +84,13 @@ async function update() {
       </div>
     </section>
 
-    <section style="padding:0;background:#f5f7f5;">
-      <div style="display:flex;gap:0;flex-wrap:wrap;max-width:1200px;margin:0 auto;">
-        <div style="flex:1;min-width:300px;">
-          <img src="${BASE}/img4.jpeg" style="width:100%;height:100%;object-fit:cover;" alt="OFMECH and 9jaRide Pro">
+    <!-- VISION: img4 is 450x1105 (tall narrow) - use at natural width, don't stretch -->
+    <section style="padding:60px 30px;background:#f5f7f5;">
+      <div style="display:flex;gap:40px;flex-wrap:wrap;max-width:1100px;margin:0 auto;align-items:center;">
+        <div style="flex:0 0 auto;">
+          <img src="${BASE}/img4.jpeg" style="width:300px;height:auto;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);" alt="OFMECH and 9jaRide Pro">
         </div>
-        <div style="flex:2;min-width:350px;padding:60px 40px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="flex:1;min-width:300px;">
           <h2 style="color:#1B5E20;margin-bottom:20px;font-size:28px;">Our Vision</h2>
           <p style="color:#666;line-height:1.8;font-size:15px;margin-bottom:20px;">When we come together we unlock endless possibilities and create solutions that drive us all forward.</p>
           <div style="display:flex;gap:20px;flex-wrap:wrap;">
@@ -104,16 +111,18 @@ async function update() {
       </div>
     </section>
 
+    <!-- EVENT: img5 is 1280x1072 - constrain to 550px max -->
     <section id="event" style="padding:60px 30px;background:#0F2B15;text-align:center;">
       <h2 style="color:#D4AF37;margin-bottom:30px;font-size:28px;">Upcoming Event</h2>
-      <div style="max-width:600px;margin:0 auto;">
-        <img src="${BASE}/img5.jpeg" style="width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.3);" alt="Demo Presentation">
+      <div style="max-width:550px;margin:0 auto;">
+        <img src="${BASE}/img5.jpeg" style="max-width:550px;width:100%;height:auto;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.3);" alt="Demo Presentation">
         <p style="color:rgba(255,255,255,0.7);margin-top:20px;font-size:15px;">Join us for the official demo presentation of 9jaRide Pro</p>
         <p style="color:#D4AF37;font-weight:600;font-size:18px;margin-top:10px;">Saturday, 11th April 2026 | 9:00 AM</p>
         <p style="color:rgba(255,255,255,0.7);font-size:14px;">NUT Hall, Agidingbi Primary School, 51 Lateef Jakande Road, Ikeja, Lagos State</p>
       </div>
     </section>
 
+    <!-- CONTACT -->
     <section id="contact" style="padding:60px 30px;background:#fff;text-align:center;">
       <h2 style="color:#1B5E20;margin-bottom:20px;font-size:28px;">Get In Touch</h2>
       <p style="color:#666;font-size:16px;margin-bottom:10px;">Ready to ride with us?</p>
