@@ -82,7 +82,7 @@ class NotificationService {
         handleMessageClick(payload: message?.data);
       }
     });
-    await FirebaseMessaging.instance.subscribeToTopic("goRide_driver");
+    await FirebaseMessaging.instance.subscribeToTopic("njaridepro_driver");
   }
 
   Future<void> handleMessageClick({required dynamic payload}) async {
@@ -143,8 +143,8 @@ class NotificationService {
 
       AndroidNotificationChannel channel = const AndroidNotificationChannel(
         '0',
-        'goRide-driver',
-        description: 'Show GoRide Notification',
+        'njaridepro-driver',
+        description: 'Show 9jaRide Pro Notification',
         importance: Importance.max,
       );
       AndroidNotificationDetails notificationDetails =

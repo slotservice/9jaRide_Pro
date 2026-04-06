@@ -50,24 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',
-    messagingSenderId: 'YOUR_ANDROID_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_ANDROID_PROJECT_ID',
-    databaseURL: 'YOUR_ANDROID_DATABASE_URL',
-    storageBucket: 'YOUR_ANDROID_STORAGE_BUCKET',
+    apiKey: 'AIzaSyAHhhjNYv11qdDr6UzlW9fr_Jmd5zC_4sU',
+    appId: '1:872495882111:web:5e355c8ce44445359e044a',
+    messagingSenderId: '872495882111',
+    projectId: 'jaride-pro',
+    databaseURL: 'https://jaride-pro-default-rtdb.firebaseio.com',
+    storageBucket: 'jaride-pro.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY',
-    appId: 'YOUR_IOS_APP_ID',
-    messagingSenderId: 'YOUR_IOS_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_IOS_PROJECT_ID',
-    databaseURL: 'YOUR_IOS_DATABASE_URL',
-    storageBucket: 'YOUR_IOS_STORAGE_BUCKET',
-    androidClientId: 'YOUR_ANDROID_CLIENT_ID',
-    iosClientId: 'YOUR_IOS_CLIENT_ID',
-    iosBundleId: 'YOUR_IOS_BUNDLE_ID',
+    apiKey: 'AIzaSyAHhhjNYv11qdDr6UzlW9fr_Jmd5zC_4sU',
+    appId: '1:872495882111:web:5e355c8ce44445359e044a',
+    messagingSenderId: '872495882111',
+    projectId: 'jaride-pro',
+    databaseURL: 'https://jaride-pro-default-rtdb.firebaseio.com',
+    storageBucket: 'jaride-pro.firebasestorage.app',
+    iosBundleId: 'com.njaridepro.customer',
   );
 
 }

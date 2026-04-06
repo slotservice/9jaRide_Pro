@@ -69,7 +69,7 @@ class IntercityPaymentOrderController extends GetxController {
         paymentModel.value = value;
 
         Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
-        Stripe.merchantIdentifier = 'GoRide';
+        Stripe.merchantIdentifier = '9jaRide Pro';
         Stripe.instance.applySettings();
         setRef();
         selectedPaymentMethod.value = orderModel.value.paymentType.toString();
@@ -237,7 +237,7 @@ class IntercityPaymentOrderController extends GetxController {
                     primary: AppColors.lightprimary,
                   ),
                 ),
-                merchantDisplayName: 'GoRide'));
+                merchantDisplayName: '9jaRide Pro'));
         displayStripePaymentSheet(amount: amount);
       }
     } catch (e, s) {
@@ -597,7 +597,7 @@ class IntercityPaymentOrderController extends GetxController {
     var options = {
       'key': paymentModel.value.razorpay!.razorpayKey,
       'amount': amount * 100,
-      'name': 'GoRide',
+      'name': '9jaRide Pro',
       'order_id': orderId,
       "currency": "INR",
       'description': 'wallet Topup',

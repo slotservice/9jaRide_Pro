@@ -69,9 +69,9 @@ class Constant {
   static const String rideHold = "Ride Hold";
   static const String rideHoldAccepted = "Ride Hold Accepted";
 
-  static String globalUrl = "https://goride.siswebapp.com/";
+  static String globalUrl = "http://148.230.120.40/";
   static const userPlaceHolder =
-      "https://firebasestorage.googleapis.com/v0/b/goride-1a752.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115";
+      "https://firebasestorage.googleapis.com/v0/b/jaride-pro.firebasestorage.app/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media";
 
   static Position? currentLocation;
   static String? country;

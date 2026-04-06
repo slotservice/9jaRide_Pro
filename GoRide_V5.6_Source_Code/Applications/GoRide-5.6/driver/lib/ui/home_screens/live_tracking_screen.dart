@@ -48,7 +48,7 @@ class LiveTrackingScreen extends StatelessWidget {
                       children: [
                         flutterMap.TileLayer(
                           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          userAgentPackageName: Platform.isAndroid ? 'com.goride.driver' : 'com.goride.driver',
+                          userAgentPackageName: Platform.isAndroid ? 'com.njaridepro.driver' : 'com.njaridepro.driver',
                         ),
                         flutterMap.MarkerLayer(
                           markers: [

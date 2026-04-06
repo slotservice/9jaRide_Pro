@@ -81,10 +81,10 @@ class Constant {
   static String? customerType = "customer";
   static String ownerType = "owner";
 
-  static String globalUrl = "https://goride.siswebapp.com/";
+  static String globalUrl = "http://148.230.120.40/";
 
   static const userPlaceHolder =
-      "https://firebasestorage.googleapis.com/v0/b/goride-1a752.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115";
+      "https://firebasestorage.googleapis.com/v0/b/jaride-pro.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115";
 
   static Widget loader({double strokeWidth = 4.0, required bool isDarkTheme}) {
     // final themeChange = Provider.of<DarkThemeProvider>(context);

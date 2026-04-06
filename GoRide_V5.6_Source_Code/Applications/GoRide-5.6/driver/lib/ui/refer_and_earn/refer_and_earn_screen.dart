@@ -90,7 +90,7 @@ class ReferralScreen extends StatelessWidget {
                                       height: 5,
                                     ),
                                     Text(
-                                      "Invite GoRide to sign up using your link and you’ll get ${Constant.amountShow(amount: Constant.referralDriverAmount.toString())}  ".tr,
+                                      "Invite 9jaRide Pro to sign up using your link and you’ll get ${Constant.amountShow(amount: Constant.referralDriverAmount.toString())}  ".tr,
                                       style: GoogleFonts.poppins(fontWeight: FontWeight.w200),
                                     ),
                                     const SizedBox(
@@ -244,8 +244,8 @@ class ReferralScreen extends StatelessWidget {
   Future<void> share(ReferralController controller) async {
     ShowToastDialog.closeLoader();
     await Share.share(
-      subject: 'GoRide'.tr,
-      'Hey there, thanks for choosing GoRide. Hope you love our product. If you do, share it with your friends using code ${controller.referralModel.value.referralCode.toString()} and get ${Constant.amountShow(amount: Constant.referralDriverAmount)}.'
+      subject: '9jaRide Pro'.tr,
+      'Hey there, thanks for choosing 9jaRide Pro. Hope you love our product. If you do, share it with your friends using code ${controller.referralModel.value.referralCode.toString()} and get ${Constant.amountShow(amount: Constant.referralDriverAmount)}.'
           .tr,
     );
   }

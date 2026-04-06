@@ -1,7 +1,7 @@
 const Map<String, String> arAR = {
-  'GoRide': 'جو رايد',
+  '9jaRide Pro': 'جو رايد',
   "Sign up": "إنشاء حساب",
-  "Create your account to start using GoRide": "قم بإنشاء حسابك لبدء استخدام جو رايد",
+  "Create your account to start using 9jaRide Pro": "قم بإنشاء حسابك لبدء استخدام جو رايد",
   "Full name": "الاسم الكامل",
   "Phone number": "رقم الهاتف",
   "Email": "البريد الإلكتروني",
@@ -166,12 +166,12 @@ const Map<String, String> arAR = {
   "Invite Friend & Businesses": "ادعُ الأصدقاء والأعمال",
   "Earn": "اكسب",
   "each": "لكل",
-  "Invite GoRide to sign up using your link and you’ll get": "ادعُ الآخرين للتسجيل في جو رايد باستخدام رابطك وستحصل على",
+  "Invite 9jaRide Pro to sign up using your link and you’ll get": "ادعُ الآخرين للتسجيل في جو رايد باستخدام رابطك وستحصل على",
   "Invite a Friend": "ادعُ صديقًا",
   "They register": "يسجلون",
   "Get Reward to complete first order": "احصل على مكافأة عند إكمال أول طلب",
   "REFER FRIEND": "أوصِ بصديق",
-  'Hey there, thanks for choosing GoRide. Hope you love our product. If you do, share it with your friends using code and get.':
+  'Hey there, thanks for choosing 9jaRide Pro. Hope you love our product. If you do, share it with your friends using code and get.':
       'مرحبًا، شكرًا لاختيارك جو رايد. نأمل أن يعجبك منتجنا. إذا أعجبك، شاركه مع أصدقائك باستخدام الكود واحصل على مكافأة.',
   'Rate for': 'السعر لـ',
   'Comment..': 'تعليق..',

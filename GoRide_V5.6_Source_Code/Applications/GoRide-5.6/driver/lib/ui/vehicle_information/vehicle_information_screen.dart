@@ -97,7 +97,7 @@ class VehicleInformationScreen extends StatelessWidget {
                                                         width: Responsive.width(18, context),
                                                         placeholder: (context, url) => Constant.loader(isDarkTheme: themeChange.getThem()),
                                                         errorWidget: (context, url, error) => Image.network(
-                                                            'https://firebasestorage.googleapis.com/v0/b/goride-1a752.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115'),
+                                                            'https://firebasestorage.googleapis.com/v0/b/jaride-pro.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115'),
                                                       ),
                                                     ),
                                                   ),

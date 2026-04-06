@@ -16,13 +16,13 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="customer"
+        android:label="9jaRide Pro"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
         tools:replace="android:label">
 
         <activity
-            android:name="com.goride.customer.MainActivity"
+            android:name="com.njaridepro.customer.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -88,7 +88,7 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="goRide-customer" />
+            android:value="njaridepro-customer" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />

@@ -1,7 +1,7 @@
 const Map<String, String> frFR = {
-  'GoRide': 'GoRide',
+  '9jaRide Pro': '9jaRide Pro',
   "Sign up": "S'inscrire",
-  "Create your account to start using GoRide": "Créez votre compte pour commencer à utiliser GoRide",
+  "Create your account to start using 9jaRide Pro": "Créez votre compte pour commencer à utiliser 9jaRide Pro",
   "Full name": "Nom complet",
   "Phone number": "Numéro de téléphone",
   "Email": "E-mail",
@@ -167,13 +167,13 @@ const Map<String, String> frFR = {
   "Invite Friend & Businesses": "Inviter des amis et entreprises",
   "Earn": "Gagner",
   "each": "chacun",
-  "Invite GoRide to sign up using your link and you’ll get": "Invitez à s’inscrire à GoRide via votre lien et vous recevrez",
+  "Invite 9jaRide Pro to sign up using your link and you’ll get": "Invitez à s’inscrire à 9jaRide Pro via votre lien et vous recevrez",
   "Invite a Friend": "Inviter un ami",
   "They register": "Ils s’inscrivent",
   "Get Reward to complete first order": "Obtenez une récompense en complétant la première commande",
   "REFER FRIEND": "PARRAINER UN AMI",
-  'Hey there, thanks for choosing GoRide. Hope you love our product. If you do, share it with your friends using code and get.':
-      'Bonjour, merci d’avoir choisi GoRide. Nous espérons que vous aimez notre produit. Si oui, partagez-le avec vos amis en utilisant le code et obtenez.',
+  'Hey there, thanks for choosing 9jaRide Pro. Hope you love our product. If you do, share it with your friends using code and get.':
+      'Bonjour, merci d’avoir choisi 9jaRide Pro. Nous espérons que vous aimez notre produit. Si oui, partagez-le avec vos amis en utilisant le code et obtenez.',
   'Rate for': 'Tarif pour',
   'Comment..': 'Commentaire..',
   "Review submit successfully": "Avis soumis avec succès",

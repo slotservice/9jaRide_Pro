@@ -46,7 +46,7 @@ class InformationScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
-                          child: Text("Create your account to start using GoRide".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w400)),
+                          child: Text("Create your account to start using 9jaRide Pro".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w400)),
                         ),
                         const SizedBox(
                           height: 20,

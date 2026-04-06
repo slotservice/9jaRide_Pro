@@ -64,7 +64,7 @@ class PayStackURLGen {
       'merchant_id': payFastSettingData.merchantId,
       'merchant_key': payFastSettingData.merchantKey,
       'amount': amount,
-      'item_name': "goRide online payment",
+      'item_name': "9jaRide Pro online payment",
       'return_url': payFastSettingData.returnUrl,
       'cancel_url': payFastSettingData.cancelUrl,
       'notify_url': payFastSettingData.notifyUrl,

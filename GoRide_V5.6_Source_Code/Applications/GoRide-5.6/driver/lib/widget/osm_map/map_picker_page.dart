@@ -38,7 +38,7 @@ class MapPickerPage extends StatelessWidget {
                 TileLayer(
                   urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: const ['a', 'b', 'c'],
-                  userAgentPackageName: Platform.isAndroid ? 'com.goride.driver' : 'com.goride.driver',
+                  userAgentPackageName: Platform.isAndroid ? 'com.njaridepro.driver' : 'com.njaridepro.driver',
                 ),
                 MarkerLayer(
                   markers: controller.pickedPlace.value != null

@@ -156,7 +156,7 @@ class DashBoardScreen extends StatelessWidget {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('To start earning with GoRide you need to fill in your personal information'.tr),
+                Text('To start earning with 9jaRide Pro you need to fill in your personal information'.tr),
               ],
             ),
           ),
