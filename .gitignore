@@ -30,3 +30,6 @@ Thumbs.db
 **/.packages
 **/.pub-cache/
 **/.pub/
+
+# APK builds
+*.apk

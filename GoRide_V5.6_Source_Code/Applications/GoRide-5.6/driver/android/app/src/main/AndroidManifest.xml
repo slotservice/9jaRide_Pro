@@ -52,7 +52,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0" />
 
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask"
@@ -79,16 +79,16 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="goRide-customer" />
+            android:value="njaridepro-driver" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
 
         <service
-            android:name="com.example.app.backgroundService"
+            android:name="com.njaridepro.driver.backgroundService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.app.START_BACKGROUND" />
+                <action android:name="com.njaridepro.driver.START_BACKGROUND" />
             </intent-filter>
         </service>
         <receiver

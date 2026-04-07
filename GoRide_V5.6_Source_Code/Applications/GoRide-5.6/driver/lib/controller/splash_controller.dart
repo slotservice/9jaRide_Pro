@@ -21,61 +21,68 @@ class SplashController extends GetxController {
   }
 
   Future<void> redirectScreen() async {
-    if (await FireStoreUtils.isMaintenanceMode() == true) {
-      Get.offAll(() => MaintenanceModeScreen());
-      return;
-    } else {
-      if (Preferences.getBoolean(Preferences.notificationPlayload) == true) {
-        await Preferences.setBoolean(Preferences.notificationPlayload, false);
-        log("Preferences.getBoolean(Preferences.notificationPlayload) :::::: ${Preferences.getBoolean(Preferences.notificationPlayload)}");
+    try {
+      if (await FireStoreUtils.isMaintenanceMode() == true) {
+        Get.offAll(() => MaintenanceModeScreen());
+        return;
       } else {
-        if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
-          Get.offAll(const OnBoardingScreen());
+        if (Preferences.getBoolean(Preferences.notificationPlayload) == true) {
+          await Preferences.setBoolean(Preferences.notificationPlayload, false);
+          log("Preferences.getBoolean(Preferences.notificationPlayload) :::::: ${Preferences.getBoolean(Preferences.notificationPlayload)}");
         } else {
-          bool isLogin = await FireStoreUtils.isLogin();
-          if (isLogin == true) {
-            await FireStoreUtils.getDriverProfile(FirebaseAuth.instance.currentUser!.uid).then(
-              (value) async {
-                if (value != null) {
-                  DriverUserModel userModel = value;
-                  bool isPlanExpire = false;
-                  if (userModel.subscriptionPlan?.id != null) {
-                    if (userModel.subscriptionExpiryDate == null) {
-                      if (userModel.subscriptionPlan?.expiryDay == '-1') {
-                        isPlanExpire = false;
+          if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
+            Get.offAll(const OnBoardingScreen());
+          } else {
+            bool isLogin = await FireStoreUtils.isLogin();
+            if (isLogin == true && FirebaseAuth.instance.currentUser != null) {
+              await FireStoreUtils.getDriverProfile(FirebaseAuth.instance.currentUser!.uid).then(
+                (value) async {
+                  if (value != null) {
+                    DriverUserModel userModel = value;
+                    bool isPlanExpire = false;
+                    if (userModel.subscriptionPlan?.id != null) {
+                      if (userModel.subscriptionExpiryDate == null) {
+                        if (userModel.subscriptionPlan?.expiryDay == '-1') {
+                          isPlanExpire = false;
+                        } else {
+                          isPlanExpire = true;
+                        }
                       } else {
-                        isPlanExpire = true;
+                        DateTime expiryDate = userModel.subscriptionExpiryDate!.toDate();
+                        isPlanExpire = expiryDate.isBefore(DateTime.now());
                       }
                     } else {
-                      DateTime expiryDate = userModel.subscriptionExpiryDate!.toDate();
-                      isPlanExpire = expiryDate.isBefore(DateTime.now());
+                      isPlanExpire = true;
+                    }
+                    if ((userModel.subscriptionPlanId == null || isPlanExpire == true) && userModel.ownerId == null) {
+                      if (Constant.adminCommission?.isEnabled == false && Constant.isSubscriptionModelApplied == false) {
+                        Get.offAll(const DashBoardScreen());
+                      } else {
+                        Get.offAll(const SubscriptionListScreen(), arguments: {"isShow": true});
+                      }
+                    } else {
+                      if (userModel.ownerId != null && userModel.isEnabled == false) {
+                        await FirebaseAuth.instance.signOut();
+                        ShowToastDialog.showToast('This account has been disabled. Please reach out to the owner'.tr);
+                        Get.offAll(const LoginScreen());
+                      } else {
+                        Get.offAll(const DashBoardScreen());
+                      }
                     }
                   } else {
-                    isPlanExpire = true;
+                    Get.offAll(const LoginScreen());
                   }
-                  if ((userModel.subscriptionPlanId == null || isPlanExpire == true) && userModel.ownerId == null) {
-                    if (Constant.adminCommission?.isEnabled == false && Constant.isSubscriptionModelApplied == false) {
-                      Get.offAll(const DashBoardScreen());
-                    } else {
-                      Get.offAll(const SubscriptionListScreen(), arguments: {"isShow": true});
-                    }
-                  } else {
-                    if (userModel.ownerId != null && userModel.isEnabled == false) {
-                      await FirebaseAuth.instance.signOut();
-                      ShowToastDialog.showToast('This account has been disabled. Please reach out to the owner'.tr);
-                      Get.offAll(const LoginScreen());
-                    } else {
-                      Get.offAll(const DashBoardScreen());
-                    }
-                  }
-                }
-              },
-            );
-          } else {
-            Get.offAll(const LoginScreen());
+                },
+              );
+            } else {
+              Get.offAll(const LoginScreen());
+            }
           }
         }
       }
+    } catch (e) {
+      log("Splash redirect error: $e");
+      Get.offAll(const LoginScreen());
     }
   }
 }

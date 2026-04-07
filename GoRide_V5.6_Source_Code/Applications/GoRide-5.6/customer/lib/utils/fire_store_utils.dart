@@ -70,26 +70,39 @@ class FireStoreUtils {
   }
 
   static Future<void> getSettings() async {
-    await fireStore.collection(CollectionName.settings).doc("globalValue").get().then((value) async {
-      if (value.exists) {
-        Constant.defaultCountryCode = value.data()?["defaultCountryCode"];
-        AppColors.darksecondprimary = Color(int.parse(value.data()!['app_customer_color'].replaceFirst("#", "0xff")));
-        AppColors.lightsecondprimary = Color(int.parse(value.data()!['app_customer_light_color'].replaceFirst("#", "0xff")));
-        Constant.distanceType = value.data()!["distanceType"];
-        Constant.radius = value.data()!["radius"];
-        Constant.mapType = value.data()!["mapType"];
-        Constant.selectedMapType = value.data()!["selectedMapType"];
-        Constant.driverLocationUpdate = value.data()!["driverLocationUpdate"];
-        Constant.regionCode = value.data()!["regionCode"];
-        Constant.regionCountry = value.data()!["regionCountry"];
-      }
-    });
+    try {
+      await fireStore.collection(CollectionName.settings).doc("globalValue").get().then((value) async {
+        if (value.exists && value.data() != null) {
+          var data = value.data()!;
+          Constant.defaultCountryCode = data["defaultCountryCode"] ?? '';
+          if (data['app_customer_color'] != null) {
+            AppColors.darksecondprimary = Color(int.parse(data['app_customer_color'].replaceFirst("#", "0xff")));
+          }
+          if (data['app_customer_light_color'] != null) {
+            AppColors.lightsecondprimary = Color(int.parse(data['app_customer_light_color'].replaceFirst("#", "0xff")));
+          }
+          Constant.distanceType = data["distanceType"] ?? "km";
+          Constant.radius = data["radius"] ?? "10";
+          Constant.mapType = data["mapType"] ?? "";
+          Constant.selectedMapType = data["selectedMapType"] ?? 0;
+          Constant.driverLocationUpdate = data["driverLocationUpdate"] ?? 10;
+          Constant.regionCode = data["regionCode"] ?? "";
+          Constant.regionCountry = data["regionCountry"] ?? "";
+        }
+      });
+    } catch (e) {
+      log("getSettings globalValue error: $e");
+    }
 
-    await fireStore.collection(CollectionName.settings).doc("globalKey").get().then((value) {
-      if (value.exists) {
-        Constant.mapAPIKey = value.data()!["googleMapKey"];
-      }
-    });
+    try {
+      await fireStore.collection(CollectionName.settings).doc("globalKey").get().then((value) {
+        if (value.exists && value.data() != null) {
+          Constant.mapAPIKey = value.data()!["googleMapKey"] ?? '';
+        }
+      });
+    } catch (e) {
+      log("getSettings globalKey error: $e");
+    }
 
     await fireStore.collection(CollectionName.settings).doc("notification_setting").get().then((value) {
       if (value.exists) {
@@ -155,7 +168,7 @@ class FireStoreUtils {
   }
 
   static String getCurrentUid() {
-    return FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseAuth.instance.currentUser?.uid ?? '';
   }
 
   static Future updateReferralAmount(OrderModel orderModel) async {

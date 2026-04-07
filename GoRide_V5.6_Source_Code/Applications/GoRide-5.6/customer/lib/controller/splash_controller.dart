@@ -16,25 +16,30 @@ class SplashController extends GetxController {
   }
 
   Future<void> redirectScreen() async {
-    if (await FireStoreUtils.isMaintenanceMode() == true) {
-      Get.offAll(() => MaintenanceModeScreen());
-      return;
-    } else {
-      if (Preferences.getBoolean(Preferences.notificationPlayload) == true) {
-        await Preferences.setBoolean(Preferences.notificationPlayload, false);
-        log("Preferences.getBoolean(Preferences.notificationPlayload) :::::: ${Preferences.getBoolean(Preferences.notificationPlayload)}");
+    try {
+      if (await FireStoreUtils.isMaintenanceMode() == true) {
+        Get.offAll(() => MaintenanceModeScreen());
+        return;
       } else {
-        if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
-          Get.offAll(const OnBoardingScreen());
+        if (Preferences.getBoolean(Preferences.notificationPlayload) == true) {
+          await Preferences.setBoolean(Preferences.notificationPlayload, false);
+          log("Preferences.getBoolean(Preferences.notificationPlayload) :::::: ${Preferences.getBoolean(Preferences.notificationPlayload)}");
         } else {
-          bool isLogin = await FireStoreUtils.isLogin();
-          if (isLogin == true) {
-            Get.offAll(const DashBoardScreen());
+          if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
+            Get.offAll(const OnBoardingScreen());
           } else {
-            Get.offAll(const LoginScreen());
+            bool isLogin = await FireStoreUtils.isLogin();
+            if (isLogin == true) {
+              Get.offAll(const DashBoardScreen());
+            } else {
+              Get.offAll(const LoginScreen());
+            }
           }
         }
       }
+    } catch (e) {
+      log("Splash redirect error: $e");
+      Get.offAll(const LoginScreen());
     }
   }
 }

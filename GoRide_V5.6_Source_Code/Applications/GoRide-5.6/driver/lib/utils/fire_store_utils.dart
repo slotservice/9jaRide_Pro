@@ -70,30 +70,43 @@ class FireStoreUtils {
   }
 
   static Future<void> getGoogleAPIKey() async {
-    await fireStore.collection(CollectionName.settings).doc("globalKey").get().then((value) {
-      if (value.exists) {
-        Constant.mapAPIKey = value.data()!["googleMapKey"];
-      }
-    });
+    try {
+      await fireStore.collection(CollectionName.settings).doc("globalKey").get().then((value) {
+        if (value.exists && value.data() != null) {
+          Constant.mapAPIKey = value.data()!["googleMapKey"] ?? '';
+        }
+      });
+    } catch (e) {
+      log("getGoogleAPIKey globalKey error: $e");
+    }
 
-    await fireStore.collection(CollectionName.settings).doc("globalValue").get().then((value) {
-      if (value.exists) {
-        Constant.defaultCountryCode = value.data()?["defaultCountryCode"];
-        AppColors.lightsecondprimary = Color(int.parse(value.data()?['app_driver_light_color'].replaceFirst("#", "0xff")));
-        AppColors.darksecondprimary = Color(int.parse(value.data()?['app_driver_color'].replaceFirst("#", "0xff")));
-        Constant.distanceType = value.data()!["distanceType"];
-        Constant.radius = value.data()!["radius"];
-        Constant.minimumAmountToWithdrawal = value.data()!["minimumAmountToWithdrawal"];
-        Constant.minimumDepositToRideAccept = value.data()!["minimumDepositToRideAccept"];
-        Constant.mapType = value.data()!["mapType"];
-        Constant.selectedMapType = value.data()!["selectedMapType"];
-        Constant.driverLocationUpdate = value.data()!["driverLocationUpdate"];
-        Constant.isVerifyDocument = value.data()!["isVerifyDocument"];
-        Constant.isSubscriptionModelApplied = value.data()!["subscription_model"];
-        Constant.regionCode = value.data()!["regionCode"];
-        Constant.regionCountry = value.data()!["regionCountry"];
-      }
-    });
+    try {
+      await fireStore.collection(CollectionName.settings).doc("globalValue").get().then((value) {
+        if (value.exists && value.data() != null) {
+          var data = value.data()!;
+          Constant.defaultCountryCode = data["defaultCountryCode"] ?? '';
+          if (data['app_driver_light_color'] != null) {
+            AppColors.lightsecondprimary = Color(int.parse(data['app_driver_light_color'].replaceFirst("#", "0xff")));
+          }
+          if (data['app_driver_color'] != null) {
+            AppColors.darksecondprimary = Color(int.parse(data['app_driver_color'].replaceFirst("#", "0xff")));
+          }
+          Constant.distanceType = data["distanceType"] ?? "km";
+          Constant.radius = data["radius"] ?? "10";
+          Constant.minimumAmountToWithdrawal = data["minimumAmountToWithdrawal"] ?? "0";
+          Constant.minimumDepositToRideAccept = data["minimumDepositToRideAccept"] ?? "0";
+          Constant.mapType = data["mapType"] ?? "";
+          Constant.selectedMapType = data["selectedMapType"] ?? 0;
+          Constant.driverLocationUpdate = data["driverLocationUpdate"] ?? 10;
+          Constant.isVerifyDocument = data["isVerifyDocument"] ?? false;
+          Constant.isSubscriptionModelApplied = data["subscription_model"] ?? false;
+          Constant.regionCode = data["regionCode"] ?? "";
+          Constant.regionCountry = data["regionCountry"] ?? "";
+        }
+      });
+    } catch (e) {
+      log("getGoogleAPIKey globalValue error: $e");
+    }
 
     await fireStore.collection(CollectionName.settings).doc("notification_setting").get().then((value) {
       if (value.exists) {
@@ -146,7 +159,7 @@ class FireStoreUtils {
   }
 
   static String getCurrentUid() {
-    return FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseAuth.instance.currentUser?.uid ?? '';
   }
 
   static Future<bool> isMaintenanceMode() async {

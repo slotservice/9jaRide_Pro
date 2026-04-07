@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -57,7 +58,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -94,10 +95,10 @@
             android:resource="@mipmap/ic_launcher" />
 
         <service
-            android:name="com.example.app.backgroundService"
+            android:name="com.njaridepro.customer.backgroundService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.app.START_BACKGROUND" />
+                <action android:name="com.njaridepro.customer.START_BACKGROUND" />
             </intent-filter>
         </service>
         <receiver

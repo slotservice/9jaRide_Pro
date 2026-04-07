@@ -16,14 +16,17 @@ import 'utils/Preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseApp firebaseApp = await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  if (currentEnv == FirebaseEnv.defaultDb) {
-    FireStoreUtils.instance.init(firebaseApp);
-  } else {
-    FireStoreUtils.instance.init(firebaseApp, databaseId: 'staging'); // pass databaseId if named DB
+  try {
+    FirebaseApp firebaseApp = await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    if (currentEnv == FirebaseEnv.defaultDb) {
+      FireStoreUtils.instance.init(firebaseApp);
+    } else {
+      FireStoreUtils.instance.init(firebaseApp, databaseId: 'staging');
+    }
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
   }
 
   await Preferences.initPref();

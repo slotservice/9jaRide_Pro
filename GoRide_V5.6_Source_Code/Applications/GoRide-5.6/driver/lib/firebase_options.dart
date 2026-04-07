@@ -50,8 +50,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAHhhjNYv11qdDr6UzlW9fr_Jmd5zC_4sU',
-    appId: '1:872495882111:web:5e355c8ce44445359e044a',
+    apiKey: 'AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0',
+    appId: '1:872495882111:android:3d3a4334bd8fe7fa9e044a',
     messagingSenderId: '872495882111',
     projectId: 'jaride-pro',
     databaseURL: 'https://jaride-pro-default-rtdb.firebaseio.com',

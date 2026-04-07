@@ -23,31 +23,44 @@ class GlobalSettingController extends GetxController {
   }
 
   Future<void> getCurrentCurrency() async {
-    if (Preferences.getString(Preferences.languageCodeKey).toString().isNotEmpty) {
-      LanguageModel languageModel = Constant.getLanguage();
-      LocalizationService().changeLocale(languageModel.code.toString());
-    } else {
-      await FireStoreUtils.getLanguage().then((value) {
-        if (value != null) {
-          List<LanguageModel> languageList = value;
-          if (languageList.where((element) => element.isDefault == true).isNotEmpty) {
-            LanguageModel languageModel = languageList.firstWhere((element) => element.isDefault == true);
-            Preferences.setString(Preferences.languageCodeKey, jsonEncode(languageModel));
-            LocalizationService().changeLocale(languageModel.code.toString());
+    try {
+      if (Preferences.getString(Preferences.languageCodeKey).toString().isNotEmpty) {
+        LanguageModel languageModel = Constant.getLanguage();
+        LocalizationService().changeLocale(languageModel.code.toString());
+      } else {
+        await FireStoreUtils.getLanguage().then((value) {
+          if (value != null) {
+            List<LanguageModel> languageList = value;
+            if (languageList.where((element) => element.isDefault == true).isNotEmpty) {
+              LanguageModel languageModel = languageList.firstWhere((element) => element.isDefault == true);
+              Preferences.setString(Preferences.languageCodeKey, jsonEncode(languageModel));
+              LocalizationService().changeLocale(languageModel.code.toString());
+            }
           }
-        }
-      });
+        });
+      }
+    } catch (e) {
+      log("Language load error: $e");
     }
 
-    await FireStoreUtils.getCurrency().then((value) {
-      if (value != null) {
-        Constant.currencyModel = value;
-      } else {
-        Constant.currencyModel = CurrencyModel(id: "", code: "USD", decimalDigits: 2, enable: true, name: "US Dollar", symbol: "\$", symbolAtRight: false);
-      }
-    });
+    try {
+      await FireStoreUtils.getCurrency().then((value) {
+        if (value != null) {
+          Constant.currencyModel = value;
+        } else {
+          Constant.currencyModel = CurrencyModel(id: "", code: "USD", decimalDigits: 2, enable: true, name: "US Dollar", symbol: "\$", symbolAtRight: false);
+        }
+      });
+    } catch (e) {
+      log("Currency load error: $e");
+      Constant.currencyModel = CurrencyModel(id: "", code: "USD", decimalDigits: 2, enable: true, name: "US Dollar", symbol: "\$", symbolAtRight: false);
+    }
 
-    FireStoreUtils.getGoogleAPIKey();
+    try {
+      await FireStoreUtils.getGoogleAPIKey();
+    } catch (e) {
+      log("Settings load error: $e");
+    }
 
     isLoading.value = false;
     update();

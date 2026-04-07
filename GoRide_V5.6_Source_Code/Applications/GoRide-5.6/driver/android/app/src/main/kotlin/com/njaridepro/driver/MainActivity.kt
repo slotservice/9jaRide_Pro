@@ -1,4 +1,4 @@
-package com.goride.customer
+package com.njaridepro.driver
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
