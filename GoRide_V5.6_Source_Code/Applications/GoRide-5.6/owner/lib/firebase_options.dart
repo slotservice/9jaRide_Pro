@@ -5,14 +5,10 @@ import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, Tar
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
+/// IMPORTANT: com.njaridepro.owner must be registered in Firebase Console
+/// (jaride-pro project) to get the Android App ID.
+/// After registering, replace REGISTER_IN_FIREBASE_CONSOLE with the real App ID
+/// and download the google-services.json to android/app/
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -48,24 +44,25 @@ class DefaultFirebaseOptions {
     }
   }
 
+  // TODO: Register com.njaridepro.owner in Firebase Console (jaride-pro project)
+  // then replace appId value below with the generated Android App ID
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',
-    messagingSenderId: 'YOUR_ANDROID_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_ANDROID_PROJECT_ID',
-    databaseURL: 'YOUR_ANDROID_DATABASE_URL',
-    storageBucket: 'YOUR_ANDROID_STORAGE_BUCKET',
+    apiKey: 'AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0',
+    appId: 'REGISTER_IN_FIREBASE_CONSOLE', // TODO: get from Firebase Console
+    messagingSenderId: '872495882111',
+    projectId: 'jaride-pro',
+    databaseURL: 'https://jaride-pro-default-rtdb.firebaseio.com',
+    storageBucket: 'jaride-pro.firebasestorage.app',
   );
 
+  // TODO: Register com.njaridepro.owner in Firebase Console for iOS as well
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY',
-    appId: 'YOUR_IOS_APP_ID',
-    messagingSenderId: 'YOUR_IOS_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_IOS_PROJECT_ID',
-    databaseURL: 'YOUR_IOS_DATABASE_URL',
-    storageBucket: 'YOUR_IOS_STORAGE_BUCKET',
-    androidClientId: 'YOUR_ANDROID_CLIENT_ID',
-    iosClientId: 'YOUR_IOS_CLIENT_ID',
-    iosBundleId: 'YOUR_IOS_BUNDLE_ID',
+    apiKey: 'AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0',
+    appId: 'REGISTER_IN_FIREBASE_CONSOLE', // TODO: get from Firebase Console
+    messagingSenderId: '872495882111',
+    projectId: 'jaride-pro',
+    databaseURL: 'https://jaride-pro-default-rtdb.firebaseio.com',
+    storageBucket: 'jaride-pro.firebasestorage.app',
+    iosBundleId: 'com.njaridepro.owner',
   );
 }

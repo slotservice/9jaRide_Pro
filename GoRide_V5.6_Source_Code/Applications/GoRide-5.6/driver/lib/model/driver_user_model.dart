@@ -34,6 +34,8 @@ class DriverUserModel {
   Timestamp? subscriptionExpiryDate;
   SubscriptionPlanModel? subscriptionPlan;
   String? ownerId;
+  bool? appLocked;
+  String? lockReason;
 
   DriverUserModel({
     this.isEnabled,
@@ -64,6 +66,8 @@ class DriverUserModel {
     this.subscriptionExpiryDate,
     this.subscriptionPlan,
     this.ownerId,
+    this.appLocked,
+    this.lockReason,
   });
 
   DriverUserModel.fromJson(Map<String, dynamic> json) {
@@ -94,6 +98,8 @@ class DriverUserModel {
     subscriptionExpiryDate = json['subscriptionExpiryDate'];
     subscriptionPlan = json['subscription_plan'] != null ? SubscriptionPlanModel.fromJson(json['subscription_plan']) : null;
     ownerId = json['ownerId'];
+    appLocked = json['appLocked'] ?? false;
+    lockReason = json['lockReason'];
     if (json['serviceName'] != null) {
       serviceName = <LanguageName>[];
       json['serviceName'].forEach((v) {
@@ -137,6 +143,8 @@ class DriverUserModel {
     data['subscriptionExpiryDate'] = subscriptionExpiryDate;
     data['subscription_plan'] = subscriptionPlan?.toJson();
     data['ownerId'] = ownerId;
+    data['appLocked'] = appLocked;
+    data['lockReason'] = lockReason;
     if (serviceName != null) {
       data['serviceName'] = serviceName!.map((v) => v.toJson()).toList();
     }

@@ -1,9 +1,11 @@
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
+import 'package:driver/constant/show_toast_dialog.dart';
 import 'package:driver/controller/dash_board_controller.dart';
 import 'package:driver/model/driver_user_model.dart';
 import 'package:driver/model/order/location_lat_lng.dart';
 import 'package:driver/model/order/positions.dart';
+import 'package:driver/ui/auth_screen/login_screen.dart';
 import 'package:driver/ui/home_screens/accepted_orders.dart';
 import 'package:driver/ui/home_screens/active_order_screen.dart';
 import 'package:driver/ui/home_screens/new_orders_screen.dart';
@@ -11,6 +13,7 @@ import 'package:driver/ui/order_screen/order_screen.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/widget/geoflutterfire/src/geoflutterfire.dart';
 import 'package:driver/widget/geoflutterfire/src/models/point.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
@@ -39,6 +42,15 @@ class HomeController extends GetxController {
     FireStoreUtils.fireStore.collection(CollectionName.driverUsers).doc(FireStoreUtils.getCurrentUid()).snapshots().listen((event) {
       if (event.exists) {
         driverModel.value = DriverUserModel.fromJson(event.data()!);
+        // Kill switch: force logout if admin locks the driver account
+        if (driverModel.value.appLocked == true) {
+          FirebaseAuth.instance.signOut();
+          ShowToastDialog.showToast(
+            'Your account has been locked by admin. Reason: ${driverModel.value.lockReason ?? 'HP payment overdue'}',
+          );
+          Get.offAllNamed('/login');
+          Get.offAll(const LoginScreen());
+        }
       }
     });
 

@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.goride.owner">
+    package="com.njaridepro.owner">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,7 +13,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="owner"
+        android:label="9jaRide Owner"
         android:usesCleartextTraffic="true"
         tools:replace="android:label"
         android:enableOnBackInvokedCallback="true">
@@ -52,7 +52,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0" />
 
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask"
@@ -79,16 +79,16 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="goRide-customer" />
+            android:value="9jaride-owner" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
 
         <service
-            android:name="com.example.app.backgroundService"
+            android:name="com.njaridepro.owner.backgroundService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.app.START_BACKGROUND" />
+                <action android:name="com.njaridepro.owner.START_BACKGROUND" />
             </intent-filter>
         </service>
         <receiver

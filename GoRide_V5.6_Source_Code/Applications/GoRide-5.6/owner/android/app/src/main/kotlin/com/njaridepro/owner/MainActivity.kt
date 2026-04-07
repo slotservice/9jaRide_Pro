@@ -1,4 +1,4 @@
-package com.goride.owner
+package com.njaridepro.owner
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
