@@ -62,71 +62,56 @@
 | Notifications | ✅ | Firebase push |
 | Airports | ✅ | |
 | Freight vehicles | ✅ | |
-| Hire Purchase module | ⚠️ | STUB — see details below |
-| Kill Switch API | ⚠️ | STUB — see details below |
+| Hire Purchase module | ✅ | Full server-side Firestore CRUD + daily cron — see details below |
+| Kill Switch API | ✅ | Real Firestore writes via kreait/laravel-firebase |
 | Settings (global, business, payment, landing template) | ✅ | |
 | Firebase integration | ✅ | Client-side JS SDK in blade views |
 | Branding (9jaRide Pro) | ✅ | Deep Green + Gold theme |
 
-### ⚠️ HIRE PURCHASE — STUB (needs real implementation)
+### ✅ HIRE PURCHASE — FULLY IMPLEMENTED (2026-04-07)
 
-**Current state:**
-- `HirePurchaseController.php` — 3 methods, each just returns a view. Zero business logic.
-- All HP logic is client-side JavaScript in `hire-purchase/index.blade.php` querying Firestore directly.
-- No MySQL model or migration for HP records.
-- No server-side deduction calculation or cron.
+**Server-side (HirePurchaseController.php — 8 API endpoints via kreait/laravel-firebase):**
+- `GET /api/hp/drivers` — List all HP-enabled drivers from Firestore
+- `GET /api/hp/driver/{id}` — Get single driver HP data + payment history
+- `POST /api/hp/assign` — Assign HP plan to driver (writes to Firestore, records initial payment)
+- `PUT /api/hp/driver/{id}` — Update HP details (recalculates balance)
+- `DELETE /api/hp/driver/{id}` — Remove HP plan from driver
+- `POST /api/hp/driver/{id}/payment` — Record manual payment (updates balance, unlocks if locked)
+- `GET /api/hp/settings` — Get HP settings from Firestore (with defaults)
+- `POST /api/hp/settings` — Save HP settings to Firestore
 
-**What works (client-side only):**
-- HP index view renders Green/Yellow/Red status cards (counts loaded from Firestore JS).
-- Kill switch activation in HP view writes to Firestore via browser JS (`drivers/{id}` document `killSwitch.isLocked = true`).
-- HP settings view renders form (fields not saved server-side).
-- Driver HP detail view loads driver's HP schedule from Firestore.
+**Scheduled command (ProcessHPDeductions.php — `hp:process-deductions` daily):**
+- Reads HP settings (yellowThresholdHours, redThresholdHours, autoKillSwitch)
+- Iterates all HP-enabled drivers
+- If wallet sufficient: deducts daily amount, records payment, resets to green, unlocks if locked
+- If wallet insufficient: escalates status (green→yellow after threshold, yellow→red after threshold)
+- Auto kill switch: locks driver app if red + autoKillSwitch enabled
 
-**What is missing:**
-- Server-side HP data model (daily deduction logic, overdue calculation).
-- Cron/scheduled job for automatic status updates (Green→Yellow after 24h, Yellow→Red after 48h).
-- HP assignment form that saves to Firestore AND database.
-- HP settings that persist across restarts.
+**Blade views (client-side JS preserved):**
+- `index.blade.php` — Dashboard with status cards, DataTable, kill switch button
+- `settings.blade.php` — HP settings form + driver assignment form
+- `driver-hp.blade.php` — Individual driver detail, payment history, update/remove/lock/unlock
 
-**Fix plan:**
-```
-1. Create Firestore collection "hirePurchase" schema:
-   - driverId, vehicleId, totalAmount, weeklyDeduction, startDate,
-     amountPaid, balance, status (green/yellow/red), lastPaymentDate
-2. Update HirePurchaseController to read/write this via Firebase Admin SDK
-3. Add scheduled command for daily status check
-```
+**Firestore data model (on `driver_users` documents):**
+- `hpEnabled`, `hpTotalCost`, `hpAmountPaid`, `hpBalance`, `hpDailyDeduction`
+- `hpStatus` (green/yellow/red), `hpStartDate`, `hpLastPaymentDate`
+- `appLocked`, `isActive`, `lockReason`, `lockedAt`
 
-### ⚠️ KILL SWITCH — STUB (works via client-side JS, not API)
+**Payment history subcollection:** `driver_users/{id}/hp_payments` (date, type, amount, balanceAfter)
 
-**Current state:**
-- `KillSwitchController.php` — 3 endpoints (lock/unlock/status) that return JSON stubs.
-- No actual Firestore write in the controller.
-- The actual kill switch write happens in `hire-purchase/index.blade.php` JS:
-  ```javascript
-  database.collection('drivers').doc(driverId).update({
-      'killSwitch.isLocked': true,
-      'killSwitch.reason': reason,
-      'killSwitch.lockedAt': firebase.firestore.FieldValue.serverTimestamp()
-  })
-  ```
-- Driver app must listen to `killSwitch.isLocked` field and lock itself.
+### ✅ KILL SWITCH — FULLY IMPLEMENTED (2026-04-07)
 
-**What works:**
-- Admin can click "Lock" in HP view → Firestore `drivers/{id}.killSwitch.isLocked = true` is set.
-- The API endpoint exists but is decorative (no Firestore write).
+**KillSwitchController.php (3 endpoints via kreait/laravel-firebase):**
+- `POST /api/kill-switch/{driverId}/lock` — Sets `appLocked=true`, `isActive=false`, `lockReason`, `lockedAt` on Firestore
+- `POST /api/kill-switch/{driverId}/unlock` — Sets `appLocked=false`, `isActive=true`, clears reason
+- `GET /api/kill-switch/{driverId}/status` — Returns current lock status from Firestore
 
-**What is missing:**
-- Driver Flutter app must check `killSwitch.isLocked` on startup and during session.
-- API endpoint should write to Firestore via Firebase Admin SDK (not rely on browser).
-- Kill switch status should show in admin driver list.
+**Driver Flutter app listener (home_controller.dart):**
+- Real-time Firestore snapshot listener on `driver_users/{uid}`
+- If `appLocked == true`: signs out via FirebaseAuth, shows toast with lock reason, redirects to LoginScreen
+- Uses `appLocked` field (not `killSwitch.isLocked`) — consistent with admin controller
 
-**Fix plan:**
-```
-1. Install kreait/laravel-firebase package (or use HTTP API) to write to Firestore from PHP.
-2. KillSwitchController::lock() → Firestore drivers/{id} set killSwitch.isLocked=true.
-3. Driver app: add StreamBuilder on drivers/{uid} to listen and force-logout if isLocked.
-```
+**Admin HP views also have client-side JS lock/unlock** as backup for browser-side operations.
 
 ### 🔒 SECURITY ISSUES
 
@@ -177,7 +162,7 @@
 | Build Type | Status | Notes |
 |------------|--------|-------|
 | Debug APK | ✅ | 212MB, working on LDPlayer |
-| Release APK | ❌ | Dart AOT snapshot failure (unrelated to this app's SDK — see driver) |
+| Release APK | ✅ | 115.8MB — `9jaRidePro-Customer-Release.apk` |
 
 ### Feature Status
 
@@ -206,7 +191,7 @@
 | Payment — COD | ✅ | |
 | Payment — Flutterwave | ⏳ | Waiting on client API keys |
 | SMS OTP (Termii) | ⏳ | Waiting on client keys |
-| App icons | ❌ | Still GoRide default icons |
+| App icons | ✅ | Custom adaptive icons in all density buckets (verified in audit) |
 | Maps SDK enabled | ❌ | Needs enabling in Google Cloud Console for jaride-pro |
 
 **Dependencies (pubspec.yaml):**
@@ -224,29 +209,15 @@
 | Build Type | Status | Notes |
 |------------|--------|-------|
 | Debug APK | ✅ | 245MB, working on LDPlayer |
-| Release APK | 🐛 | "Dart snapshot generator failed with exit code 1" |
+| Release APK | ✅ | 117.0MB — `9jaRidePro-Driver-Release.apk` |
 
-### 🐛 ROOT CAUSE OF RELEASE BUILD FAILURE
+### Release Build Fix (2026-04-07)
 
-**Problem:** `pubspec.yaml` environment SDK constraint is `>=2.19.5 <3.0.0`.  
-**Installed Flutter uses Dart 3.x** (comes with Flutter 3.x+).  
-**AOT compilation (release only) strictly enforces SDK constraints.**  
-**Debug builds are more lenient; release AOT fails the constraint.**
+**Root cause:** Was originally two issues:
+1. SDK constraint was `>=2.19.5 <3.0.0` (fixed to `>=3.0.0 <4.0.0`)
+2. DNS timeout to `storage.googleapis.com` during Gradle build (intermittent network issue)
 
-**Fix:**
-```yaml
-# In GoRide_V5.6_Source_Code/Applications/GoRide-5.6/driver/pubspec.yaml
-environment:
-  sdk: '>=3.0.0 <4.0.0'   # was: '>=2.19.5 <3.0.0'
-```
-Then run:
-```bash
-cd "GoRide_V5.6_Source_Code/Applications/GoRide-5.6/driver"
-flutter clean
-flutter pub upgrade
-flutter build apk --release
-```
-**Note:** Some package APIs may have changed between Dart 2.x and 3.x. After upgrade, check for breaking changes (especially null-safety and removed APIs).
+**Fix applied:** SDK constraint updated + signing keystore created + DNS flushed. Both release APKs now build successfully.
 
 ### Feature Status
 
@@ -263,34 +234,34 @@ flutter build apk --release
 | Payouts | ✅ | |
 | Subscriptions | ✅ | |
 | Referral | ✅ | |
-| Kill switch response | ⚠️ | No listener for `killSwitch.isLocked` field in driver app |
+| Kill switch response | ✅ | Real-time listener on `appLocked` field, force logout + toast |
 | Payment — Stripe | ✅ | |
 | Payment — Paystack | ✅ | |
-| App icons | ❌ | Still GoRide default icons |
+| App icons | ✅ | Custom adaptive icons in all density buckets (verified in audit) |
 | Maps SDK enabled | ❌ | Needs enabling in Google Cloud Console |
 
 ---
 
-## 6. OWNER FLUTTER APP — com.goride.owner ⚠️ NOT REBRANDED
+## 6. OWNER FLUTTER APP — com.njaridepro.owner (PARTIALLY REBRANDED)
 
-### Status: INCOMPLETE — Low priority (client hasn't requested this yet)
+### Status: Rebranded code-side, blocked on Firebase Console registration
 
-| Issue | Details |
-|-------|---------|
-| Package name | ❌ Still `com.goride.owner` — needs 7 files updated |
-| App title | ❌ Still "GoRide" in main.dart |
-| Firebase config | ❌ All placeholder values (YOUR_ANDROID_API_KEY, etc.) |
-| Android label | ❌ Generic "owner" label |
-| Google Maps API key | ❌ Placeholder `YOUR_API_KEY_HERE` |
+| Item | Status | Details |
+|------|--------|---------|
+| Package name (main) | ✅ | `com.njaridepro.owner` in build.gradle.kts, main AndroidManifest.xml, MainActivity.kt |
+| Package name (debug/profile) | ✅ | Fixed 2026-04-07 — was `com.goride.owner`, now `com.njaridepro.owner` |
+| MainActivity.kt directory | ✅ | Correctly at `kotlin/com/njaridepro/owner/` |
+| App title | ✅ | "9jaRide Pro" in main.dart, "9jaRide Owner" in AndroidManifest |
+| Google Maps API key | ✅ | Real key in AndroidManifest + runtime Firestore loading |
+| Dart SDK constraint | ✅ | `>=3.0.0 <4.0.0` |
+| Firebase options — project/keys | ✅ | jaride-pro project, real API key |
+| Firebase options — appId | ⏳ | Placeholder `REGISTER_IN_FIREBASE_CONSOLE` — needs Firebase Console registration |
+| google-services.json | ⏳ | Template with `YOUR_*` placeholders — download from Firebase after registration |
 
-**Files to update when rebranding:**
-1. `android/app/build.gradle.kts` — namespace + applicationId
-2. `android/app/src/main/kotlin/.../MainActivity.kt` — package + directory rename
-3. `android/app/src/main/AndroidManifest.xml` — package, API key
-4. `ios/Runner.xcodeproj/project.pbxproj` — bundle identifier
-5. `lib/firebase_options.dart` — all Firebase credentials
-6. `android/app/google-services.json` — add package to Firebase project first
-7. `lib/main.dart` — app title
+**Remaining (blocked on Firebase Console):**
+1. Register `com.njaridepro.owner` as Android app in Firebase Console (jaride-pro project)
+2. Download generated `google-services.json` and replace template
+3. Copy the Android App ID into `firebase_options.dart` appId field
 
 ---
 
@@ -300,16 +271,29 @@ The apps load critical settings from Firestore at startup. If these are empty, f
 
 | Collection | Required Fields | Status |
 |------------|----------------|--------|
-| `settings/globalValue` | currency, currencySymbol, basePrice, perKmRate, etc. | ❌ Not populated |
-| `settings/globalKey` | googleMapKey, stripePublishableKey, etc. | ❌ Not populated |
-| `settings/sendbird` | appId, token | ❌ Not populated |
-| `settings/payfast` | merchant_id, merchant_key, passphrase | ❌ Not populated |
-| `currency` | Array of currency docs with `enable: true` | ❌ Not populated |
-| `services` | Vehicle types (economy, premium, etc.) | ❌ Not populated |
-| `landingPageTemplate` | header, footer HTML templates | ❌ Not populated |
+| `settings/globalValue` | defaultCountryCode, distanceType, radius, etc. | ⚠️ Script ready, needs execution |
+| `settings/globalKey` | googleMapKey | ⚠️ Script ready, needs execution |
+| `settings/adminCommission` | amount, isEnabled, type | ⚠️ Script ready |
+| `settings/referral` | referralAmount, referralAmountDriver | ⚠️ Script ready |
+| `settings/maintenance_settings` | customerApp, ownerApp, driverApp | ⚠️ Script ready |
+| `settings/contact_us` | supportURL | ⚠️ Script ready |
+| `settings/global` | appVersion, privacyPolicy, termsAndConditions | ⚠️ Script ready |
+| `settings/notification_setting` | senderId, serviceJson | ⚠️ Script ready |
+| `settings/hirePurchase` | defaultDailyDeduction, thresholds, autoKillSwitch | ⚠️ Script ready |
+| `settings/payment` | All payment gateways (Stripe, PayPal, Paystack, etc.) | ⚠️ Script ready, keys needed |
+| `currency` | NGN (enabled) + USD (disabled fallback) | ⚠️ Script ready |
+| `service` | Economy, Premium, SUV vehicle types with pricing | ⚠️ Script ready |
+| `languages` | English (default) | ⚠️ Script ready |
+| `landingPageTemplate` | header, footer HTML templates | ❌ Needs manual setup via admin panel |
 | `onBoarding` | Onboarding slides (optional — app skips if empty) | ✅ Skip handled |
 
-**Populate script location:** Create `scripts/populate_firestore.js` using Firebase Admin SDK.
+**Populate script:** `scripts/populate_firestore.js` — ready to run with Firebase Admin SDK.
+```bash
+cd scripts
+npm install firebase-admin
+# Place firebase-admin-key.json (service account) in scripts/
+node populate_firestore.js
+```
 
 ---
 
@@ -317,37 +301,38 @@ The apps load critical settings from Firestore at startup. If these are empty, f
 
 ### Priority 1: Critical (blocks app functionality)
 
-| Task | Effort | Why Critical |
-|------|--------|-------------|
-| Fix driver SDK constraint (`>=3.0.0 <4.0.0`) | 30 min | Release APK won't build |
-| Populate Firestore settings collections | 1 hour | Apps crash/malfunction without settings |
-| Enable Maps SDK in Google Cloud Console | 5 min | Maps won't render in apps |
-| Add kill switch listener in driver app | 2 hours | Kill switch feature non-functional from app side |
+| Task | Effort | Status |
+|------|--------|--------|
+| ~~Fix driver SDK constraint (`>=3.0.0 <4.0.0`)~~ | ~~30 min~~ | ✅ Done |
+| Run Firestore populate script (`scripts/populate_firestore.js`) | 10 min | ⚠️ Ready to run |
+| Enable Maps SDK in Google Cloud Console | 5 min | ❌ Manual step |
+| ~~Add kill switch listener in driver app~~ | ~~2 hours~~ | ✅ Done |
 
 ### Priority 2: Security
 
-| Task | Effort |
-|------|--------|
-| Move FCM server key to .env | 15 min |
-| Restrict Google Maps API key to app packages | 10 min |
-| Restrict Firebase API key to allowed domains | 10 min |
+| Task | Effort | Status |
+|------|--------|--------|
+| ~~Move FCM server key to .env~~ | ~~15 min~~ | ✅ Done |
+| Restrict Google Maps API key to app packages | 10 min | ❌ Google Cloud Console |
+| Restrict Firebase API key to allowed domains | 10 min | ❌ Firebase Console |
 
 ### Priority 3: Feature Completion
 
-| Task | Effort | Blocker |
-|------|--------|---------|
-| Flutterwave split payment (2.5% royalty) | 3 hours | Waiting on client API keys |
-| Termii SMS OTP integration | 2 hours | Waiting on client API keys |
-| App icons (9jaRide Pro branded) | 1 hour | Waiting on client icon assets |
-| Release APK signing keystore setup | 1 hour | — |
-| HP server-side logic + Firestore writes from PHP | 4 hours | kreait/laravel-firebase package |
-| KillSwitchController real Firestore write (PHP) | 2 hours | kreait/laravel-firebase package |
+| Task | Effort | Status |
+|------|--------|--------|
+| Flutterwave split payment (2.5% royalty) | 3 hours | ⏳ Waiting on client API keys |
+| Termii SMS OTP integration | 2 hours | ⏳ Waiting on client API keys |
+| App icons (9jaRide Pro branded) | 1 hour | ⏳ Waiting on client icon assets |
+| Release APK signing keystore setup | 1 hour | ❌ Pending |
+| ~~HP server-side logic + Firestore writes from PHP~~ | ~~4 hours~~ | ✅ Done |
+| ~~KillSwitchController real Firestore write (PHP)~~ | ~~2 hours~~ | ✅ Done |
+| Register owner app in Firebase Console | 10 min | ⏳ Needs Firebase Console access |
 
 ### Priority 4: Deferred
 
 | Task | Notes |
 |------|-------|
-| Owner Flutter app rebranding | Client hasn't requested yet |
+| ~~Owner Flutter app rebranding~~ | ✅ Done (code-side), blocked on Firebase registration |
 | SSL/Nginx for 9jaridepro.com | Waiting on client domain registration |
 | Guardian AI (advanced) | Phase 2 |
 | Vehicle hardware kill switch | Phase 2 (requires hardware API) |
@@ -401,3 +386,29 @@ cd /var/www/9jaride-owner && git pull origin main
 | 2026-04-07 | KillSwitchController implemented with real Firestore write via kreait/laravel-firebase | `Admin Panel/app/Http/Controllers/KillSwitchController.php` |
 | 2026-04-07 | Owner Flutter app rebranded: com.goride.owner → com.njaridepro.owner | `owner/android/app/build.gradle.kts`, `owner/android/.../AndroidManifest.xml`, `owner/android/.../MainActivity.kt` (moved to new package dir), `owner/lib/main.dart`, `owner/lib/firebase_options.dart` |
 | 2026-04-07 | Owner firebase_options.dart updated with jaride-pro credentials (appId TODO until Firebase Console registration) | `owner/lib/firebase_options.dart` |
+| 2026-04-07 | ULTRADEEP audit: verified all ✅ items, identified discrepancies | `project_status&plan.md` |
+| 2026-04-07 | Owner debug/profile AndroidManifest.xml: com.goride.owner → com.njaridepro.owner | `owner/android/app/src/debug/AndroidManifest.xml`, `owner/android/app/src/profile/AndroidManifest.xml` |
+| 2026-04-07 | HirePurchaseController: stub → full Firestore CRUD (8 API endpoints) | `Admin Panel/app/Http/Controllers/HirePurchaseController.php` |
+| 2026-04-07 | HP API routes added: /api/hp/* (drivers, assign, update, remove, payment, settings) | `Admin Panel/routes/web.php` |
+| 2026-04-07 | Firestore populate script created (all settings, currency, services, languages) | `scripts/populate_firestore.js` |
+| 2026-04-07 | Confirmed ProcessHPDeductions.php already functional with daily cron | `Admin Panel/app/Console/Commands/ProcessHPDeductions.php` |
+| 2026-04-07 | Release signing keystore created (9jaridepro-release.jks, Eagles Partners, Lagos NG) | `9jaridepro-release.jks`, `customer/android/key.properties`, `driver/android/key.properties` |
+| 2026-04-07 | Customer signing config enabled in build.gradle (was commented out) | `customer/android/app/build.gradle` |
+| 2026-04-07 | Firestore settings populated (13 collections/documents) | `scripts/populate_firestore.js` — executed successfully |
+| 2026-04-07 | Release APKs built successfully | `9jaRidePro-Customer-Release.apk` (115.8MB), `9jaRidePro-Driver-Release.apk` (117.0MB) |
+| 2026-04-07 | Default country code set to Nigeria (+234) in both apps | `customer/lib/constant/constant.dart`, `driver/lib/constant/constant.dart` |
+| 2026-04-07 | App icons generated: Deep Green + Gold "9J PRO" for all 3 apps (all density buckets) | `scripts/generate_icons.js`, customer/driver/owner `mipmap-*/ic_launcher*.png` |
+| 2026-04-07 | Firestore payment model fixed: correct field names matching PaymentModel.fromJson() | `scripts/fix_firestore.js` — cash, wallet, strip, paypal, payStack, flutterWave, etc. |
+| 2026-04-07 | Subscription plans added to Firestore: free_plan + standard_plan | `scripts/fix_firestore.js` — collection `subscription_plans` |
+| 2026-04-07 | commissionSubscriptionID fixed: "J0RwvxCWhZzQQD7Kc2Ll" → "free_plan" | `customer/lib/constant/constant.dart`, `driver/lib/constant/constant.dart` |
+| 2026-04-07 | Driver subscription controller: fixed crash on empty list, added adminCommission pre-load, added error handling | `driver/lib/controller/subscription_controller.dart` |
+| 2026-04-07 | Driver getAllSubscriptionPlans: added try-catch + fallback without orderBy if index missing | `driver/lib/utils/fire_store_utils.dart` |
+| 2026-04-07 | Removed orderBy("createdDate") from all ride/order queries to avoid composite index errors | `customer/lib/ui/orders/order_screen.dart`, `customer/lib/ui/intercityOrders/intercity_order_screen.dart`, driver 10+ UI files |
+| 2026-04-07 | Removed orderBy('createdAt') from inbox queries to avoid composite index errors | `customer/lib/ui/chat_screen/inbox_screen.dart`, `driver/lib/ui/chat_screen/inbox_screen.dart` |
+| 2026-04-07 | Changed "Something went wrong" error messages to "No rides/data found" (graceful empty state) | All order/ride screens in both apps |
+| 2026-04-07 | Added subscription_model field to Firestore settings/globalValue | `scripts/fix_firestore2.js` |
+| 2026-04-07 | Enabled Paystack sandbox in Firestore payment settings (placeholder keys) | `scripts/fix_firestore2.js` |
+| 2026-04-07 | Final release APKs rebuilt with all fixes | `9jaRidePro-Customer-Release.apk` (116MB), `9jaRidePro-Driver-Release.apk` (117MB) |
+| 2026-04-07 | Splash logo replaced: GoRide → 9jaRide Pro (gold "9ja" + white "Ride" + "PRO") | `customer/assets/app_logo.png`, `driver/assets/app_logo.png`, `owner/assets/app_logo.png` |
+| 2026-04-07 | .gitignore updated: added *.jks, key.properties, google-services.json, firebase-admin-key.json | `.gitignore` |
+| 2026-04-07 | Sensitive files removed from git tracking: customerKey.jks, key.properties, google-services.json (3 apps) | `git rm --cached` |

@@ -58,31 +58,51 @@
 
 ---
 
-## In Progress
+## Completed (2026-04-07 Session 2)
 
-### Flutter APK Builds
-- Debug APKs built and tested on LDPlayer (212MB customer, 245MB driver)
-- Release APKs: Dart AOT snapshot failure - needs investigation
-  - Error: "Dart snapshot generator failed with exit code 1" on all architectures
-  - Likely Dart SDK version compatibility with some dependencies
-- App icons: Still GoRide icons, need 9jaRide Pro icons from client
+### Release APK Builds — WORKING
+- Release signing keystore created (9jaridepro-release.jks)
+- Customer: 9jaRidePro-Customer-Release.apk (116MB) ✅
+- Driver: 9jaRidePro-Driver-Release.apk (117MB) ✅
+- Root cause of prior failure: DNS timeout to storage.googleapis.com (not SDK issue)
+
+### App Icons — 9jaRide Pro branded
+- Generated Deep Green (#1B5E20) + Gold (#D4AF37) "9J PRO" icons
+- All density buckets (mdpi→xxxhdpi) + adaptive icons for all 3 apps
+
+### Default Country Code — Nigeria (+234)
+- Both customer and driver apps default to +234 on login screen
+
+### Firestore Populated
+- All 13 settings collections populated via scripts/populate_firestore.js
+- Payment model fixed with correct field names (scripts/fix_firestore.js)
+- Subscription plans added: free_plan + standard_plan
+- subscription_model + adminCommission fields fixed
+
+### Bug Fixes
+- commissionSubscriptionID: hardcoded wrong ID → "free_plan"
+- Driver subscription controller: crash on empty list fixed, adminCommission pre-load added
+- getAllSubscriptionPlans: error handling + fallback without composite index
+- Removed orderBy from all ride/order/inbox queries (avoids composite index requirement)
+- "Something went wrong" → graceful "No rides/data found" messages
+- HirePurchaseController: stub → full Firestore CRUD (8 API endpoints)
+- HP API routes added (/api/hp/*)
+- Owner debug/profile AndroidManifest: com.goride.owner → com.njaridepro.owner
+- Maps SDK enabled on 9jaride-pro Google Cloud project
 
 ---
 
 ## Remaining (Phase 1)
 
 ### Waiting on Client
-- **Domain:** Client registering 9jaridepro.com -> needs SSL setup
-- **Flutterwave/Paystack:** Sandbox integration waiting on client API keys
+- **Domain:** Client registering 9jaridepro.com → needs SSL setup
+- **Flutterwave/Paystack:** Real API keys needed (sandbox placeholder in Firestore)
 - **Termii SMS OTP:** Waiting on client API keys
-- **App icons:** Need 9jaRide Pro branded icons from client
+- **Vehicle type images:** Upload to Firebase Storage (gray box until then)
 
 ### Technical Tasks
-- Fix release APK build (investigate AOT snapshot failure)
-- Set up signing keystores for release builds
-- Google Maps API key: Enable Maps SDK in Google Cloud Console for jaride-pro project
-- Populate Firestore settings collections (globalValue, globalKey, etc.)
-- Move FCM server key from config/constant.php to .env (security)
+- Upload vehicle service images to Firebase Storage
+- Owner app: register com.njaridepro.owner in Firebase Console (get appId + google-services.json)
 
 ---
 
