@@ -490,6 +490,18 @@ Route::middleware(['permission:hire-purchase,hp.view'])->group(function () {
     Route::get('/hire-purchase/driver/{id}', [App\Http\Controllers\HirePurchaseController::class, 'driverHP'])->name('hire-purchase.driver');
 });
 
+// Hire Purchase API (server-side Firestore operations)
+Route::middleware(['auth'])->prefix('api/hp')->group(function () {
+    Route::get('/drivers', [App\Http\Controllers\HirePurchaseController::class, 'listDrivers'])->name('hp.api.drivers');
+    Route::get('/driver/{id}', [App\Http\Controllers\HirePurchaseController::class, 'getDriver'])->name('hp.api.driver');
+    Route::post('/assign', [App\Http\Controllers\HirePurchaseController::class, 'assignDriver'])->name('hp.api.assign');
+    Route::put('/driver/{id}', [App\Http\Controllers\HirePurchaseController::class, 'updateDriver'])->name('hp.api.update');
+    Route::delete('/driver/{id}', [App\Http\Controllers\HirePurchaseController::class, 'removeDriver'])->name('hp.api.remove');
+    Route::post('/driver/{id}/payment', [App\Http\Controllers\HirePurchaseController::class, 'recordPayment'])->name('hp.api.payment');
+    Route::get('/settings', [App\Http\Controllers\HirePurchaseController::class, 'getSettings'])->name('hp.api.settings');
+    Route::post('/settings', [App\Http\Controllers\HirePurchaseController::class, 'saveSettings'])->name('hp.api.settings.save');
+});
+
 // Kill Switch API
 Route::post('/api/kill-switch/{driverId}/lock', [App\Http\Controllers\KillSwitchController::class, 'lock'])->name('kill-switch.lock');
 Route::post('/api/kill-switch/{driverId}/unlock', [App\Http\Controllers\KillSwitchController::class, 'unlock'])->name('kill-switch.unlock');
