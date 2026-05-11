@@ -267,11 +267,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> calculateAmount() async {
-    acCharge.value = selectedType.value.prices?.first.acCharge ?? '0.0';
-    nonAcCharge.value = selectedType.value.prices?.first.nonAcCharge ?? '0.0';
-    basicFare.value = selectedType.value.prices?.first.basicFare ?? '0.0';
-    basicFareCharge.value = selectedType.value.prices?.first.basicFareCharge ?? '0.0';
-    isAcNonAc.value = selectedType.value.prices?.first.isAcNonAc ?? false;
+    acCharge.value = selectedType.value.firstPrice.acCharge ?? '0.0';
+    nonAcCharge.value = selectedType.value.firstPrice.nonAcCharge ?? '0.0';
+    basicFare.value = selectedType.value.firstPrice.basicFare ?? '0.0';
+    basicFareCharge.value = selectedType.value.firstPrice.basicFareCharge ?? '0.0';
+    isAcNonAc.value = selectedType.value.firstPrice.isAcNonAc ?? false;
     String formatTime(String? time) {
       if (time == null || !time.contains(":")) {
         return "00:00";
@@ -281,8 +281,8 @@ class HomeController extends GetxController {
       return "${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}";
     }
 
-    startNightTime = formatTime(selectedType.value.prices?.first.startNightTime);
-    endNightTime = formatTime(selectedType.value.prices?.first.endNightTime);
+    startNightTime = formatTime(selectedType.value.firstPrice.startNightTime);
+    endNightTime = formatTime(selectedType.value.firstPrice.endNightTime);
 
     List<String> startParts = startNightTime!.split(':');
     List<String> endParts = endNightTime!.split(':');
@@ -291,12 +291,12 @@ class HomeController extends GetxController {
         DateTime(currentDate.year, currentDate.month, currentDate.day, int.parse(startParts[0]), int.parse(startParts[1]));
     endNightTimeString = DateTime(currentDate.year, currentDate.month, currentDate.day, int.parse(endParts[0]), int.parse(endParts[1]));
 
-    nightCharge.value = selectedType.value.prices?.first.nightCharge ?? '0.0';
+    nightCharge.value = selectedType.value.firstPrice.nightCharge ?? '0.0';
     if (sourceLocationLAtLng.value.latitude != null && destinationLocationLAtLng.value.latitude != null) {
       double durationValueInMinutes = convertToMinutes(duration.toString());
       if (double.parse(distance.value) <= double.parse(basicFare.value)) {
         amount.value = ((double.parse(basicFareCharge.value.toString())) +
-                (double.parse(durationValueInMinutes.toString()) * double.parse(selectedType.value.prices?.first.perMinuteCharge ?? '0.0')))
+                (double.parse(durationValueInMinutes.toString()) * double.parse(selectedType.value.firstPrice.perMinuteCharge ?? '0.0')))
             .toStringAsFixed(Constant.currencyModel!.decimalDigits!);
 
         totalNightFare.value = double.parse(amount.value);
@@ -315,8 +315,8 @@ class HomeController extends GetxController {
             ? isAcSelected.value == false
                 ? nonAcChargeValue
                 : acChargeValue
-            : double.parse(selectedType.value.prices?.first.kmCharge ?? '0.0');
-        double perMinuteCharge = double.parse(selectedType.value.prices?.first.perMinuteCharge ?? '0.0');
+            : double.parse(selectedType.value.firstPrice.kmCharge ?? '0.0');
+        double perMinuteCharge = double.parse(selectedType.value.firstPrice.perMinuteCharge ?? '0.0');
         double durationInMinutes = double.parse(durationValueInMinutes.toString());
         double basicFareChargeValue = double.parse(basicFareCharge.value.toString());
         totalAmount.value = (perKmCharge * extraDist) + (durationInMinutes * perMinuteCharge) + basicFareChargeValue;

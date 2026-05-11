@@ -619,7 +619,7 @@ class FireStoreUtils {
   static Future<List<WalletTransactionModel>?> getWalletTransaction() async {
     List<WalletTransactionModel> walletTransactionModel = [];
 
-    await fireStore.collection(CollectionName.walletTransaction).where('userId', isEqualTo: FireStoreUtils.getCurrentUid()).orderBy('createdDate', descending: true).get().then((value) {
+    await fireStore.collection(CollectionName.walletTransaction).where('userId', isEqualTo: FireStoreUtils.getCurrentUid()).get().then((value) {
       for (var element in value.docs) {
         WalletTransactionModel taxModel = WalletTransactionModel.fromJson(element.data());
         walletTransactionModel.add(taxModel);
@@ -768,7 +768,7 @@ class FireStoreUtils {
 
   static Future<List<WithdrawModel>> getWithDrawRequest() async {
     List<WithdrawModel> withdrawalList = [];
-    await fireStore.collection(CollectionName.withdrawalHistory).where('userId', isEqualTo: getCurrentUid()).orderBy('createdDate', descending: true).get().then((value) {
+    await fireStore.collection(CollectionName.withdrawalHistory).where('userId', isEqualTo: getCurrentUid()).get().then((value) {
       for (var element in value.docs) {
         WithdrawModel documentModel = WithdrawModel.fromJson(element.data());
         withdrawalList.add(documentModel);
@@ -1159,15 +1159,23 @@ class FireStoreUtils {
 
   static Future<List<SubscriptionPlanModel>> getAllSubscriptionPlans() async {
     List<SubscriptionPlanModel> subscriptionPlanModels = [];
-    await fireStore
-        .collection(CollectionName.subscriptionPlans)
-        .where('isEnable', isEqualTo: true)
-        .orderBy(
-          'place',
-          descending: false,
-        )
-        .get()
-        .then((value) async {
+    try {
+      // Try with orderBy first (requires composite index)
+      QuerySnapshot<Map<String, dynamic>> value;
+      try {
+        value = await fireStore
+            .collection(CollectionName.subscriptionPlans)
+            .where('isEnable', isEqualTo: true)
+            .orderBy('place', descending: false)
+            .get();
+      } catch (indexError) {
+        // Fallback without orderBy if index is missing
+        log("Subscription index missing, falling back: $indexError");
+        value = await fireStore
+            .collection(CollectionName.subscriptionPlans)
+            .where('isEnable', isEqualTo: true)
+            .get();
+      }
       if (value.docs.isNotEmpty) {
         for (var element in value.docs) {
           SubscriptionPlanModel subscriptionPlanModel = SubscriptionPlanModel.fromJson(element.data());
@@ -1184,7 +1192,9 @@ class FireStoreUtils {
           }
         }
       }
-    });
+    } catch (e) {
+      log("getAllSubscriptionPlans error: $e");
+    }
     return subscriptionPlanModels;
   }
 
@@ -1221,7 +1231,7 @@ class FireStoreUtils {
 
   static Future<List<SubscriptionHistoryModel>> getSubscriptionHistory() async {
     List<SubscriptionHistoryModel> subscriptionHistoryList = [];
-    await fireStore.collection(CollectionName.subscriptionHistory).where('user_id', isEqualTo: getCurrentUid()).orderBy('createdAt', descending: true).get().then((value) async {
+    await fireStore.collection(CollectionName.subscriptionHistory).where('user_id', isEqualTo: getCurrentUid()).get().then((value) async {
       if (value.docs.isNotEmpty) {
         for (var element in value.docs) {
           SubscriptionHistoryModel subscriptionHistoryModel = SubscriptionHistoryModel.fromJson(element.data());
@@ -1361,7 +1371,9 @@ class FireStoreUtils {
   static Future<ServiceModel> getServiceById(String? id) async {
     ServiceModel serviceList = ServiceModel();
     await fireStore.collection(CollectionName.service).where('id', isEqualTo: id).where('enable', isEqualTo: true).get().then((value) {
-      serviceList = ServiceModel.fromJson(value.docs.first.data());
+      if (value.docs.isNotEmpty) {
+        serviceList = ServiceModel.fromJson(value.docs.first.data());
+      }
     }).catchError((error) {
       log(error.toString());
     });

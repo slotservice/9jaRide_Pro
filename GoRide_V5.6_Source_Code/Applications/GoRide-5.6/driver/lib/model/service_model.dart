@@ -14,6 +14,9 @@ class ServiceModel {
 
   ServiceModel({this.image, this.enable, this.intercityType, this.offerRate, this.id, this.markerIcon, this.title, this.adminCommission, this.prices});
 
+  /// Safe accessor — returns first price or a default empty Price to avoid .first crash
+  Price get firstPrice => (prices != null && prices!.isNotEmpty) ? prices!.first : Price();
+
   ServiceModel.fromJson(Map<String, dynamic> json) {
     image = json['image'];
     enable = json['enable'];

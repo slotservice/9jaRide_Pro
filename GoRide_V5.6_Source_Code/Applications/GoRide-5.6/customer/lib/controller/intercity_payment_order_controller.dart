@@ -68,7 +68,7 @@ class IntercityPaymentOrderController extends GetxController {
       if (value != null) {
         paymentModel.value = value;
 
-        Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
+        if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
         Stripe.merchantIdentifier = '9jaRide Pro';
         Stripe.instance.applySettings();
         setRef();

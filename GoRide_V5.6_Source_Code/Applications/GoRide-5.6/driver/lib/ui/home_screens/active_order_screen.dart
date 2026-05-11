@@ -104,7 +104,7 @@ class ActiveOrderScreen extends StatelessWidget {
                                       amount: orderModel.finalRate,
                                       distance: orderModel.distance,
                                       distanceType: orderModel.distanceType,
-                                      isAcOrNonAc: orderModel.service?.prices?.first.isAcNonAc == false ? null : orderModel.isAcSelected,
+                                      isAcOrNonAc: orderModel.service?.firstPrice.isAcNonAc == false ? null : orderModel.isAcSelected,
                                     ),
                                     const Padding(
                                       padding: EdgeInsets.symmetric(vertical: 5),
@@ -283,8 +283,8 @@ class ActiveOrderScreen extends StatelessWidget {
                                               int rideHoldTimeInSeconds = DateTime.now().difference(acceptTime).inSeconds;
                                               int rideHoldTimeInMinutes = (rideHoldTimeInSeconds / 60).ceil();
 
-                                              int chargePerInterval = int.parse(orderModel.service?.prices?.first.holdingMinuteCharge ?? '0.0');
-                                              int holdingInterval = int.parse(orderModel.service?.prices?.first.holdingMinute ?? '0.0');
+                                              int chargePerInterval = int.parse(orderModel.service?.firstPrice.holdingMinuteCharge ?? '0.0');
+                                              int holdingInterval = int.parse(orderModel.service?.firstPrice.holdingMinute ?? '0.0');
 
                                               int intervals = rideHoldTimeInMinutes ~/ holdingInterval;
                                               int extraTime = rideHoldTimeInMinutes % holdingInterval;

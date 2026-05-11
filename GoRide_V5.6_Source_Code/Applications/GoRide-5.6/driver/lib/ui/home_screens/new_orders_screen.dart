@@ -123,21 +123,21 @@ class NewOrderScreen extends StatelessWidget {
                               double acChargeValue = double.tryParse(acPerKmRateData) ?? 0.0;
                               double kmCharge = double.tryParse(perKmRateData) ?? 0.0;
 
-                              totalChargeOfMinute = double.parse(durationValueInMinutes.toString()) * double.parse(orderModel.service?.prices?.first.perMinuteCharge ?? '0.0');
-                              basicFare = double.parse(orderModel.service?.prices?.first.basicFareCharge ?? '0.0');
+                              totalChargeOfMinute = double.parse(durationValueInMinutes.toString()) * double.parse(orderModel.service?.firstPrice.perMinuteCharge ?? '0.0');
+                              basicFare = double.parse(orderModel.service?.firstPrice.basicFareCharge ?? '0.0');
 
-                              if (distance <= double.parse(orderModel.service?.prices?.first.basicFare ?? '0.0')) {
+                              if (distance <= double.parse(orderModel.service?.firstPrice.basicFare ?? '0.0')) {
                                 if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-                                  amount = amount * double.parse(orderModel.service?.prices?.first.nightCharge ?? '0.0');
+                                  amount = amount * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
                                 } else {
-                                  amount = double.parse(orderModel.service?.prices?.first.basicFareCharge ?? '0.0');
+                                  amount = double.parse(orderModel.service?.firstPrice.basicFareCharge ?? '0.0');
                                 }
                               } else {
                                 double distanceValue = double.tryParse(orderModel.distance.toString()) ?? 0.0;
-                                double basicFareValue = double.parse(orderModel.service?.prices?.first.basicFare ?? '0.0');
+                                double basicFareValue = double.parse(orderModel.service?.firstPrice.basicFare ?? '0.0');
                                 double extraDist = distanceValue - basicFareValue;
 
-                                double perKmCharge = orderModel.service?.prices?.first.isAcNonAc == true
+                                double perKmCharge = orderModel.service?.firstPrice.isAcNonAc == true
                                     ? orderModel.isAcSelected == false
                                         ? nonAcChargeValue
                                         : acChargeValue
@@ -145,9 +145,9 @@ class NewOrderScreen extends StatelessWidget {
                                 amount = (perKmCharge * extraDist);
 
                                 if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-                                  amount = amount * double.parse(orderModel.service?.prices?.first.nightCharge ?? '0.0');
-                                  totalChargeOfMinute = totalChargeOfMinute * double.parse(orderModel.service?.prices?.first.nightCharge ?? '0.0');
-                                  basicFare = basicFare * double.parse(orderModel.service?.prices?.first.nightCharge ?? '0.0');
+                                  amount = amount * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
+                                  totalChargeOfMinute = totalChargeOfMinute * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
+                                  basicFare = basicFare * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
                                 }
                               }
 
@@ -187,7 +187,7 @@ class NewOrderScreen extends StatelessWidget {
                                             amount: orderModel.offerRate,
                                             distance: orderModel.distance,
                                             distanceType: orderModel.distanceType,
-                                            isAcOrNonAc: orderModel.service?.prices?.first.isAcNonAc == false ? null : orderModel.isAcSelected,
+                                            isAcOrNonAc: orderModel.service?.firstPrice.isAcNonAc == false ? null : orderModel.isAcSelected,
                                           ),
                                           const Padding(
                                             padding: EdgeInsets.symmetric(vertical: 5),

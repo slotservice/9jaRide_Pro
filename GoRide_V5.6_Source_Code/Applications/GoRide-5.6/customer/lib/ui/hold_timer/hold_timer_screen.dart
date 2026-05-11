@@ -59,7 +59,7 @@ class HoldTimerWidget extends StatelessWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Text(
-                "${"Hold Charges:".tr} \$${isNightCharge() ? totalCharges * double.parse(orderModel.service?.prices?.first.nightCharge ?? '0.0') : totalCharges} ($holdingMinute Minute)",
+                "${"Hold Charges:".tr} \$${isNightCharge() ? totalCharges * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0') : totalCharges} ($holdingMinute Minute)",
                 textAlign: TextAlign.start,
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
@@ -83,8 +83,8 @@ class HoldTimerWidget extends StatelessWidget {
     DateTime startNightTimeString = DateTime.now();
     DateTime endNightTimeString = DateTime.now();
 
-    startNightTime.value = formatTime(orderModel.service?.prices?.first.startNightTime);
-    endNightTime.value = formatTime(orderModel.service?.prices?.first.endNightTime);
+    startNightTime.value = formatTime(orderModel.service?.firstPrice.startNightTime);
+    endNightTime.value = formatTime(orderModel.service?.firstPrice.endNightTime);
 
     List<String> startParts = startNightTime.split(':');
     List<String> endParts = endNightTime.split(':');

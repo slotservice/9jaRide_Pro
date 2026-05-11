@@ -35,10 +35,10 @@ class OrderScreen extends StatelessWidget {
           return controller.isLoading.value
               ? Constant.loader(isDarkTheme: themeChange.getThem())
               : StreamBuilder<QuerySnapshot>(
-                  stream: FireStoreUtils.fireStore.collection(CollectionName.orders).where('driverId', isEqualTo: FireStoreUtils.getCurrentUid()).orderBy("createdDate", descending: true).snapshots(),
+                  stream: FireStoreUtils.fireStore.collection(CollectionName.orders).where('driverId', isEqualTo: FireStoreUtils.getCurrentUid()).snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
-                      return Center(child: Text('Something went wrong'.tr));
+                      return Center(child: Text('No data found'.tr));
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -88,7 +88,7 @@ class OrderScreen extends StatelessWidget {
                                             amount: orderModel.finalRate,
                                             distance: orderModel.distance,
                                             distanceType: orderModel.distanceType,
-                                            isAcOrNonAc: orderModel.service?.prices?.first.isAcNonAc == false ? null : orderModel.isAcSelected,
+                                            isAcOrNonAc: orderModel.service?.firstPrice.isAcNonAc == false ? null : orderModel.isAcSelected,
                                           ),
                                           const SizedBox(
                                             height: 10,

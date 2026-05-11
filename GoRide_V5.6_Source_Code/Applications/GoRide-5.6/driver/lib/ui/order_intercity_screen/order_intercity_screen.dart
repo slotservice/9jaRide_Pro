@@ -53,11 +53,11 @@ class OrderIntercityScreen extends StatelessWidget {
                                   .collection(CollectionName.ordersIntercity)
                                   .where('driverId', isEqualTo: FireStoreUtils.getCurrentUid())
                                   .where('intercityServiceId', whereIn: ["647f340e35553", '647f350983ba2', 'UmQ2bjWTnlwoKqdCIlTr'])
-                                  .orderBy("createdDate", descending: true)
+                                  
                                   .snapshots(),
                               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                 if (snapshot.hasError) {
-                                  return Center(child: Text('Something went wrong'.tr));
+                                  return Center(child: Text('No data found'.tr));
                                 }
 
                                 if (snapshot.connectionState == ConnectionState.waiting) {

@@ -236,9 +236,9 @@ class CompleteOrderScreen extends StatelessWidget {
                                                                     ],
                                                                   ),
                                                                   SizedBox(
-                                                                    height: controller.orderModel.value.service?.prices?.first.isAcNonAc == false ? 0 : 10,
+                                                                    height: controller.orderModel.value.service?.firstPrice.isAcNonAc == false ? 0 : 10,
                                                                   ),
-                                                                  controller.orderModel.value.service?.prices?.first.isAcNonAc == false
+                                                                  controller.orderModel.value.service?.firstPrice.isAcNonAc == false
                                                                       ? SizedBox()
                                                                       : Row(
                                                                           children: [

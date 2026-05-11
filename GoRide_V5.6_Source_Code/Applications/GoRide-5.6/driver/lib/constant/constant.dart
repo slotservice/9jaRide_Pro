@@ -55,7 +55,7 @@ class Constant {
   static bool isVerifyDocument = false;
   static bool isSubscriptionModelApplied = false;
   static AdminCommission? adminCommission;
-  static const commissionSubscriptionID = "J0RwvxCWhZzQQD7Kc2Ll";
+  static const commissionSubscriptionID = "free_plan";
 
   static String mapType = "google";
   static String selectedMapType = 'osm';
@@ -63,7 +63,7 @@ class Constant {
 
   static CurrencyModel? currencyModel;
 
-  static String defaultCountryCode = '';
+  static String defaultCountryCode = '+234';
 
   static const String ridePlaced = "Ride Placed";
   static const String rideActive = "Ride Active";
@@ -304,18 +304,23 @@ class Constant {
   }
 
   static String calculateReview({required String? reviewCount, required String? reviewSum}) {
-    if (reviewCount == "0.0" && reviewSum == "0.0") {
+    if (reviewCount == "0.0" && reviewSum == "0.0" || reviewCount == null || reviewSum == null) {
       return "0.0";
     }
-
-    return (double.parse(reviewSum.toString()) / double.parse(reviewCount.toString())).toStringAsFixed(Constant.currencyModel!.decimalDigits!);
+    final count = double.tryParse(reviewCount.toString()) ?? 0;
+    if (count == 0) return "0.0";
+    return ((double.tryParse(reviewSum.toString()) ?? 0) / count)
+        .toStringAsFixed(Constant.currencyModel?.decimalDigits ?? 2);
   }
 
   static String amountShow({required String? amount}) {
-    if (Constant.currencyModel!.symbolAtRight == true) {
-      return "${double.parse(amount.toString()).toStringAsFixed(Constant.currencyModel!.decimalDigits!)} ${Constant.currencyModel!.symbol.toString()}";
+    final digits = Constant.currencyModel?.decimalDigits ?? 2;
+    final symbol = Constant.currencyModel?.symbol ?? '\u20A6';
+    final parsed = double.tryParse(amount?.toString() ?? '0') ?? 0.0;
+    if (Constant.currencyModel?.symbolAtRight == true) {
+      return "${parsed.toStringAsFixed(digits)} $symbol";
     } else {
-      return "${Constant.currencyModel!.symbol.toString()} ${double.parse(amount.toString()).toStringAsFixed(Constant.currencyModel!.decimalDigits!)}";
+      return "$symbol ${parsed.toStringAsFixed(digits)}";
     }
   }
 

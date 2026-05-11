@@ -25,6 +25,6 @@ class OrderController extends GetxController {
   }
 
   Stream<QuerySnapshot> getDriverOrdersStream() {
-    return FireStoreUtils.fireStore.collection(CollectionName.orders).where('driverId', isEqualTo: FireStoreUtils.getCurrentUid()).orderBy("createdDate", descending: true).snapshots();
+    return FireStoreUtils.fireStore.collection(CollectionName.orders).where('driverId', isEqualTo: FireStoreUtils.getCurrentUid()).snapshots();
   }
 }

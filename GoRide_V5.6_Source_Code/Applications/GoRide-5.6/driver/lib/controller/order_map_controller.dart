@@ -177,8 +177,8 @@ class OrderMapController extends GetxController {
       return "${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}";
     }
 
-    startNightTime.value = formatTime(orderModel.value.service?.prices?.first.startNightTime);
-    endNightTime.value = formatTime(orderModel.value.service?.prices?.first.endNightTime);
+    startNightTime.value = formatTime(orderModel.value.service?.firstPrice.startNightTime);
+    endNightTime.value = formatTime(orderModel.value.service?.firstPrice.endNightTime);
 
     List<String> startParts = startNightTime.split(':');
     List<String> endParts = endNightTime.split(':');
@@ -213,21 +213,21 @@ class OrderMapController extends GetxController {
     double acChargeValue = double.tryParse(acPerKmRateData) ?? 0.0;
     double kmCharge = double.tryParse(perKmRateData) ?? 0.0;
 
-    totalChargeOfMinute.value = double.parse(durationValueInMinutes.toString()) * double.parse(orderModel.value.service?.prices?.first.perMinuteCharge ?? '0.0');
-    basicFare.value = double.parse(orderModel.value.service?.prices?.first.basicFareCharge ?? '0.0');
+    totalChargeOfMinute.value = double.parse(durationValueInMinutes.toString()) * double.parse(orderModel.value.service?.firstPrice.perMinuteCharge ?? '0.0');
+    basicFare.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
 
-    if (distance <= double.parse(orderModel.value.service?.prices?.first.basicFare ?? '0.0')) {
+    if (distance <= double.parse(orderModel.value.service?.firstPrice.basicFare ?? '0.0')) {
       if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-        amount.value = amount.value * double.parse(orderModel.value.service?.prices?.first.nightCharge ?? '0.0');
+        amount.value = amount.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
       } else {
-        amount.value = double.parse(orderModel.value.service?.prices?.first.basicFareCharge ?? '0.0');
+        amount.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
       }
     } else {
       double distanceValue = double.tryParse(orderModel.value.distance.toString()) ?? 0.0;
-      double basicFareValue = double.parse(orderModel.value.service?.prices?.first.basicFare ?? '0.0');
+      double basicFareValue = double.parse(orderModel.value.service?.firstPrice.basicFare ?? '0.0');
       double extraDist = distanceValue - basicFareValue;
 
-      double perKmCharge = orderModel.value.service?.prices?.first.isAcNonAc == true
+      double perKmCharge = orderModel.value.service?.firstPrice.isAcNonAc == true
           ? orderModel.value.isAcSelected == false
               ? nonAcChargeValue
               : acChargeValue
@@ -235,9 +235,9 @@ class OrderMapController extends GetxController {
       amount.value = (perKmCharge * extraDist);
 
       if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-        amount.value = amount.value * double.parse(orderModel.value.service?.prices?.first.nightCharge ?? '0.0');
-        totalChargeOfMinute.value = totalChargeOfMinute.value * double.parse(orderModel.value.service?.prices?.first.nightCharge ?? '0.0');
-        basicFare.value = basicFare.value * double.parse(orderModel.value.service?.prices?.first.nightCharge ?? '0.0');
+        amount.value = amount.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
+        totalChargeOfMinute.value = totalChargeOfMinute.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
+        basicFare.value = basicFare.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
       }
     }
 

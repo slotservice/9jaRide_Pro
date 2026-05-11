@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant/show_toast_dialog.dart';
+import 'package:driver/model/admin_commission.dart';
 import 'package:driver/model/driver_user_model.dart';
 import 'package:driver/model/payment_model.dart';
 import 'package:driver/model/stripe_failed_model.dart';
@@ -59,13 +60,30 @@ class SubscriptionController extends GetxController {
   }
 
   getInitPlanSettings() async {
-    driverUserModel.value = await FireStoreUtils.getDriverProfile(FireStoreUtils.getCurrentUid()) ?? DriverUserModel();
+    try {
+      driverUserModel.value = await FireStoreUtils.getDriverProfile(FireStoreUtils.getCurrentUid()) ?? DriverUserModel();
 
-    await FireStoreUtils.fireStore.collection(CollectionName.settings).doc('globalValue').get().then((value) {
-      Constant.isSubscriptionModelApplied = value.data()!['subscription_model'];
-    });
-    await getSubscriptionPlanList();
-    getPaymentSettings();
+      await FireStoreUtils.fireStore.collection(CollectionName.settings).doc('globalValue').get().then((value) {
+        if (value.exists && value.data() != null) {
+          Constant.isSubscriptionModelApplied = value.data()!['subscription_model'] ?? false;
+        }
+      });
+
+      // Ensure adminCommission is loaded before checking subscriptions
+      if (Constant.adminCommission == null) {
+        await FireStoreUtils.fireStore.collection(CollectionName.settings).doc('adminCommission').get().then((value) {
+          if (value.exists && value.data() != null) {
+            Constant.adminCommission = AdminCommission.fromJson(value.data()!);
+          }
+        });
+      }
+
+      await getSubscriptionPlanList();
+      getPaymentSettings();
+    } catch (e) {
+      log("getInitPlanSettings error: $e");
+      isLoading.value = false;
+    }
   }
 
   Future<void> getPaymentSettings() async {
@@ -73,9 +91,11 @@ class SubscriptionController extends GetxController {
       if (value != null) {
         paymentModel.value = value;
 
-        Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
-        Stripe.merchantIdentifier = '9jaRide Pro';
-        Stripe.instance.applySettings();
+        if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) {
+          Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
+          Stripe.merchantIdentifier = '9jaRide Pro';
+          Stripe.instance.applySettings();
+        }
         setRef();
         razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
         razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
@@ -86,25 +106,45 @@ class SubscriptionController extends GetxController {
 
   Future<void> getSubscriptionPlanList() async {
     isLoading.value = true;
-    if (Constant.adminCommission?.isEnabled == true) {
-      await FireStoreUtils.getSubscriptionPlanById(planId: Constant.commissionSubscriptionID).then(
-        (value) {
-          if (value != null) {
-            subscriptionPlanList.add(value);
-          }
-        },
-      );
-    }
+    try {
+      if (Constant.adminCommission?.isEnabled == true) {
+        await FireStoreUtils.getSubscriptionPlanById(planId: Constant.commissionSubscriptionID).then(
+          (value) {
+            if (value != null && value.id != null && value.id!.isNotEmpty) {
+              subscriptionPlanList.add(value);
+            }
+          },
+        ).catchError((e) {
+          log("getSubscriptionPlanById error: $e");
+        });
+      }
 
-    if (Constant.isSubscriptionModelApplied) {
-      await FireStoreUtils.getAllSubscriptionPlans().then(
-        (value) {
-          subscriptionPlanList.value = value;
-        },
-      );
-    }
-    if (driverUserModel.value.subscriptionPlanId == null) {
-      selectedSubscriptionPlan.value = subscriptionPlanList.first;
+      if (Constant.isSubscriptionModelApplied) {
+        await FireStoreUtils.getAllSubscriptionPlans().then(
+          (value) {
+            subscriptionPlanList.value = value;
+          },
+        ).catchError((e) {
+          log("getAllSubscriptionPlans error: $e");
+        });
+      }
+
+      // If no plans found through either path, try loading all enabled plans directly
+      if (subscriptionPlanList.isEmpty) {
+        await FireStoreUtils.getAllSubscriptionPlans().then(
+          (value) {
+            subscriptionPlanList.value = value;
+          },
+        ).catchError((e) {
+          log("Fallback getAllSubscriptionPlans error: $e");
+        });
+      }
+
+      if (driverUserModel.value.subscriptionPlanId == null && subscriptionPlanList.isNotEmpty) {
+        selectedSubscriptionPlan.value = subscriptionPlanList.first;
+      }
+    } catch (e) {
+      log("getSubscriptionPlanList error: $e");
     }
     isLoading.value = false;
   }

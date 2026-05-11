@@ -96,11 +96,11 @@ class OrderScreen extends StatelessWidget {
                                       Constant.rideHold,
                                     ])
                                     .where("paymentStatus", isEqualTo: false)
-                                    .orderBy("createdDate", descending: true)
+                                    
                                     .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
-                                    return Center(child: Text('Something went wrong'.tr));
+                                    return Center(child: Text('No rides found'.tr));
                                   }
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Constant.loader(isDarkTheme: themeChange.getThem());
@@ -216,8 +216,8 @@ class OrderScreen extends StatelessWidget {
                                                         if (orderModel.acceptHoldTime != null && orderModel.status == Constant.rideHoldAccepted)
                                                           HoldTimerWidget(
                                                             acceptHoldTime: orderModel.acceptHoldTime!,
-                                                            holdingMinuteCharge: orderModel.service?.prices?.first.holdingMinuteCharge ?? '0.0',
-                                                            holdingMinute: orderModel.service?.prices?.first.holdingMinute ?? '0.0',
+                                                            holdingMinuteCharge: orderModel.service?.firstPrice.holdingMinuteCharge ?? '0.0',
+                                                            holdingMinute: orderModel.service?.firstPrice.holdingMinute ?? '0.0',
                                                             orderId: orderModel.id!,
                                                             orderModel: orderModel,
                                                           ),
@@ -466,11 +466,11 @@ class OrderScreen extends StatelessWidget {
                                     .where("userId", isEqualTo: FireStoreUtils.getCurrentUid())
                                     .where("status", isEqualTo: Constant.rideComplete)
                                     .where("paymentStatus", isEqualTo: true)
-                                    .orderBy("createdDate", descending: true)
+                                    
                                     .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
-                                    return Center(child: Text('Something went wrong'.tr));
+                                    return Center(child: Text('No rides found'.tr));
                                   }
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Constant.loader(isDarkTheme: themeChange.getThem());
@@ -572,11 +572,11 @@ class OrderScreen extends StatelessWidget {
                                     .collection(CollectionName.orders)
                                     .where("userId", isEqualTo: FireStoreUtils.getCurrentUid())
                                     .where("status", isEqualTo: Constant.rideCanceled)
-                                    .orderBy("createdDate", descending: true)
+                                    
                                     .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
-                                    return Center(child: Text('Something went wrong'.tr));
+                                    return Center(child: Text('No rides found'.tr));
                                   }
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Constant.loader(isDarkTheme: themeChange.getThem());

@@ -180,7 +180,7 @@ class OrderMapScreen extends StatelessWidget {
                                                               amount: controller.orderModel.value.offerRate,
                                                               distance: controller.orderModel.value.distance,
                                                               distanceType: controller.orderModel.value.distanceType,
-                                                              isAcOrNonAc: controller.orderModel.value.service?.prices?.first.isAcNonAc == false ? null : controller.orderModel.value.isAcSelected,
+                                                              isAcOrNonAc: controller.orderModel.value.service?.firstPrice.isAcNonAc == false ? null : controller.orderModel.value.isAcSelected,
                                                             ),
                                                           ),
                                                           IconButton(
@@ -279,7 +279,7 @@ class OrderMapScreen extends StatelessWidget {
                                                               controller.amount.value = double.tryParse(value) ?? 0.0;
                                                               controller.finalAmount.value = double.parse(value) +
                                                                   controller.totalChargeOfMinute.value +
-                                                                  (double.parse(controller.orderModel.value.service?.prices?.first.basicFareCharge ?? '0.0'));
+                                                                  (double.parse(controller.orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0'));
                                                             }
                                                           },
                                                           prefix: Padding(
@@ -295,7 +295,7 @@ class OrderMapScreen extends StatelessWidget {
                                                           "ETA: ${controller.convertToMinutes(controller.orderModel.value.duration.toString())} Minutes / Minutes charges (${Constant.amountShow(amount: controller.totalChargeOfMinute.value.toString())})",
                                                           style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                                                       Text(
-                                                          "${controller.orderModel.value.service?.prices?.first.basicFare} ${Constant.distanceType} - Base Fare (${Constant.amountShow(amount: controller.basicFare.value.toString())})",
+                                                          "${controller.orderModel.value.service?.firstPrice.basicFare} ${Constant.distanceType} - Base Fare (${Constant.amountShow(amount: controller.basicFare.value.toString())})",
                                                           style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
                                                       const SizedBox(
                                                         height: 20,

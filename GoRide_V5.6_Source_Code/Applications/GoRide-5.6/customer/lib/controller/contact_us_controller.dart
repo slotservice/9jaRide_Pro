@@ -22,14 +22,19 @@ class ContactUsController extends GetxController {
   RxString subject = "".obs;
 
   getContactUsInformation() async {
-    await FireStoreUtils.fireStore.collection(CollectionName.settings).doc("contact_us").get().then((value) {
-      if (value.exists) {
-        email.value = value.data()!["email"];
-        phone.value = value.data()!["phone"];
-        address.value = value.data()!["address"];
-        subject.value = value.data()!["subject"];
+    try {
+      await FireStoreUtils.fireStore.collection(CollectionName.settings).doc("contact_us").get().then((value) {
+        if (value.exists && value.data() != null) {
+          var data = value.data()!;
+          email.value = data["email"] ?? "";
+          phone.value = data["phone"] ?? "";
+          address.value = data["address"] ?? "";
+          subject.value = data["subject"] ?? "";
+        }
         isLoading.value = false;
-      }
-    });
+      });
+    } catch (e) {
+      isLoading.value = false;
+    }
   }
 }

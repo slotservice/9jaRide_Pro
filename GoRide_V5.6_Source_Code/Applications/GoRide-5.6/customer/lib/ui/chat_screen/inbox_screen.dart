@@ -41,7 +41,7 @@ class InboxScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: FirestorePagination(
-                  query: FireStoreUtils.fireStore.collection('chat').where("sender_receiver_id", arrayContains: FireStoreUtils.getCurrentUid()).orderBy('createdAt', descending: true),
+                  query: FireStoreUtils.fireStore.collection('chat').where("sender_receiver_id", arrayContains: FireStoreUtils.getCurrentUid()),
                   //item builder type is compulsory.
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, documentSnapshots, index) {

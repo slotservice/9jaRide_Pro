@@ -86,11 +86,11 @@ class InterCityOrderScreen extends StatelessWidget {
                                     .where("userId", isEqualTo: FireStoreUtils.getCurrentUid())
                                     .where("status", whereIn: [Constant.ridePlaced, Constant.rideInProgress, Constant.rideComplete, Constant.rideActive])
                                     .where("paymentStatus", isEqualTo: false)
-                                    .orderBy("createdDate", descending: true)
+                                    
                                     .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
-                                    return Center(child: Text('Something went wrong'.tr));
+                                    return Center(child: Text('No rides found'.tr));
                                   }
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Constant.loader(isDarkTheme: themeChange.getThem());
@@ -380,11 +380,11 @@ class InterCityOrderScreen extends StatelessWidget {
                                     .where("userId", isEqualTo: FireStoreUtils.getCurrentUid())
                                     .where("status", isEqualTo: Constant.rideComplete)
                                     .where("paymentStatus", isEqualTo: true)
-                                    .orderBy("createdDate", descending: true)
+                                    
                                     .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
-                                    return Center(child: Text('Something went wrong'.tr));
+                                    return Center(child: Text('No rides found'.tr));
                                   }
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Constant.loader(isDarkTheme: themeChange.getThem());
@@ -519,11 +519,11 @@ class InterCityOrderScreen extends StatelessWidget {
                                     .collection(CollectionName.ordersIntercity)
                                     .where("userId", isEqualTo: FireStoreUtils.getCurrentUid())
                                     .where("status", isEqualTo: Constant.rideCanceled)
-                                    .orderBy("createdDate", descending: true)
+                                    
                                     .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasError) {
-                                    return Center(child: Text('Something went wrong'.tr));
+                                    return Center(child: Text('No rides found'.tr));
                                   }
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Constant.loader(isDarkTheme: themeChange.getThem());

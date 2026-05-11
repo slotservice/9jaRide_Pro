@@ -72,7 +72,7 @@ class AcceptedOrders extends StatelessWidget {
                                     amount: orderModel.offerRate,
                                     distance: orderModel.distance,
                                     distanceType: orderModel.distanceType,
-                                    isAcOrNonAc: orderModel.service?.prices?.first.isAcNonAc == false ? null : orderModel.isAcSelected,
+                                    isAcOrNonAc: orderModel.service?.firstPrice.isAcNonAc == false ? null : orderModel.isAcSelected,
                                   ),
                                   const Padding(
                                     padding: EdgeInsets.symmetric(vertical: 5),

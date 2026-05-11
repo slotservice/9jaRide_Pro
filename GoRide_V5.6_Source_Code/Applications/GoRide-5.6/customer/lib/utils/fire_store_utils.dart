@@ -929,13 +929,13 @@ class FireStoreUtils {
   static Future<List<WalletTransactionModel>?> getWalletTransaction() async {
     List<WalletTransactionModel> walletTransactionModel = [];
 
-    await fireStore.collection(CollectionName.walletTransaction).where('userId', isEqualTo: FireStoreUtils.getCurrentUid()).orderBy('createdDate', descending: true).get().then((value) {
+    await fireStore.collection(CollectionName.walletTransaction).where('userId', isEqualTo: FireStoreUtils.getCurrentUid()).get().then((value) {
       for (var element in value.docs) {
         WalletTransactionModel taxModel = WalletTransactionModel.fromJson(element.data());
         walletTransactionModel.add(taxModel);
       }
     }).catchError((error) {
-      log(error.toString());
+      log("getWalletTransaction error: $error");
     });
     return walletTransactionModel;
   }
@@ -1313,9 +1313,11 @@ class FireStoreUtils {
   static Future<ServiceModel> getServiceById(String? id) async {
     ServiceModel serviceList = ServiceModel();
     await fireStore.collection(CollectionName.service).where('id', isEqualTo: id).where('enable', isEqualTo: true).get().then((value) {
-      serviceList = ServiceModel.fromJson(value.docs.first.data());
+      if (value.docs.isNotEmpty) {
+        serviceList = ServiceModel.fromJson(value.docs.first.data());
+      }
     }).catchError((error) {
-      log(error.toString());
+      log("getServiceById error: $error");
     });
     return serviceList;
   }

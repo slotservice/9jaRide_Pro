@@ -66,7 +66,7 @@ class PaymentOrderController extends GetxController {
       if (value != null) {
         paymentModel.value = value;
 
-        Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
+        if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
         Stripe.merchantIdentifier = '9jaRide Pro';
         Stripe.instance.applySettings();
         setRef();
@@ -220,8 +220,8 @@ class PaymentOrderController extends GetxController {
       return "${parts[0].padLeft(2, '0')}:${parts[1].padLeft(2, '0')}";
     }
 
-    startNightTime.value = formatTime(orderModel.value.service?.prices?.first.startNightTime);
-    endNightTime.value = formatTime(orderModel.value.service?.prices?.first.endNightTime);
+    startNightTime.value = formatTime(orderModel.value.service?.firstPrice.startNightTime);
+    endNightTime.value = formatTime(orderModel.value.service?.firstPrice.endNightTime);
 
     List<String> startParts = startNightTime.split(':');
     List<String> endParts = endNightTime.split(':');
@@ -243,26 +243,26 @@ class PaymentOrderController extends GetxController {
       acChargeValue = double.tryParse(acPerKmRateData) ?? 1.0;
       kmCharge = double.tryParse(perKmRateData) ?? 1.0;
     } else {
-      nonAcChargeValue = double.tryParse(orderModel.value.service!.prices!.first.nonAcCharge!) ?? 1.0;
-      acChargeValue = double.tryParse(orderModel.value.service!.prices!.first.acCharge!) ?? 1.0;
-      kmCharge = double.tryParse(orderModel.value.service!.prices!.first.kmCharge!) ?? 1.0;
+      nonAcChargeValue = double.tryParse(orderModel.value.service!.firstPrice.nonAcCharge!) ?? 1.0;
+      acChargeValue = double.tryParse(orderModel.value.service!.firstPrice.acCharge!) ?? 1.0;
+      kmCharge = double.tryParse(orderModel.value.service!.firstPrice.kmCharge!) ?? 1.0;
     }
 
-    totalChargeOfMinute.value = durationValueInMinutes * (double.tryParse(orderModel.value.service!.prices!.first.perMinuteCharge!) ?? 1.0);
-    basicFareCharge.value = (double.tryParse(orderModel.value.service!.prices!.first.basicFareCharge!)) ?? 1.0;
+    totalChargeOfMinute.value = durationValueInMinutes * (double.tryParse(orderModel.value.service!.firstPrice.perMinuteCharge!) ?? 1.0);
+    basicFareCharge.value = (double.tryParse(orderModel.value.service!.firstPrice.basicFareCharge!)) ?? 1.0;
     holdingCharge.value = double.tryParse(orderModel.value.totalHoldingCharges!) ?? 1.0;
-    if (distance <= double.parse(orderModel.value.service!.prices!.first.basicFare!)) {
+    if (distance <= double.parse(orderModel.value.service!.firstPrice.basicFare!)) {
       if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-        amount.value = amount.value * (double.tryParse(orderModel.value.service!.prices!.first.nightCharge!) ?? 1.0);
+        amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
       } else {
-        amount.value = double.parse(orderModel.value.service?.prices?.first.basicFareCharge ?? '0.0');
+        amount.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
       }
     } else {
       double distanceValue = double.tryParse(orderModel.value.distance.toString()) ?? 0.0;
-      double basicFareValue = double.tryParse(orderModel.value.service!.prices!.first.basicFare!) ?? 0.0;
+      double basicFareValue = double.tryParse(orderModel.value.service!.firstPrice.basicFare!) ?? 0.0;
       double extraDist = distanceValue - basicFareValue;
 
-      double perKmCharge = orderModel.value.service?.prices?.first.isAcNonAc == true
+      double perKmCharge = orderModel.value.service?.firstPrice.isAcNonAc == true
           ? orderModel.value.isAcSelected == false
               ? nonAcChargeValue
               : acChargeValue
@@ -274,16 +274,16 @@ class PaymentOrderController extends GetxController {
       }
 
       if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-        totalChargeOfMinute.value = totalChargeOfMinute.value * (double.tryParse(orderModel.value.service!.prices!.first.nightCharge!) ?? 1.0);
-        basicFareCharge.value = basicFareCharge.value * (double.tryParse(orderModel.value.service!.prices!.first.nightCharge!) ?? 1.0);
-        holdingCharge.value = holdingCharge.value * (double.tryParse(orderModel.value.service!.prices!.first.nightCharge!) ?? 1.0);
+        totalChargeOfMinute.value = totalChargeOfMinute.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
+        basicFareCharge.value = basicFareCharge.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
+        holdingCharge.value = holdingCharge.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
       }
     }
 
     if (orderModel.value.finalRate != null && orderModel.value.finalRate != '0.0') {
       amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value - holdingCharge.value;
     } else {
-      amount.value = amount.value * (double.tryParse(orderModel.value.service!.prices!.first.nightCharge!) ?? 0.0);
+      amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 0.0);
     }
 
     subTotal.value = amount.value + basicFareCharge.value + totalChargeOfMinute.value + holdingCharge.value;
