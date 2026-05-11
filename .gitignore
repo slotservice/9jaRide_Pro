@@ -33,3 +33,13 @@ Thumbs.db
 
 # APK builds
 *.apk
+
+# Signing keys & credentials (NEVER commit)
+*.jks
+**/key.properties
+**/google-services.json
+**/firebase-admin-key.json
+**/firebase.json
+**/*-firebase-adminsdk-*.json
+scripts/jaride-pro-*.json
+scripts/node_modules/
