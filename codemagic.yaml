@@ -1,0 +1,98 @@
+workflows:
+  customer-android:
+    name: 9jaRide Pro Customer Android
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      flutter: 3.41.6
+      java: 17
+      groups:
+        - jaride_secrets
+      vars:
+        APP_DIR: GoRide_V5.6_Source_Code/Applications/GoRide-5.6/customer
+    scripts:
+      - name: Decode keystore
+        script: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$APP_DIR/android/keystore.jks"
+      - name: Write key.properties
+        script: |
+          cat > "$APP_DIR/android/key.properties" <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=keystore.jks
+          EOF
+      - name: Decode google-services.json
+        script: |
+          echo "$GOOGLE_SERVICES_CUSTOMER_BASE64" | base64 -d > "$APP_DIR/android/app/google-services.json"
+      - name: Flutter pub get
+        script: |
+          cd "$APP_DIR"
+          flutter pub get
+      - name: Build split-per-abi APKs
+        script: |
+          cd "$APP_DIR"
+          flutter build apk --release --split-per-abi
+      - name: Build universal APK
+        script: |
+          cd "$APP_DIR"
+          flutter build apk --release
+      - name: Rename APKs
+        script: |
+          cd "$APP_DIR/build/app/outputs/flutter-apk"
+          [ -f app-arm64-v8a-release.apk ]    && mv app-arm64-v8a-release.apk    9jaRidePro-Customer.apk           || true
+          [ -f app-armeabi-v7a-release.apk ]  && mv app-armeabi-v7a-release.apk  9jaRidePro-Customer-armv7.apk     || true
+          [ -f app-x86_64-release.apk ]       && mv app-x86_64-release.apk       9jaRidePro-Customer-x86.apk       || true
+          [ -f app-release.apk ]              && mv app-release.apk              9jaRidePro-Customer-Universal.apk || true
+          ls -lh
+    artifacts:
+      - $APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-*.apk
+
+  driver-android:
+    name: 9jaRide Pro Driver Android
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      flutter: 3.41.6
+      java: 17
+      groups:
+        - jaride_secrets
+      vars:
+        APP_DIR: GoRide_V5.6_Source_Code/Applications/GoRide-5.6/driver
+    scripts:
+      - name: Decode keystore
+        script: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$APP_DIR/android/keystore.jks"
+      - name: Write key.properties
+        script: |
+          cat > "$APP_DIR/android/key.properties" <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=keystore.jks
+          EOF
+      - name: Decode google-services.json
+        script: |
+          echo "$GOOGLE_SERVICES_DRIVER_BASE64" | base64 -d > "$APP_DIR/android/app/google-services.json"
+      - name: Flutter pub get
+        script: |
+          cd "$APP_DIR"
+          flutter pub get
+      - name: Build split-per-abi APKs
+        script: |
+          cd "$APP_DIR"
+          flutter build apk --release --split-per-abi
+      - name: Build universal APK
+        script: |
+          cd "$APP_DIR"
+          flutter build apk --release
+      - name: Rename APKs
+        script: |
+          cd "$APP_DIR/build/app/outputs/flutter-apk"
+          [ -f app-arm64-v8a-release.apk ]    && mv app-arm64-v8a-release.apk    9jaRidePro-Driver.apk           || true
+          [ -f app-armeabi-v7a-release.apk ]  && mv app-armeabi-v7a-release.apk  9jaRidePro-Driver-armv7.apk     || true
+          [ -f app-x86_64-release.apk ]       && mv app-x86_64-release.apk       9jaRidePro-Driver-x86.apk       || true
+          [ -f app-release.apk ]              && mv app-release.apk              9jaRidePro-Driver-Universal.apk || true
+          ls -lh
+    artifacts:
+      - $APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-*.apk
