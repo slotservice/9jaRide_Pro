@@ -13,7 +13,7 @@ workflows:
     scripts:
       - name: Decode keystore
         script: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$APP_DIR/android/keystore.jks"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$APP_DIR/android/app/keystore.jks"
       - name: Write key.properties
         script: |
           cat > "$APP_DIR/android/key.properties" <<EOF
@@ -62,7 +62,7 @@ workflows:
     scripts:
       - name: Decode keystore
         script: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$APP_DIR/android/keystore.jks"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$APP_DIR/android/app/keystore.jks"
       - name: Write key.properties
         script: |
           cat > "$APP_DIR/android/key.properties" <<EOF
