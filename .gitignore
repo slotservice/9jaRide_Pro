@@ -43,3 +43,6 @@ Thumbs.db
 **/*-firebase-adminsdk-*.json
 scripts/jaride-pro-*.json
 scripts/node_modules/
+
+# Local-only secret payloads to paste into GitHub Actions (never commit)
+.github-secrets/
