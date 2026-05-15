@@ -23,45 +23,50 @@ class GlobalSettingController extends GetxController {
   }
 
   Future<void> getCurrentCurrency() async {
-    try {
-      if (Preferences.getString(Preferences.languageCodeKey).toString().isNotEmpty) {
-        LanguageModel languageModel = Constant.getLanguage();
-        LocalizationService().changeLocale(languageModel.code.toString());
-      } else {
-        await FireStoreUtils.getLanguage().then((value) {
+    final langF = () async {
+      try {
+        if (Preferences.getString(Preferences.languageCodeKey).toString().isNotEmpty) {
+          LanguageModel languageModel = Constant.getLanguage();
+          LocalizationService().changeLocale(languageModel.code.toString());
+        } else {
+          final value = await FireStoreUtils.getLanguage();
           if (value != null) {
             List<LanguageModel> languageList = value;
-
             if (languageList.where((element) => element.isDefault == true).isNotEmpty) {
               LanguageModel languageModel = languageList.firstWhere((element) => element.isDefault == true);
               Preferences.setString(Preferences.languageCodeKey, jsonEncode(languageModel));
               LocalizationService().changeLocale(languageModel.code.toString());
             }
           }
-        });
+        }
+      } catch (e) {
+        log("Language load error: $e");
       }
-    } catch (e) {
-      log("Language load error: $e");
-    }
+    }();
 
-    try {
-      await FireStoreUtils.getCurrency().then((value) {
+    final currF = () async {
+      try {
+        final value = await FireStoreUtils.getCurrency();
         if (value != null) {
           Constant.currencyModel = value;
         } else {
           Constant.currencyModel = CurrencyModel(id: "", code: "USD", decimalDigits: 2, enable: true, name: "US Dollar", symbol: "\$", symbolAtRight: false);
         }
-      });
-    } catch (e) {
-      log("Currency load error: $e");
-      Constant.currencyModel = CurrencyModel(id: "", code: "USD", decimalDigits: 2, enable: true, name: "US Dollar", symbol: "\$", symbolAtRight: false);
-    }
+      } catch (e) {
+        log("Currency load error: $e");
+        Constant.currencyModel = CurrencyModel(id: "", code: "USD", decimalDigits: 2, enable: true, name: "US Dollar", symbol: "\$", symbolAtRight: false);
+      }
+    }();
 
-    try {
-      await FireStoreUtils.getSettings();
-    } catch (e) {
-      log("Settings load error: $e");
-    }
+    final settF = () async {
+      try {
+        await FireStoreUtils.getSettings();
+      } catch (e) {
+        log("Settings load error: $e");
+      }
+    }();
+
+    await Future.wait([langF, currF, settF]);
   }
 
   NotificationService notificationService = NotificationService();

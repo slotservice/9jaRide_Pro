@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant/show_toast_dialog.dart';
@@ -16,7 +15,7 @@ import 'package:get/get.dart';
 class SplashController extends GetxController {
   @override
   void onInit() {
-    Timer(const Duration(seconds: 3), () => redirectScreen());
+    redirectScreen();
     super.onInit();
   }
 
