@@ -1,7 +1,7 @@
 workflows:
   customer-android:
     name: 9jaRide Pro Customer Android
-    instance_type: linux
+    instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
       flutter: 3.41.6
@@ -50,7 +50,7 @@ workflows:
 
   driver-android:
     name: 9jaRide Pro Driver Android
-    instance_type: linux
+    instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
       flutter: 3.41.6
