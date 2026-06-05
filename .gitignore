@@ -50,3 +50,11 @@ drivergoogleservice.json
 
 # Local-only secret payloads to paste into GitHub Actions (never commit)
 .github-secrets/
+
+# Internal dev / session files (not for client)
+5.11_prompt.md
+chat.md
+project_status&plan.md
+update-landing.js
+img*.jpeg
+vectorlogo.*
