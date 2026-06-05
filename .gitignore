@@ -43,3 +43,7 @@ Thumbs.db
 **/*-firebase-adminsdk-*.json
 scripts/jaride-pro-*.json
 scripts/node_modules/
+
+# Misnamed google-services files at project root
+coustomer-googleservice.json
+drivergoogleservice.json
