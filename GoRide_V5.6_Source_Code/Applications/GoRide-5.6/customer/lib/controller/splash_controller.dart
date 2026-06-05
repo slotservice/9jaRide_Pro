@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 import 'package:customer/ui/auth_screen/login_screen.dart';
 import 'package:customer/ui/dashboard_screen.dart';
@@ -11,7 +10,7 @@ import 'package:get/get.dart';
 class SplashController extends GetxController {
   @override
   void onInit() {
-    Timer(const Duration(seconds: 3), () => redirectScreen());
+    redirectScreen();
     super.onInit();
   }
 

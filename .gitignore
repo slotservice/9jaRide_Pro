@@ -47,3 +47,6 @@ scripts/node_modules/
 # Misnamed google-services files at project root
 coustomer-googleservice.json
 drivergoogleservice.json
+
+# Local-only secret payloads to paste into GitHub Actions (never commit)
+.github-secrets/
