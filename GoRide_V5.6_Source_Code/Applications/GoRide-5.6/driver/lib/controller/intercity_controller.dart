@@ -37,8 +37,7 @@ class IntercityController extends GetxController {
   Rx<DriverUserModel> driverModel = DriverUserModel().obs;
 
   Future<void> acceptOrder(InterCityOrderModel orderModel) async {
-    if ((driverModel.value.ownerId == null && double.parse(driverModel.value.walletAmount.toString()) >= double.parse(Constant.minimumDepositToRideAccept)) || driverModel.value.ownerId != null) {
-      ShowToastDialog.showLoader("Please wait".tr);
+    ShowToastDialog.showLoader("Please wait".tr);
       List<dynamic> newAcceptedDriverId = [];
       if (orderModel.acceptedDriverId != null) {
         newAcceptedDriverId = orderModel.acceptedDriverId!;
@@ -84,9 +83,6 @@ class IntercityController extends GetxController {
         }
         homeController.selectedIndex.value = 1;
       });
-    } else {
-      ShowToastDialog.showToast("You have to minimum ${Constant.amountShow(amount: Constant.minimumDepositToRideAccept)} wallet amount to Accept Order and place a bid".tr);
-    }
   }
 
   Future<void> getOrder() async {
