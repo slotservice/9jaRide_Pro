@@ -20,9 +20,9 @@ class LiveTrackingController extends GetxController {
   final flutterMap.MapController osmMapController = flutterMap.MapController();
   RxString title = 'Map view'.obs;
 
-  Rx<location.LatLng> current = location.LatLng(21.1800, 72.8400).obs;
-  Rx<location.LatLng> source = location.LatLng(21.1702, 72.8311).obs; // Start (e.g., Surat)
-  Rx<location.LatLng> destination = location.LatLng(21.2000, 72.8600).obs; // Destination
+  Rx<location.LatLng> current = location.LatLng(6.5244, 3.3792).obs;
+  Rx<location.LatLng> source = location.LatLng(6.5244, 3.3792).obs;
+  Rx<location.LatLng> destination = location.LatLng(6.5244, 3.3792).obs;
 
   @override
   void onInit() {

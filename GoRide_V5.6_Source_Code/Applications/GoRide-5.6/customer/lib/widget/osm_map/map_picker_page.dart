@@ -27,7 +27,7 @@ class MapPickerPage extends StatelessWidget {
             () => FlutterMap(
               mapController: controller.mapController,
               options: MapOptions(
-                initialCenter: controller.pickedPlace.value?.coordinates ?? LatLng(20.5937, 78.9629), // Default India center
+                initialCenter: controller.pickedPlace.value?.coordinates ?? LatLng(6.5244, 3.3792),
                 initialZoom: 13,
                 onTap: (tapPos, latlng) {
                   controller.addLatLngOnly(latlng);
