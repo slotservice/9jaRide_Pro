@@ -6,6 +6,7 @@ import 'package:driver/model/driver_user_model.dart';
 import 'package:driver/model/service_model.dart';
 import 'package:driver/model/zone_model.dart';
 import 'package:driver/themes/app_colors.dart';
+import 'package:driver/ui/dashboard_screen.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -167,9 +168,8 @@ class VehicleInformationController extends GetxController {
     await FireStoreUtils.updateDriverUser(driverModel.value).then((value) {
       ShowToastDialog.closeLoader();
       if (value == true) {
-        ShowToastDialog.showToast(
-          "Information update successfully".tr,
-        );
+        ShowToastDialog.showToast("Information update successfully".tr);
+        Get.offAll(const DashBoardScreen());
       }
     });
   }
