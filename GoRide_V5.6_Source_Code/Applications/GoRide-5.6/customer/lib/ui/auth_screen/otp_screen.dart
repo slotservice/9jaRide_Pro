@@ -6,6 +6,7 @@ import 'package:customer/themes/app_colors.dart';
 import 'package:customer/themes/button_them.dart';
 import 'package:customer/ui/auth_screen/information_screen.dart';
 import 'package:customer/ui/dashboard_screen.dart';
+import 'package:customer/ui/kyc/kyc_screen.dart';
 import 'package:customer/utils/DarkThemeProvider.dart';
 import 'package:customer/utils/fire_store_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -112,7 +113,13 @@ class OtpScreen extends StatelessWidget {
                                       UserModel? userModel = await FireStoreUtils.getUserProfile(value.user!.uid);
                                       if (userModel != null) {
                                         if (userModel.isActive == true) {
-                                          Get.offAll(const DashBoardScreen());
+                                          var existingDocs = await FireStoreUtils.getDocumentOfCustomer();
+                                          bool hasUploaded = existingDocs != null && (existingDocs.documents?.isNotEmpty == true);
+                                          if (hasUploaded) {
+                                            Get.offAll(const DashBoardScreen());
+                                          } else {
+                                            Get.offAll(const KycScreen());
+                                          }
                                         } else {
                                           await FirebaseAuth.instance.signOut();
                                           ShowToastDialog.showToast("This user is disable please contact administrator".tr);

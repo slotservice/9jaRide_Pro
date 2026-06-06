@@ -1368,6 +1368,7 @@ class FireStoreUtils {
         .collection(CollectionName.documents)
         .where('enable', isEqualTo: true)
         .where('type', isEqualTo: Constant.currentUserType)
+        .where('isDeleted', isEqualTo: false)
         .get()
         .then((value) {
       for (var element in value.docs) {

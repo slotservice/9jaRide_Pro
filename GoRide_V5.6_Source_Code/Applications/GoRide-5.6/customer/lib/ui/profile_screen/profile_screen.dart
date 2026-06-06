@@ -7,6 +7,7 @@ import 'package:customer/constant/show_toast_dialog.dart';
 import 'package:customer/controller/profile_controller.dart';
 import 'package:customer/model/user_model.dart';
 import 'package:customer/themes/app_colors.dart';
+import 'package:customer/ui/kyc/kyc_screen.dart';
 import 'package:customer/themes/button_them.dart';
 import 'package:customer/themes/responsive.dart';
 import 'package:customer/themes/text_field_them.dart';
@@ -176,6 +177,32 @@ class ProfileScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 20,
                                         ),
+                                        InkWell(
+                                          onTap: () => Get.to(const KycScreen()),
+                                          child: Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color: themeChange.getThem() ? AppColors.darkContainerBackground : AppColors.containerBackground,
+                                              borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                              border: Border.all(color: AppColors.lightprimary, width: 1),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                            child: Row(
+                                              children: [
+                                                const Icon(Icons.verified_user_outlined, color: AppColors.lightprimary),
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: Text(
+                                                    'Identity Verification (KYC)'.tr,
+                                                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500, color: AppColors.lightprimary),
+                                                  ),
+                                                ),
+                                                const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.lightprimary),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
                                         ButtonThem.buildButton(
                                           context,
                                           title: "Update Profile".tr,
