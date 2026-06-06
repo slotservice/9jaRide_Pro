@@ -200,14 +200,28 @@ class InterCityScreen extends StatelessWidget {
                                                           )),
                                                       child: Padding(
                                                         padding: const EdgeInsets.all(8.0),
-                                                        child: CachedNetworkImage(
-                                                          imageUrl: serviceModel.image.toString(),
-                                                          fit: BoxFit.contain,
-                                                          height: Responsive.height(8, context),
-                                                          width: Responsive.width(18, context),
-                                                          placeholder: (context, url) => Constant.loader(isDarkTheme: themeChange.getThem()),
-                                                          errorWidget: (context, url, error) => Image.network(Constant.userPlaceHolder),
-                                                        ),
+                                                        child: serviceModel.image != null && serviceModel.image!.isNotEmpty
+                                                            ? CachedNetworkImage(
+                                                                imageUrl: serviceModel.image!,
+                                                                fit: BoxFit.contain,
+                                                                height: Responsive.height(8, context),
+                                                                width: Responsive.width(18, context),
+                                                                placeholder: (context, url) => SizedBox(
+                                                                  height: Responsive.height(8, context),
+                                                                  width: Responsive.width(18, context),
+                                                                  child: const Center(child: Icon(Icons.directions_car_filled, size: 32, color: Colors.grey)),
+                                                                ),
+                                                                errorWidget: (context, url, error) => SizedBox(
+                                                                  height: Responsive.height(8, context),
+                                                                  width: Responsive.width(18, context),
+                                                                  child: const Center(child: Icon(Icons.directions_car_filled, size: 32, color: Colors.grey)),
+                                                                ),
+                                                              )
+                                                            : SizedBox(
+                                                                height: Responsive.height(8, context),
+                                                                width: Responsive.width(18, context),
+                                                                child: const Center(child: Icon(Icons.directions_car_filled, size: 32, color: Colors.grey)),
+                                                              ),
                                                       ),
                                                     ),
                                                     const SizedBox(

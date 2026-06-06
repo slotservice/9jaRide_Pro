@@ -179,24 +179,27 @@ class HomeController extends GetxController {
       }
     });
 
-    await FireStoreUtils.getBanner().then((value) {
+    isLoading.value = false;
+
+    FireStoreUtils.getBanner().then((value) {
       bannerList.value = value;
     });
 
-    await FireStoreUtils.getAirports().then((value) {
+    FireStoreUtils.getAirports().then((value) {
       if (value != null) {
         Constant.airaPortList = value;
       }
     });
 
-    String token = await NotificationService.getToken();
-    await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
-      userModel.value = value!;
-      userModel.value.fcmToken = token;
-      FireStoreUtils.updateUser(userModel.value);
+    NotificationService.getToken().then((token) {
+      FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
+        if (value != null) {
+          userModel.value = value;
+          userModel.value.fcmToken = token;
+          FireStoreUtils.updateUser(userModel.value);
+        }
+      });
     });
-
-    isLoading.value = false;
   }
 
   RxString duration = "".obs;
