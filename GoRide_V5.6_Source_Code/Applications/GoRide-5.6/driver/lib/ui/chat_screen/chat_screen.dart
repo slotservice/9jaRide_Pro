@@ -238,6 +238,7 @@ class _ChatScreensState extends State<ChatScreens> {
                                           : AppColors.darkTextFieldBorder),
                             ),
                             IconButton(
+                              tooltip: 'Send message',
                               onPressed: () async {
                                 if (_messageController.text.isNotEmpty) {
                                   _sendMessage(_messageController.text, null, '', 'text');
@@ -255,6 +256,7 @@ class _ChatScreensState extends State<ChatScreens> {
                           ],
                         ),
                         prefixIcon: IconButton(
+                          tooltip: 'Attach media',
                           onPressed: () async {
                             _onCameraClick();
                           },
@@ -703,6 +705,7 @@ class _VoiceBubbleState extends State<VoiceBubble> {
     return Column(
       children: [
         IconButton(
+          tooltip: 'Play audio message',
           icon: isLoading == true
               ? CircleAvatar(
                   radius: 20,

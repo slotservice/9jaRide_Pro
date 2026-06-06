@@ -56,7 +56,10 @@ class DashBoardScreen extends StatelessWidget {
                                 return Text(snapshot.error.toString());
                               } else {
                                 UserModel driverModel = snapshot.data!;
-                                return InkWell(
+                                return Semantics(
+                                  label: 'Open profile',
+                                  button: true,
+                                  child: InkWell(
                                   onTap: () {
                                     controller.selectedDrawerIndex(8);
                                   },
@@ -76,6 +79,7 @@ class DashBoardScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                                ),
                                 );
                               }
                             default:

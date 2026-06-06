@@ -269,6 +269,7 @@ class ProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
+                                tooltip: 'Take photo with camera',
                                 onPressed: () => controller.pickFile(source: ImageSource.camera),
                                 icon: const Icon(
                                   Icons.camera_alt,
@@ -288,6 +289,7 @@ class ProfileScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
+                                tooltip: 'Choose from gallery',
                                 onPressed: () => controller.pickFile(source: ImageSource.gallery),
                                 icon: const Icon(
                                   Icons.photo_library_sharp,

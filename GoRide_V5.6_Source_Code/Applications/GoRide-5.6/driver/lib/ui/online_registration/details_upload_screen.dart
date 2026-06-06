@@ -311,6 +311,7 @@ class DetailsUploadScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
+                                tooltip: 'Take photo with camera',
                                 onPressed: () => controller.pickFile(source: ImageSource.camera, type: type),
                                 icon: const Icon(
                                   Icons.camera_alt,
@@ -330,6 +331,7 @@ class DetailsUploadScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
+                                tooltip: 'Choose from gallery',
                                 onPressed: () => controller.pickFile(source: ImageSource.gallery, type: type),
                                 icon: const Icon(
                                   Icons.photo_library_sharp,

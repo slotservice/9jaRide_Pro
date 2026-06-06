@@ -184,6 +184,7 @@ class OrderMapScreen extends StatelessWidget {
                                                             ),
                                                           ),
                                                           IconButton(
+                                                            tooltip: 'Hide ride details',
                                                             onPressed: () {
                                                               controller.isHideButtomSheet.value = true;
                                                             },

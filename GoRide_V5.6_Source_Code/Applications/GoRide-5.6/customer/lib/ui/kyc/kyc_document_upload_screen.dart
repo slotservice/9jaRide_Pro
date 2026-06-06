@@ -217,7 +217,7 @@ class KycDocumentUploadScreen extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       child: Column(
         children: [
-          IconButton(onPressed: onTap, icon: Icon(icon, size: 32)),
+          IconButton(tooltip: label, onPressed: onTap, icon: Icon(icon, size: 32)),
           Text(label),
         ],
       ),

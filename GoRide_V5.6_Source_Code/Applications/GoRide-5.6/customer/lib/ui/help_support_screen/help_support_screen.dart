@@ -244,6 +244,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                                           : AppColors.darkTextFieldBorder),
                             ),
                             IconButton(
+                                tooltip: 'Send message',
                                 onPressed: () async {
                                   if (_messageController.text.isNotEmpty) {
                                     _sendMessage(_messageController.text, null, '', 'text');
@@ -260,6 +261,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                           ],
                         ),
                         prefixIcon: IconButton(
+                          tooltip: 'Attach media',
                           onPressed: () async {
                             _onCameraClick();
                           },
