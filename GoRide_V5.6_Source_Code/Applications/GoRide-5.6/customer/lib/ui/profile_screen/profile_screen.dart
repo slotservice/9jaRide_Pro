@@ -106,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
                         ? Constant.loader(isDarkTheme: themeChange.getThem())
                         : Container(
                             decoration:
-                                BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+                                const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Padding(

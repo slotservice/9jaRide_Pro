@@ -36,7 +36,7 @@ class VehicleInformationScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+                  decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
                   child: controller.isLoading.value
                       ? Constant.loader(isDarkTheme: themeChange.getThem())
                       : Padding(
@@ -84,21 +84,34 @@ class VehicleInformationScreen extends StatelessWidget {
                                                 children: [
                                                   Container(
                                                     decoration: const BoxDecoration(
-                                                        color: AppColors.background,
+                                                        color: Colors.white,
                                                         borderRadius: BorderRadius.all(
                                                           Radius.circular(20),
                                                         )),
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(8.0),
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: serviceModel.image.toString(),
-                                                        fit: BoxFit.contain,
-                                                        height: Responsive.height(8, context),
-                                                        width: Responsive.width(18, context),
-                                                        placeholder: (context, url) => Constant.loader(isDarkTheme: themeChange.getThem()),
-                                                        errorWidget: (context, url, error) => Image.network(
-                                                            'https://firebasestorage.googleapis.com/v0/b/jaride-pro.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115'),
-                                                      ),
+                                                      child: serviceModel.image != null && serviceModel.image!.isNotEmpty
+                                                          ? CachedNetworkImage(
+                                                              imageUrl: serviceModel.image!,
+                                                              fit: BoxFit.contain,
+                                                              height: Responsive.height(8, context),
+                                                              width: Responsive.width(18, context),
+                                                              placeholder: (context, url) => SizedBox(
+                                                                height: Responsive.height(8, context),
+                                                                width: Responsive.width(18, context),
+                                                                child: const Center(child: Icon(Icons.directions_car, size: 32, color: Colors.grey)),
+                                                              ),
+                                                              errorWidget: (context, url, error) => SizedBox(
+                                                                height: Responsive.height(8, context),
+                                                                width: Responsive.width(18, context),
+                                                                child: const Center(child: Icon(Icons.directions_car, size: 32, color: Colors.grey)),
+                                                              ),
+                                                            )
+                                                          : SizedBox(
+                                                              height: Responsive.height(8, context),
+                                                              width: Responsive.width(18, context),
+                                                              child: const Center(child: Icon(Icons.directions_car, size: 32, color: Colors.grey)),
+                                                            ),
                                                     ),
                                                   ),
                                                   const SizedBox(

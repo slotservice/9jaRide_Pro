@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   ? true
                   : themeChangeProvider.darkTheme == 1
                       ? false
-                      : true,
+                      : themeChangeProvider.getSystemThem(),
               context),
           localizationsDelegates: const [
             CountryLocalizations.delegate,

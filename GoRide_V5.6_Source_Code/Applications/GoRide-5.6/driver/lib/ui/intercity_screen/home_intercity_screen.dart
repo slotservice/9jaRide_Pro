@@ -35,7 +35,7 @@ class HomeIntercityScreen extends StatelessWidget {
                           height: Responsive.height(100, context),
                           width: Responsive.width(100, context),
                           decoration:
-                              BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+                              const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: controller.isLoading.value == true
