@@ -24,4 +24,6 @@ class CollectionName {
   static const String zone = "zone";
   static const String chat = "chat";
   static const String surgeZones = "surge_zones";
+  static const String documents = "documents";
+  static const String customerDocument = "customer_document";
 }

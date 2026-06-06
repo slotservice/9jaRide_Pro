@@ -109,6 +109,15 @@ class Constant {
     }
   }
 
+  static Future<DateTime?> selectFetureDate(BuildContext context) async {
+    return await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2200),
+    );
+  }
+
   static String localizationDescription(List<LanguageDescription>? name) {
     if (name!.firstWhere((element) => element.type == Constant.getLanguage().code).description!.isNotEmpty) {
       return name.firstWhere((element) => element.type == Constant.getLanguage().code).description!;

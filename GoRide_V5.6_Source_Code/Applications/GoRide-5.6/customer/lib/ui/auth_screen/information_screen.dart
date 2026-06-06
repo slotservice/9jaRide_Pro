@@ -9,7 +9,7 @@ import 'package:customer/themes/app_colors.dart';
 import 'package:customer/themes/button_them.dart';
 import 'package:customer/themes/responsive.dart';
 import 'package:customer/themes/text_field_them.dart';
-import 'package:customer/ui/dashboard_screen.dart';
+import 'package:customer/ui/kyc/kyc_screen.dart';
 import 'package:customer/utils/DarkThemeProvider.dart';
 import 'package:customer/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
@@ -171,7 +171,7 @@ class InformationScreen extends StatelessWidget {
                                       ShowToastDialog.closeLoader();
 
                                       if (value == true) {
-                                        Get.offAll(const DashBoardScreen());
+                                        Get.offAll(const KycScreen());
                                       }
                                     });
                                   } else {
@@ -200,7 +200,7 @@ class InformationScreen extends StatelessWidget {
                                   ShowToastDialog.closeLoader();
                                   print("------>$value");
                                   if (value == true) {
-                                    Get.offAll(const DashBoardScreen());
+                                    Get.offAll(const KycScreen());
                                   }
                                 });
                               }

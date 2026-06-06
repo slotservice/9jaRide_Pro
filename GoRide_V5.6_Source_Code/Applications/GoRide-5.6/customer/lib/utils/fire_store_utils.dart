@@ -5,6 +5,8 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer/constant/collection_name.dart';
 import 'package:customer/constant/constant.dart';
+import 'package:customer/model/customer_document_model.dart';
+import 'package:customer/model/document_model.dart';
 import 'package:customer/constant/show_toast_dialog.dart';
 import 'package:customer/firebase_options.dart';
 import 'package:customer/model/admin_commission.dart';
@@ -1358,5 +1360,65 @@ class FireStoreUtils {
       print("❌ Error deleting driver: $e");
       return false;
     }
+  }
+
+  static Future<List<DocumentModel>> getCustomerDocumentList() async {
+    List<DocumentModel> documentList = [];
+    await fireStore
+        .collection(CollectionName.documents)
+        .where('enable', isEqualTo: true)
+        .where('type', isEqualTo: Constant.currentUserType)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        documentList.add(DocumentModel.fromJson(element.data()));
+      }
+    }).catchError((error) {
+      log(error.toString());
+    });
+    return documentList;
+  }
+
+  static Future<CustomerDocumentModel?> getDocumentOfCustomer() async {
+    CustomerDocumentModel? model;
+    await fireStore.collection(CollectionName.customerDocument).doc(getCurrentUid()).get().then((value) {
+      if (value.exists && value.data() != null) {
+        model = CustomerDocumentModel.fromJson(value.data()!);
+      }
+    });
+    return model;
+  }
+
+  static Future<bool> uploadCustomerDocument(Documents documents) async {
+    bool isAdded = false;
+    CustomerDocumentModel customerDocumentModel = CustomerDocumentModel();
+    List<Documents> documentsList = [];
+    await fireStore.collection(CollectionName.customerDocument).doc(getCurrentUid()).get().then((value) async {
+      if (value.exists && value.data() != null) {
+        CustomerDocumentModel existing = CustomerDocumentModel.fromJson(value.data()!);
+        documentsList = existing.documents ?? [];
+        var match = documentsList.where((e) => e.documentId == documents.documentId);
+        if (match.isEmpty) {
+          documentsList.add(documents);
+        } else {
+          int index = documentsList.indexWhere((e) => e.documentId == documents.documentId);
+          documentsList.removeAt(index);
+          documentsList.insert(index, documents);
+          ShowToastDialog.showToast("Document is under verification");
+        }
+      } else {
+        documentsList.add(documents);
+      }
+      customerDocumentModel.id = getCurrentUid();
+      customerDocumentModel.documents = documentsList;
+    });
+
+    await fireStore.collection(CollectionName.customerDocument).doc(getCurrentUid()).set(customerDocumentModel.toJson()).then((_) {
+      isAdded = true;
+    }).catchError((error) {
+      isAdded = false;
+      log(error.toString());
+    });
+    return isAdded;
   }
 }
