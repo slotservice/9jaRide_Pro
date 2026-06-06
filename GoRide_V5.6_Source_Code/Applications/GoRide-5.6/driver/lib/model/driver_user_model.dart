@@ -7,6 +7,7 @@ import 'package:driver/model/subscription_plan_model.dart';
 
 class DriverUserModel {
   bool? isEnabled;
+  bool? isActive;
   String? phoneNumber;
   String? loginType;
   String? countryCode;
@@ -39,6 +40,7 @@ class DriverUserModel {
 
   DriverUserModel({
     this.isEnabled,
+    this.isActive,
     this.phoneNumber,
     this.loginType,
     this.countryCode,
@@ -72,6 +74,7 @@ class DriverUserModel {
 
   DriverUserModel.fromJson(Map<String, dynamic> json) {
     isEnabled = json['isEnabled'];
+    isActive = json['isActive'];
     phoneNumber = json['phoneNumber'];
     loginType = json['loginType'];
     countryCode = json['countryCode'];

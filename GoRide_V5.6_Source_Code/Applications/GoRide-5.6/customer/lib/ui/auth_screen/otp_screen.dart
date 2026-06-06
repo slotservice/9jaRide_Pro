@@ -126,8 +126,29 @@ class OtpScreen extends StatelessWidget {
                                         }
                                       }
                                     } else {
-                                      await FirebaseAuth.instance.signOut();
-                                      ShowToastDialog.showToast('This mobile number is already registered with a different role.'.tr);
+                                      UserModel? customerModel = await FireStoreUtils.getUserProfile(value.user!.uid);
+                                      if (customerModel != null) {
+                                        if (customerModel.isActive == true) {
+                                          var existingDocs = await FireStoreUtils.getDocumentOfCustomer();
+                                          bool hasUploaded = existingDocs != null && (existingDocs.documents?.isNotEmpty == true);
+                                          if (hasUploaded) {
+                                            Get.offAll(const DashBoardScreen());
+                                          } else {
+                                            Get.offAll(const KycScreen());
+                                          }
+                                        } else {
+                                          await FirebaseAuth.instance.signOut();
+                                          ShowToastDialog.showToast("This user is disable please contact administrator".tr);
+                                        }
+                                      } else {
+                                        UserModel newUser = UserModel();
+                                        newUser.id = value.user!.uid;
+                                        newUser.countryCode = controller.countryCode.value;
+                                        newUser.countryISOCode = controller.countryISOCode.value;
+                                        newUser.phoneNumber = controller.phoneNumber.value;
+                                        newUser.loginType = Constant.phoneLoginType;
+                                        Get.to(const InformationScreen(), arguments: {"userModel": newUser});
+                                      }
                                     }
                                   });
                                 }

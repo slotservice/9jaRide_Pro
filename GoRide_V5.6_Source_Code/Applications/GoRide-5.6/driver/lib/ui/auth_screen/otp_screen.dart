@@ -116,11 +116,25 @@ class OtpScreen extends StatelessWidget {
                                       Get.off(const InformationScreen(), arguments: {
                                         "userModel": userModel,
                                       });
-                                    } else if (userExit == Constant.currentUserType) {
+                                    } else if (userExit == Constant.currentUserType || userExit != '') {
                                       await FireStoreUtils.getDriverProfile(value.user!.uid).then(
-                                        (value) async {
-                                          if (value != null) {
-                                            DriverUserModel userModel = value;
+                                        (driverProfile) async {
+                                          if (driverProfile == null) {
+                                            DriverUserModel newUser = DriverUserModel();
+                                            newUser.id = value.user!.uid;
+                                            newUser.countryCode = controller.countryCode.value;
+                                            newUser.countryISOCode = controller.countryISOCode.value;
+                                            newUser.phoneNumber = controller.phoneNumber.value;
+                                            newUser.loginType = Constant.phoneLoginType;
+                                            ShowToastDialog.closeLoader();
+                                            Get.off(const InformationScreen(), arguments: {"userModel": newUser});
+                                          } else {
+                                            DriverUserModel userModel = driverProfile;
+                                            if (userModel.isActive == false) {
+                                              await FirebaseAuth.instance.signOut();
+                                              ShowToastDialog.showToast("This user is disable please contact administrator".tr);
+                                              return;
+                                            }
                                             bool isPlanExpire = false;
                                             if (userModel.subscriptionPlan?.id != null) {
                                               if (userModel.subscriptionExpiryDate == null) {
@@ -154,9 +168,6 @@ class OtpScreen extends StatelessWidget {
                                           }
                                         },
                                       );
-                                    } else {
-                                      await FirebaseAuth.instance.signOut();
-                                      ShowToastDialog.showToast('This mobile number is already registered with a different role.'.tr);
                                     }
                                   });
                                 }
