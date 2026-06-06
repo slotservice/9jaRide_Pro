@@ -189,7 +189,7 @@ class ProfileScreen extends StatelessWidget {
                                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                                             child: Row(
                                               children: [
-                                                const Icon(Icons.verified_user_outlined, color: AppColors.lightprimary),
+                                                Icon(Icons.verified_user_outlined, color: AppColors.lightprimary),
                                                 const SizedBox(width: 12),
                                                 Expanded(
                                                   child: Text(
@@ -197,7 +197,7 @@ class ProfileScreen extends StatelessWidget {
                                                     style: GoogleFonts.poppins(fontWeight: FontWeight.w500, color: AppColors.lightprimary),
                                                   ),
                                                 ),
-                                                const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.lightprimary),
+                                                Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.lightprimary),
                                               ],
                                             ),
                                           ),
