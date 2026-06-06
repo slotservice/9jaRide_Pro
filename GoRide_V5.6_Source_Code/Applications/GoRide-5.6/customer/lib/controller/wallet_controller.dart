@@ -53,16 +53,18 @@ class WalletController extends GetxController {
       if (value != null) {
         paymentModel.value = value;
 
-        if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
-        Stripe.merchantIdentifier = '9jaRide Pro';
-        Stripe.instance.applySettings();
+        if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) {
+          Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
+          Stripe.merchantIdentifier = '9jaRide Pro';
+          try { Stripe.instance.applySettings(); } catch (_) {}
+        }
         setRef();
 
         razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
         razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
         razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
       }
-    });
+    }).catchError((_) {});
 
     isLoading.value = false;
     update();
