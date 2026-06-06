@@ -35,6 +35,9 @@ class HomeController extends GetxController {
 
   RxString currentLocation = "".obs;
   RxBool isLoading = true.obs;
+  RxBool isAssistMode = false.obs;
+  RxBool hasAssistService = false.obs;
+  Rx<ServiceModel> assistService = ServiceModel().obs;
   RxList<ServiceModel> serviceList = <ServiceModel>[].obs;
   RxList bannerList = <BannerModel>[].obs;
   RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
@@ -157,7 +160,20 @@ class HomeController extends GetxController {
 
   Future<void> getServiceType() async {
     await FireStoreUtils.getService().then((value) {
-      serviceList.value = value;
+      ServiceModel? found;
+      for (var s in value) {
+        if (s.type == 'assist') {
+          found = s;
+          break;
+        }
+      }
+      if (found != null) {
+        assistService.value = found;
+        hasAssistService.value = true;
+        serviceList.value = value.where((s) => s.type != 'assist').toList();
+      } else {
+        serviceList.value = value;
+      }
       if (serviceList.isNotEmpty) {
         selectedType.value = serviceList.first;
       }

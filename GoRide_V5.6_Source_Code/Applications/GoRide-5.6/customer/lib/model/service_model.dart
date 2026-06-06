@@ -7,12 +7,13 @@ class ServiceModel {
   bool? offerRate;
   bool? intercityType;
   String? id;
+  String? type;
   List<LanguageName>? title;
   String? markerIcon;
   AdminCommission? adminCommission;
   List<Price>? prices;
 
-  ServiceModel({this.image, this.enable, this.intercityType, this.offerRate, this.id, this.markerIcon, this.title, this.adminCommission, this.prices});
+  ServiceModel({this.image, this.enable, this.intercityType, this.offerRate, this.id, this.type, this.markerIcon, this.title, this.adminCommission, this.prices});
 
   /// Safe accessor — returns first price or a default empty Price to avoid .first crash
   Price get firstPrice => (prices != null && prices!.isNotEmpty) ? prices!.first : Price();
@@ -24,6 +25,7 @@ class ServiceModel {
     id = json['id'];
     markerIcon = json['markerIcon'];
     intercityType = json['intercityType'];
+    type = json['type'];
     adminCommission = json['adminCommission'] != null ? AdminCommission.fromJson(json['adminCommission']) : AdminCommission(isEnabled: true, amount: "", type: "");
     if (json['title'] != null) {
       title = <LanguageName>[];
@@ -47,6 +49,7 @@ class ServiceModel {
     data['markerIcon'] = markerIcon;
     data['title'] = title;
     data['intercityType'] = intercityType;
+    data['type'] = type;
     if (title != null) {
       data['title'] = title!.map((v) => v.toJson()).toList();
     }

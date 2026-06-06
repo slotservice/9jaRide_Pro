@@ -376,89 +376,135 @@ class HomeScreen extends StatelessWidget {
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      Text("Select Vehicle".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w500, letterSpacing: 1)),
+                                      Row(
+                                        children: [
+                                          Expanded(child: Text("Select Vehicle".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w500, letterSpacing: 1))),
+                                          if (controller.hasAssistService.value)
+                                            GestureDetector(
+                                              onTap: () {
+                                                controller.isAssistMode.value = !controller.isAssistMode.value;
+                                                if (controller.isAssistMode.value) {
+                                                  controller.selectedType.value = controller.assistService.value;
+                                                } else {
+                                                  if (controller.serviceList.isNotEmpty) {
+                                                    controller.selectedType.value = controller.serviceList.first;
+                                                  }
+                                                }
+                                                controller.calculateAmount();
+                                              },
+                                              child: AnimatedContainer(
+                                                duration: const Duration(milliseconds: 200),
+                                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                                decoration: BoxDecoration(
+                                                  color: controller.isAssistMode.value ? AppColors.lightprimary : Colors.grey.shade200,
+                                                  borderRadius: BorderRadius.circular(20),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      controller.isAssistMode.value ? Icons.check_circle : Icons.accessible,
+                                                      size: 16,
+                                                      color: controller.isAssistMode.value ? Colors.white : Colors.grey.shade700,
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Text(
+                                                      '9ja-Assist',
+                                                      style: GoogleFonts.poppins(
+                                                        fontSize: 12,
+                                                        color: controller.isAssistMode.value ? Colors.white : Colors.grey.shade700,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
                                       const SizedBox(
                                         height: 05,
                                       ),
-                                      SizedBox(
-                                        height: Responsive.height(18, context),
-                                        child: ListView.builder(
-                                          itemCount: controller.serviceList.length,
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) {
-                                            ServiceModel serviceModel = controller.serviceList[index];
-                                            return Obx(
-                                              () => InkWell(
-                                                onTap: () {
-                                                  controller.selectedType.value = serviceModel;
-                                                  Price? selectedPrice = controller.selectedType.value.prices?.firstWhere(
-                                                    (price) => price.zoneId == controller.selectedZone.value.id,
-                                                    orElse: () => Price(),
-                                                  );
-                                                  if (selectedPrice?.zoneId != null) {
-                                                    controller.selectedType.value.prices = [selectedPrice!];
-                                                  }
-                                                  controller.calculateAmount();
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(6.0),
-                                                  child: Container(
-                                                    width: Responsive.width(28, context),
-                                                    decoration: BoxDecoration(
-                                                        color: controller.selectedType.value == serviceModel
-                                                            ? themeChange.getThem()
-                                                                ? AppColors.darksecondprimary
-                                                                : AppColors.lightsecondprimary
-                                                            : themeChange.getThem()
-                                                                ? AppColors.darkService
-                                                                : controller.colors[index % controller.colors.length],
-                                                        borderRadius: const BorderRadius.all(
-                                                          Radius.circular(20),
-                                                        )),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              color: Theme.of(context).colorScheme.background,
-                                                              borderRadius: const BorderRadius.all(
-                                                                Radius.circular(20),
-                                                              )),
-                                                          child: Padding(
-                                                            padding: const EdgeInsets.all(8.0),
-                                                            child: CachedNetworkImage(
-                                                              imageUrl: serviceModel.image.toString(),
-                                                              fit: BoxFit.contain,
-                                                              height: Responsive.height(8, context),
-                                                              width: Responsive.width(18, context),
-                                                              placeholder: (context, url) => Constant.loader(isDarkTheme: themeChange.getThem()),
-                                                              errorWidget: (context, url, error) => Image.network(Constant.userPlaceHolder),
+                                      if (!controller.isAssistMode.value)
+                                        SizedBox(
+                                          height: Responsive.height(18, context),
+                                          child: ListView.builder(
+                                            itemCount: controller.serviceList.length,
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) {
+                                              ServiceModel serviceModel = controller.serviceList[index];
+                                              return Obx(
+                                                () => InkWell(
+                                                  onTap: () {
+                                                    controller.selectedType.value = serviceModel;
+                                                    Price? selectedPrice = controller.selectedType.value.prices?.firstWhere(
+                                                      (price) => price.zoneId == controller.selectedZone.value.id,
+                                                      orElse: () => Price(),
+                                                    );
+                                                    if (selectedPrice?.zoneId != null) {
+                                                      controller.selectedType.value.prices = [selectedPrice!];
+                                                    }
+                                                    controller.calculateAmount();
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(6.0),
+                                                    child: Container(
+                                                      width: Responsive.width(28, context),
+                                                      decoration: BoxDecoration(
+                                                          color: controller.selectedType.value == serviceModel
+                                                              ? themeChange.getThem()
+                                                                  ? AppColors.darksecondprimary
+                                                                  : AppColors.lightsecondprimary
+                                                              : themeChange.getThem()
+                                                                  ? AppColors.darkService
+                                                                  : controller.colors[index % controller.colors.length],
+                                                          borderRadius: const BorderRadius.all(
+                                                            Radius.circular(20),
+                                                          )),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                                color: Theme.of(context).colorScheme.background,
+                                                                borderRadius: const BorderRadius.all(
+                                                                  Radius.circular(20),
+                                                                )),
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: CachedNetworkImage(
+                                                                imageUrl: serviceModel.image.toString(),
+                                                                fit: BoxFit.contain,
+                                                                height: Responsive.height(8, context),
+                                                                width: Responsive.width(18, context),
+                                                                placeholder: (context, url) => Constant.loader(isDarkTheme: themeChange.getThem()),
+                                                                errorWidget: (context, url, error) => Image.network(Constant.userPlaceHolder),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        Text(Constant.localizationTitle(serviceModel.title),
-                                                            style: GoogleFonts.poppins(
-                                                                color: controller.selectedType.value == serviceModel
-                                                                    ? themeChange.getThem()
-                                                                        ? Colors.black
-                                                                        : Colors.white
-                                                                    : themeChange.getThem()
-                                                                        ? Colors.white
-                                                                        : Colors.black)),
-                                                      ],
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(Constant.localizationTitle(serviceModel.title),
+                                                              style: GoogleFonts.poppins(
+                                                                  color: controller.selectedType.value == serviceModel
+                                                                      ? themeChange.getThem()
+                                                                          ? Colors.black
+                                                                          : Colors.white
+                                                                      : themeChange.getThem()
+                                                                          ? Colors.white
+                                                                          : Colors.black)),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                          },
+                                              );
+                                            },
+                                          ),
                                         ),
-                                      ),
                                       Obx(
                                         () =>
                                             controller.sourceLocationLAtLng.value.latitude != null && controller.destinationLocationLAtLng.value.latitude != null && controller.amount.value.isNotEmpty
