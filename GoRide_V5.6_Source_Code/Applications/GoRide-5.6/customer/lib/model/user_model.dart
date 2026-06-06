@@ -14,6 +14,7 @@ class UserModel {
   String? reviewsSum;
   String? walletAmount;
   bool? isActive;
+  bool? specialAssistance;
   Timestamp? createdAt;
 
   UserModel(
@@ -29,6 +30,7 @@ class UserModel {
       this.reviewsCount,
       this.reviewsSum,
       this.isActive,
+      this.specialAssistance,
       this.walletAmount,
       this.createdAt});
 
@@ -45,6 +47,7 @@ class UserModel {
     reviewsCount = json['reviewsCount'] ?? "0.0";
     reviewsSum = json['reviewsSum'] ?? "0.0";
     isActive = json['isActive'];
+    specialAssistance = json['specialAssistance'] ?? false;
     walletAmount = json['walletAmount'] ?? "0.0";
     createdAt = json['createdAt'];
   }
@@ -63,6 +66,7 @@ class UserModel {
     data['reviewsCount'] = reviewsCount;
     data['reviewsSum'] = reviewsSum;
     data['isActive'] = isActive;
+    data['specialAssistance'] = specialAssistance;
     data['walletAmount'] = walletAmount;
     data['createdAt'] = createdAt;
     return data;

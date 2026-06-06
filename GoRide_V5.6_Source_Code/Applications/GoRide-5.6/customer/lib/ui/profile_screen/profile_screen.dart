@@ -174,6 +174,40 @@ class ProfileScreen extends StatelessWidget {
                                           height: 10,
                                         ),
                                         TextFieldThem.buildTextFiled(context, hintText: 'Email'.tr, controller: controller.emailController.value, enable: false),
+                                        const SizedBox(height: 10),
+                                        Container(
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: themeChange.getThem() ? AppColors.darkContainerBackground : AppColors.containerBackground,
+                                            borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                            border: Border.all(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Special Assistance Needed'.tr,
+                                                      style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 14),
+                                                    ),
+                                                    Text(
+                                                      'Wheelchair, elderly care, visual impairment'.tr,
+                                                      style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey.shade600),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Obx(() => Switch(
+                                                    value: controller.specialAssistance.value,
+                                                    activeColor: AppColors.lightprimary,
+                                                    onChanged: (val) => controller.specialAssistance.value = val,
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
                                         const SizedBox(
                                           height: 20,
                                         ),
@@ -218,6 +252,7 @@ class ProfileScreen extends StatelessWidget {
                                             UserModel userModel = controller.userModel.value;
                                             userModel.fullName = controller.fullNameController.value.text;
                                             userModel.profilePic = controller.profileImage.value;
+                                            userModel.specialAssistance = controller.specialAssistance.value;
 
                                             FireStoreUtils.updateUser(userModel).then((value) {
                                               ShowToastDialog.closeLoader();

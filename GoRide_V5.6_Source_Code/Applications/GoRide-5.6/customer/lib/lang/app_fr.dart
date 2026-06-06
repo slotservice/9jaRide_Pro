@@ -236,5 +236,7 @@ const Map<String, String> frFR = {
   'This account is already registered with a different role.': 'Ce compte est déjà enregistré avec un rôle différent.',
   'Start Recording...': 'Démarrage de l’enregistrement...',
   'loaing..': 'chargement..',
-  'Light/dark mode': 'Mode clair / Mode sombre'
+  'Light/dark mode': 'Mode clair / Mode sombre',
+  'Special Assistance Needed': 'Assistance spéciale requise',
+  'Wheelchair, elderly care, visual impairment': 'Fauteuil roulant, soins aux personnes âgées, déficience visuelle',
 };

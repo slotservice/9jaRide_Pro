@@ -264,4 +264,6 @@ const Map<String, String> yoYO = {
   'Please upload back side of document.': 'Jọwọ gbe ẹgbẹ ẹhin iwe aṣẹ soke.',
   'Please wait..': 'Jọwọ duro..',
   'No Image available': 'Ko si aworan to wa',
+  'Special Assistance Needed': 'Iranlọwọ Pataki Nilo',
+  'Wheelchair, elderly care, visual impairment': 'Kẹkẹ alaabo, itọju arugbo, ailagbara oju',
 };

@@ -237,5 +237,7 @@ const Map<String, String> arAR = {
   'loaing..': 'جاري التحميل..',
   'Light/dark mode': 'وضع فاتح / وضع داكن',
   "We'll be back soon!": "سنعود قريبًا!",
-  "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!": "نعتذر عن الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة. سنعود للعمل قريبًا!"
+  "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!": "نعتذر عن الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة. سنعود للعمل قريبًا!",
+  'Special Assistance Needed': 'مساعدة خاصة مطلوبة',
+  'Wheelchair, elderly care, visual impairment': 'كرسي متحرك، رعاية المسنين، ضعف البصر',
 };

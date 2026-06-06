@@ -35,11 +35,14 @@ class ProfileController extends GetxController {
         emailController.value.text = userModel.value.email.toString();
         fullNameController.value.text = userModel.value.fullName.toString();
         profileImage.value = userModel.value.profilePic ?? '';
+        specialAssistance.value = userModel.value.specialAssistance ?? false;
         print("======>${profileImage.value}");
         isLoading.value = false;
       }
     });
   }
+
+  RxBool specialAssistance = false.obs;
 
   final ImagePicker _imagePicker = ImagePicker();
   RxString profileImage = "".obs;

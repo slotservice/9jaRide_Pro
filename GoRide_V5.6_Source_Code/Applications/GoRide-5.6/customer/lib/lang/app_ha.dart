@@ -264,4 +264,6 @@ const Map<String, String> haHA = {
   'Please upload back side of document.': 'Da fatan za a loda bayayan takarda.',
   'Please wait..': 'Da fatan za a jira..',
   'No Image available': 'Babu hoto da yake samu',
+  'Special Assistance Needed': 'Ana Buƙatar Taimako Na Musamman',
+  'Wheelchair, elderly care, visual impairment': 'Kujera guragu, kula da tsofaffi, naƙasasshen gani',
 };

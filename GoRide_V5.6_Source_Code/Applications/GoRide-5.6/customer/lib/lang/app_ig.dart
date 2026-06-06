@@ -264,4 +264,6 @@ const Map<String, String> igIG = {
   'Please upload back side of document.': 'Biko bulite azụ akwụkwọ.',
   'Please wait..': 'Biko chere..',
   'No Image available': 'Enweghị onyonyo dị',
+  'Special Assistance Needed': 'Achọrọ Enyemaka Pụrụ Iche',
+  'Wheelchair, elderly care, visual impairment': 'Oche igwe, nlekọta ndị okenye, adịghị ike anya',
 };

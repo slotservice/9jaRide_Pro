@@ -467,9 +467,9 @@ class HomeScreen extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           Container(
-                                                            decoration: BoxDecoration(
-                                                                color: Theme.of(context).colorScheme.background,
-                                                                borderRadius: const BorderRadius.all(
+                                                            decoration: const BoxDecoration(
+                                                                color: Colors.white,
+                                                                borderRadius: BorderRadius.all(
                                                                   Radius.circular(20),
                                                                 )),
                                                             child: Padding(

@@ -20,7 +20,7 @@ class DarkThemeProvider with ChangeNotifier {
     } else if (_darkTheme == 1) {
       return false;
     } else {
-      return true;
+      return getSystemThem();
     }
   }
 
