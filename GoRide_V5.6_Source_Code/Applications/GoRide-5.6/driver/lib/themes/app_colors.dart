@@ -4,7 +4,7 @@ class AppColors {
   static Color lightprimary = Color(0xff1B5E20); // Deep Green
 
   static Color darksecondprimary = Color(0xffD4AF37); // Gold
-  static Color lightsecondprimary = Color(0xff1B5E20); // Deep Green
+  static Color lightsecondprimary = Color(0xffD4AF37); // Gold — contrasts with dark green nav background
 
   static const Color background = Color(0xffFFFFFF);
   static const Color darkBackground = Color(0xff0F2B15); // Dark Green

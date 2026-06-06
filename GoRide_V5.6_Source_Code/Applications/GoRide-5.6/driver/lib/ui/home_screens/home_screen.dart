@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
             backgroundColor: AppColors.lightprimary,
-            body: controller.isLoading.value || controller.driverModel.value.id == null
+            body: controller.isLoading.value
                 ? Constant.loader(isDarkTheme: themeChange.getThem())
                 : Column(
                     children: [
