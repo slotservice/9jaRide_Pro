@@ -1,6 +1,7 @@
 import 'package:customer/controller/splash_controller.dart';
 import 'package:customer/themes/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -14,9 +15,9 @@ class SplashScreen extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColors.lightprimary,
             body: Center(
-                child: Image.asset(
-              "assets/app_logo.png",
-              width: 200,
+                child: SvgPicture.asset(
+              "assets/app_logo.svg",
+              width: MediaQuery.of(context).size.width * 0.65,
             )),
           );
         });
