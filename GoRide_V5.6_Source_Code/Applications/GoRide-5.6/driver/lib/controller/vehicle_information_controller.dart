@@ -56,7 +56,7 @@ class VehicleInformationController extends GetxController {
 
   Future<void> getVehicleTye() async {
     await FireStoreUtils.getService().then((value) {
-      serviceList.value = value;
+      serviceList.value = value.where((s) => s.type != 'assist').toList();
     });
 
     await FireStoreUtils.getZone().then((value) {
@@ -76,7 +76,7 @@ class VehicleInformationController extends GetxController {
           seatsController.value.text = driverModel.value.vehicleInformation!.seats ?? "2";
           selectedServiceType.value = await FireStoreUtils.getServiceById(driverModel.value.serviceId);
           zoneList.clear();
-          final priceIds = selectedServiceType.value.prices!.map((p) => p.zoneId).toSet();
+          final priceIds = (selectedServiceType.value.prices ?? []).map((p) => p.zoneId).toSet();
           zoneList.addAll(zoneAllList.where((z) => priceIds.contains(z.id)));
           if (driverModel.value.zoneIds != null) {
             if (zoneList.isNotEmpty) {
@@ -104,11 +104,13 @@ class VehicleInformationController extends GetxController {
               }
             }
           }
-          tabBarheight.value = selectedPrices.first.isAcNonAc == true ? 200 : 100;
+          tabBarheight.value = selectedPrices.isNotEmpty && selectedPrices.first.isAcNonAc == true ? 200 : 100;
         }
         if (driverModel.value.zoneIds == null) {
-          selectedServiceType.value = serviceList.first;
-          getZone();
+          if (serviceList.isNotEmpty) {
+            selectedServiceType.value = serviceList.first;
+            getZone();
+          }
         }
       }
     });
@@ -134,7 +136,7 @@ class VehicleInformationController extends GetxController {
     zoneNameController.value.text = '';
     selectedPrices.clear();
     zoneList.clear();
-    final priceIds = selectedServiceType.value.prices!.map((p) => p.zoneId).toSet();
+    final priceIds = (selectedServiceType.value.prices ?? []).map((p) => p.zoneId).toSet();
     zoneList.addAll(zoneAllList.where((z) => priceIds.contains(z.id)));
   }
 

@@ -308,5 +308,13 @@ const Map<String, String> frFR = {
   "Please Select Payment Method.": "Veuillez sélectionner un mode de paiement.",
   "Subscription plan purchase": "Achat du plan d'abonnement",
   "Choose Subscription Plan": "Choisissez un plan d'abonnement",
-  "Wallet Amount Insufficient": "Montant du portefeuille insuffisant"
+  "Wallet Amount Insufficient": "Montant du portefeuille insuffisant",
+  'My Documents': 'Mes Documents',
+  '(License & Vehicle Reg.)': "(Permis & Carte grise)",
+  'Update KYC Documents': 'Mettre à jour les documents KYC',
+  'Save KYC Documents': 'Enregistrer les documents KYC',
+  'Hire-Purchase Tracker': 'Suivi location-vente',
+  'View vehicle payment progress': 'Voir la progression du paiement',
+  'Please select at least one document image': 'Veuillez sélectionner au moins une image',
+  'Documents saved successfully': 'Documents enregistrés avec succès',
 };

@@ -10,6 +10,7 @@ import 'package:driver/themes/app_colors.dart';
 import 'package:driver/themes/button_them.dart';
 import 'package:driver/themes/responsive.dart';
 import 'package:driver/themes/text_field_them.dart';
+import 'package:driver/ui/online_registration/online_registartion_screen.dart';
 import 'package:driver/utils/DarkThemeProvider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
@@ -171,6 +172,151 @@ class ProfileScreen extends StatelessWidget {
                                           height: 10,
                                         ),
                                         TextFieldThem.buildTextFiled(context, hintText: 'Email'.tr, controller: controller.emailController.value, enable: false),
+                                        const SizedBox(height: 10),
+                                        // My Documents tile
+                                        InkWell(
+                                          onTap: () => Get.to(const OnlineRegistrationScreen()),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                              border: Border.all(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(Icons.folder_outlined),
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("My Documents".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+                                                        Text("(License & Vehicle Reg.)".tr, style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.grey),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        // Update KYC Documents section
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text("Update KYC Documents".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 14)),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Obx(() => Row(
+                                          children: [
+                                            for (int i = 0; i < controller.documentList.length && i < 2; i++) ...[
+                                              Expanded(
+                                                child: GestureDetector(
+                                                  onTap: () async {
+                                                    await showModalBottomSheet(
+                                                      context: context,
+                                                      builder: (_) => SafeArea(
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            ListTile(
+                                                              leading: const Icon(Icons.camera_alt),
+                                                              title: Text("Camera".tr),
+                                                              onTap: () { Get.back(); controller.pickDocImage(source: ImageSource.camera, docIndex: i); },
+                                                            ),
+                                                            ListTile(
+                                                              leading: const Icon(Icons.photo_library),
+                                                              title: Text("Gallery".tr),
+                                                              onTap: () { Get.back(); controller.pickDocImage(source: ImageSource.gallery, docIndex: i); },
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    height: 100,
+                                                    margin: EdgeInsets.only(right: i == 0 ? 6 : 0),
+                                                    decoration: BoxDecoration(
+                                                      color: themeChange.getThem() ? AppColors.darkTextField : AppColors.textField,
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      border: Border.all(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Builder(builder: (_) {
+                                                          String img = i == 0 ? controller.doc0Image.value : controller.doc1Image.value;
+                                                          if (img.isNotEmpty && !Constant().hasValidUrl(img)) {
+                                                            return ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.file(File(img), height: 60, width: double.infinity, fit: BoxFit.cover));
+                                                          } else if (img.isNotEmpty) {
+                                                            return ClipRRect(borderRadius: BorderRadius.circular(8), child: Image.network(img, height: 60, width: double.infinity, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.upload_file, size: 36, color: Colors.grey)));
+                                                          }
+                                                          return const Icon(Icons.upload_file, size: 36, color: Colors.grey);
+                                                        }),
+                                                        const SizedBox(height: 4),
+                                                        Text(
+                                                          Constant.localizationTitle(controller.documentList[i].title),
+                                                          style: GoogleFonts.poppins(fontSize: 11),
+                                                          textAlign: TextAlign.center,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ],
+                                        )),
+                                        const SizedBox(height: 10),
+                                        ButtonThem.buildButton(
+                                          context,
+                                          title: "Save KYC Documents".tr,
+                                          onPress: () async {
+                                            bool hasNew = (controller.doc0Image.value.isNotEmpty && !Constant().hasValidUrl(controller.doc0Image.value)) ||
+                                                (controller.doc1Image.value.isNotEmpty && !Constant().hasValidUrl(controller.doc1Image.value));
+                                            if (!hasNew) {
+                                              ShowToastDialog.showToast("Please select at least one document image".tr);
+                                              return;
+                                            }
+                                            await controller.saveKycDocs();
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        // Hire-Purchase Tracker tile
+                                        if (controller.driverModel.value.ownerId != null)
+                                          InkWell(
+                                            onTap: () {},
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                                border: Border.all(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(Icons.directions_car_outlined),
+                                                    const SizedBox(width: 10),
+                                                    Expanded(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text("Hire-Purchase Tracker".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+                                                          Text("View vehicle payment progress".tr, style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.grey),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         const SizedBox(
                                           height: 20,
                                         ),

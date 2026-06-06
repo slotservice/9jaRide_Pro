@@ -326,4 +326,12 @@ const Map<String, String> igIG = {
   'Expiry date': 'Ụbọchị ngwụcha',
   'Select source': 'Họrọ ebe mmepụta',
   'number': 'nọmba',
+  'My Documents': 'Akwụkwọ M',
+  '(License & Vehicle Reg.)': '(Laịsensị & Ndebanye Ụgbọ)',
+  'Update KYC Documents': 'Melite Akwụkwọ KYC',
+  'Save KYC Documents': 'Chekwaa Akwụkwọ KYC',
+  'Hire-Purchase Tracker': 'Onye Soro Mgbazinye Ụgbọ',
+  'View vehicle payment progress': 'Hụ ọganihu ịkwụ ụgwọ ụgbọ',
+  'Please select at least one document image': 'Biko họrọ opekata mpe otu foto akwụkwọ',
+  'Documents saved successfully': 'Echekwara akwụkwọ n\'ụzọ ọma',
 };

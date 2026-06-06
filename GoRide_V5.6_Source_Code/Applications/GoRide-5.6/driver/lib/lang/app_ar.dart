@@ -307,5 +307,13 @@ const Map<String, String> arAR = {
   "Choose Subscription Plan": "اختر خطة الاشتراك",
   "Wallet Amount Insufficient": "رصيد المحفظة غير كافٍ",
   "We'll be back soon!": "سنعود قريبًا!",
-  "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!": "نعتذر عن الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة. سنعود للعمل قريبًا!"
+  "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!": "نعتذر عن الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة. سنعود للعمل قريبًا!",
+  'My Documents': 'وثائقي',
+  '(License & Vehicle Reg.)': '(الرخصة وتسجيل المركبة)',
+  'Update KYC Documents': 'تحديث وثائق KYC',
+  'Save KYC Documents': 'حفظ وثائق KYC',
+  'Hire-Purchase Tracker': 'متتبع الإيجار مع الشراء',
+  'View vehicle payment progress': 'عرض تقدم سداد المركبة',
+  'Please select at least one document image': 'يرجى تحديد صورة وثيقة واحدة على الأقل',
+  'Documents saved successfully': 'تم حفظ المستندات بنجاح',
 };

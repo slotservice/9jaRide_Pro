@@ -326,4 +326,12 @@ const Map<String, String> yoYO = {
   'Expiry date': 'Ọjọ ipari',
   'Select source': 'Yan orisun',
   'number': 'nọmba',
+  'My Documents': 'Awọn Iwe Mi',
+  '(License & Vehicle Reg.)': '(Iwe-aṣẹ & Iforukọsilẹ Ọkọ)',
+  'Update KYC Documents': 'Ṣe imudojuiwọn Awọn Iwe KYC',
+  'Save KYC Documents': 'Fipamọ Awọn Iwe KYC',
+  'Hire-Purchase Tracker': 'Atẹle Rẹnrẹn-Rira',
+  'View vehicle payment progress': 'Wo ipa ọna isanwo ọkọ',
+  'Please select at least one document image': 'Jọwọ yan o kere ju aworan iwe kan',
+  'Documents saved successfully': 'Awọn iwe ti wa ni fipamọ daradara',
 };

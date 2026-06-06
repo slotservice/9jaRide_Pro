@@ -313,5 +313,13 @@ const Map<String, String> enUS = {
   'Wallet Amount Insufficient': 'Wallet Amount Insufficient',
   "We'll be back soon!": "We'll be back soon!",
   "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!":
-      "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!"
+      "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!",
+  'My Documents': 'My Documents',
+  '(License & Vehicle Reg.)': '(License & Vehicle Reg.)',
+  'Update KYC Documents': 'Update KYC Documents',
+  'Save KYC Documents': 'Save KYC Documents',
+  'Hire-Purchase Tracker': 'Hire-Purchase Tracker',
+  'View vehicle payment progress': 'View vehicle payment progress',
+  'Please select at least one document image': 'Please select at least one document image',
+  'Documents saved successfully': 'Documents saved successfully',
 };

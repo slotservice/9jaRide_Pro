@@ -326,4 +326,12 @@ const Map<String, String> haHA = {
   'Expiry date': 'Ranar ƙarewa',
   'Select source': 'Zaɓi tushe',
   'number': 'lamba',
+  'My Documents': 'Takarduna',
+  '(License & Vehicle Reg.)': '(Lasisi & Rajista Mota)',
+  'Update KYC Documents': 'Sabunta Takardun KYC',
+  'Save KYC Documents': 'Ajiye Takardun KYC',
+  'Hire-Purchase Tracker': 'Mai Bin Hayar Siya',
+  'View vehicle payment progress': 'Duba ci gaban biyan kudin mota',
+  'Please select at least one document image': 'Da fatan a zabi hoton takarda daya akalla',
+  'Documents saved successfully': 'Takardun an adana cikin nasara',
 };
