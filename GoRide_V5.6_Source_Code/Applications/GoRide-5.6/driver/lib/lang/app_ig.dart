@@ -323,7 +323,6 @@ const Map<String, String> igIG = {
   'Save Document': 'Chekwaa Akwụkwọ',
   'Document uploaded successfully': 'Ebulitera akwụkwọ n\'ụzọ ọma',
   'Front side of': 'Ihu nke',
-  'Back side of': 'Azụ nke',
   'Expiry date': 'Ụbọchị ngwụcha',
   'Select source': 'Họrọ ebe mmepụta',
   'number': 'nọmba',

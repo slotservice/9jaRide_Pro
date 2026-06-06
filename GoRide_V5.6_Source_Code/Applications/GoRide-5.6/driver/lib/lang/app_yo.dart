@@ -323,7 +323,6 @@ const Map<String, String> yoYO = {
   'Save Document': 'Fipamọ Iwe Aṣẹ',
   'Document uploaded successfully': 'Iwe aṣẹ ti gbe soke daradara',
   'Front side of': 'Ẹgbẹ iwaju ti',
-  'Back side of': 'Ẹgbẹ ẹhin ti',
   'Expiry date': 'Ọjọ ipari',
   'Select source': 'Yan orisun',
   'number': 'nọmba',

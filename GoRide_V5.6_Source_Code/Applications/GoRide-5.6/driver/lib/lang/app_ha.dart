@@ -323,7 +323,6 @@ const Map<String, String> haHA = {
   'Save Document': 'Ajiye Takarda',
   'Document uploaded successfully': 'An loda takarda cikin nasara',
   'Front side of': 'Gaban',
-  'Back side of': 'Bayan',
   'Expiry date': 'Ranar ƙarewa',
   'Select source': 'Zaɓi tushe',
   'number': 'lamba',
