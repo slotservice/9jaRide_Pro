@@ -453,12 +453,8 @@ class HomeScreen extends StatelessWidget {
                                                       width: Responsive.width(28, context),
                                                       decoration: BoxDecoration(
                                                           color: controller.selectedType.value == serviceModel
-                                                              ? themeChange.getThem()
-                                                                  ? AppColors.darksecondprimary
-                                                                  : AppColors.lightsecondprimary
-                                                              : themeChange.getThem()
-                                                                  ? AppColors.darkService
-                                                                  : controller.colors[index % controller.colors.length],
+                                                              ? AppColors.lightsecondprimary
+                                                              : controller.colors[index % controller.colors.length],
                                                           borderRadius: const BorderRadius.all(
                                                             Radius.circular(20),
                                                           )),
@@ -504,12 +500,8 @@ class HomeScreen extends StatelessWidget {
                                                           Text(Constant.localizationTitle(serviceModel.title),
                                                               style: GoogleFonts.poppins(
                                                                   color: controller.selectedType.value == serviceModel
-                                                                      ? themeChange.getThem()
-                                                                          ? Colors.black
-                                                                          : Colors.white
-                                                                      : themeChange.getThem()
-                                                                          ? Colors.white
-                                                                          : Colors.black)),
+                                                                      ? Colors.white
+                                                                      : Colors.black)),
                                                         ],
                                                       ),
                                                     ),
