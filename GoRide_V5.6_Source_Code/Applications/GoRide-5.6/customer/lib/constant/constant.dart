@@ -102,11 +102,12 @@ class Constant {
   }
 
   static String localizationTitle(List<LanguageName>? name) {
-    if (name?.firstWhere((element) => element.type == Constant.getLanguage().code).title?.isNotEmpty == true) {
-      return name?.firstWhere((element) => element.type == Constant.getLanguage().code).title ?? '';
-    } else {
-      return name?.firstWhere((element) => element.type == "en").title ?? '';
-    }
+    if (name == null || name.isEmpty) return '';
+    final langCode = Constant.getLanguage().code;
+    final byLang = name.where((el) => el.type == langCode);
+    final byEn = name.where((el) => el.type == 'en');
+    final match = byLang.isNotEmpty ? byLang.first : byEn.isNotEmpty ? byEn.first : name.first;
+    return match.title ?? match.name ?? '';
   }
 
   static Future<DateTime?> selectFetureDate(BuildContext context) async {

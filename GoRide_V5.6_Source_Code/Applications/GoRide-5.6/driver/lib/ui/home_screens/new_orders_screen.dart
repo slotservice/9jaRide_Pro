@@ -27,7 +27,7 @@ class NewOrderScreen extends StatelessWidget {
           FireStoreUtils.closeStream();
         },
         builder: (controller) {
-          return controller.isLoading.value
+          return controller.isLoading.value || controller.driverModel.value.id == null
               ? Constant.loader(isDarkTheme: themeChange.getThem())
               : controller.driverModel.value.isOnline == false
                   ? Center(

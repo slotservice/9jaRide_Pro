@@ -8,8 +8,8 @@ class LanguageName {
   factory LanguageName.fromJson(Map<String, dynamic> json) {
     return LanguageName(
       name: json['name'] as String?,
-      title: json['title'] as String?,
-      type: json['type'] as String?,
+      title: (json['title'] ?? json['name']) as String?,
+      type: (json['type'] ?? json['language_code'] ?? json['languageName']) as String?,
     );
   }
 

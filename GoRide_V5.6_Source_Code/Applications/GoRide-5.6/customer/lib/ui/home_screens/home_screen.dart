@@ -452,7 +452,7 @@ class HomeScreen extends StatelessWidget {
                                                     child: Container(
                                                       width: Responsive.width(28, context),
                                                       decoration: BoxDecoration(
-                                                          color: controller.selectedType.value == serviceModel
+                                                          color: controller.selectedType.value.id != null && controller.selectedType.value.id == serviceModel.id
                                                               ? AppColors.lightsecondprimary
                                                               : controller.colors[index % controller.colors.length],
                                                           borderRadius: const BorderRadius.all(
@@ -499,7 +499,7 @@ class HomeScreen extends StatelessWidget {
                                                           ),
                                                           Text(Constant.localizationTitle(serviceModel.title),
                                                               style: GoogleFonts.poppins(
-                                                                  color: controller.selectedType.value == serviceModel
+                                                                  color: controller.selectedType.value.id != null && controller.selectedType.value.id == serviceModel.id
                                                                       ? Colors.white
                                                                       : Colors.black)),
                                                         ],
