@@ -29,22 +29,13 @@ workflows:
         script: |
           cd "$APP_DIR"
           flutter pub get
-      - name: Build split-per-abi APKs
-        script: |
-          cd "$APP_DIR"
-          flutter build apk --release --split-per-abi
-      - name: Build universal APK
+      - name: Build APK
         script: |
           cd "$APP_DIR"
           flutter build apk --release
-      - name: Rename APKs
+      - name: Rename APK
         script: |
-          cd "$APP_DIR/build/app/outputs/flutter-apk"
-          [ -f app-arm64-v8a-release.apk ]    && mv app-arm64-v8a-release.apk    9jaRidePro-Customer.apk           || true
-          [ -f app-armeabi-v7a-release.apk ]  && mv app-armeabi-v7a-release.apk  9jaRidePro-Customer-armv7.apk     || true
-          [ -f app-x86_64-release.apk ]       && mv app-x86_64-release.apk       9jaRidePro-Customer-x86.apk       || true
-          [ -f app-release.apk ]              && mv app-release.apk              9jaRidePro-Customer-Universal.apk || true
-          ls -lh
+          mv "$APP_DIR/build/app/outputs/flutter-apk/app-release.apk" "$APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-Customer.apk"
     artifacts:
       - $APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-*.apk
 
@@ -78,21 +69,12 @@ workflows:
         script: |
           cd "$APP_DIR"
           flutter pub get
-      - name: Build split-per-abi APKs
-        script: |
-          cd "$APP_DIR"
-          flutter build apk --release --split-per-abi
-      - name: Build universal APK
+      - name: Build APK
         script: |
           cd "$APP_DIR"
           flutter build apk --release
-      - name: Rename APKs
+      - name: Rename APK
         script: |
-          cd "$APP_DIR/build/app/outputs/flutter-apk"
-          [ -f app-arm64-v8a-release.apk ]    && mv app-arm64-v8a-release.apk    9jaRidePro-Driver.apk           || true
-          [ -f app-armeabi-v7a-release.apk ]  && mv app-armeabi-v7a-release.apk  9jaRidePro-Driver-armv7.apk     || true
-          [ -f app-x86_64-release.apk ]       && mv app-x86_64-release.apk       9jaRidePro-Driver-x86.apk       || true
-          [ -f app-release.apk ]              && mv app-release.apk              9jaRidePro-Driver-Universal.apk || true
-          ls -lh
+          mv "$APP_DIR/build/app/outputs/flutter-apk/app-release.apk" "$APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-Driver.apk"
     artifacts:
       - $APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-*.apk
