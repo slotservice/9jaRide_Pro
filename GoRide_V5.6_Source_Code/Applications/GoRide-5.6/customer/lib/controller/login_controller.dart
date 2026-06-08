@@ -30,7 +30,7 @@ class LoginController extends GetxController {
         if (e.code == 'invalid-phone-number') {
           ShowToastDialog.showToast("The provided phone number is not valid.");
         } else {
-          ShowToastDialog.showToast("Something went wrong.");
+          ShowToastDialog.showToast("Error: ${e.code}");
         }
       },
       codeSent: (String verificationId, int? resendToken) {
