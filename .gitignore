@@ -53,8 +53,9 @@ drivergoogleservice.json
 .github-secrets/
 
 # Internal dev / session files (not for client)
-5.11_prompt.md
+*_prompt.md
 chat.md
+guide.md
 project_status&plan.md
 update-landing.js
 img*.jpeg
