@@ -10,6 +10,7 @@ import 'package:driver/themes/app_colors.dart';
 import 'package:driver/themes/button_them.dart';
 import 'package:driver/themes/responsive.dart';
 import 'package:driver/themes/text_field_them.dart';
+import 'package:driver/ui/hire_purchase/hp_tracker_screen.dart';
 import 'package:driver/ui/online_registration/online_registartion_screen.dart';
 import 'package:driver/utils/DarkThemeProvider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
@@ -290,7 +291,7 @@ class ProfileScreen extends StatelessWidget {
                                         // Hire-Purchase Tracker tile
                                         if (controller.driverModel.value.ownerId != null)
                                           InkWell(
-                                            onTap: () {},
+                                            onTap: () => Get.to(() => HpTrackerScreen(driverModel: controller.driverModel.value)),
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 borderRadius: const BorderRadius.all(Radius.circular(4)),

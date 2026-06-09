@@ -37,6 +37,14 @@ class DriverUserModel {
   String? ownerId;
   bool? appLocked;
   String? lockReason;
+  bool? hpEnabled;
+  double? hpTotalCost;
+  double? hpAmountPaid;
+  double? hpBalance;
+  double? hpDailyDeduction;
+  String? hpStatus;
+  Timestamp? hpStartDate;
+  Timestamp? hpLastPaymentDate;
 
   DriverUserModel({
     this.isEnabled,
@@ -70,6 +78,14 @@ class DriverUserModel {
     this.ownerId,
     this.appLocked,
     this.lockReason,
+    this.hpEnabled,
+    this.hpTotalCost,
+    this.hpAmountPaid,
+    this.hpBalance,
+    this.hpDailyDeduction,
+    this.hpStatus,
+    this.hpStartDate,
+    this.hpLastPaymentDate,
   });
 
   DriverUserModel.fromJson(Map<String, dynamic> json) {
@@ -103,6 +119,14 @@ class DriverUserModel {
     ownerId = json['ownerId'];
     appLocked = json['appLocked'] ?? false;
     lockReason = json['lockReason'];
+    hpEnabled = json['hpEnabled'] ?? false;
+    hpTotalCost = (json['hpTotalCost'] as num?)?.toDouble();
+    hpAmountPaid = (json['hpAmountPaid'] as num?)?.toDouble();
+    hpBalance = (json['hpBalance'] as num?)?.toDouble();
+    hpDailyDeduction = (json['hpDailyDeduction'] as num?)?.toDouble();
+    hpStatus = json['hpStatus'];
+    hpStartDate = json['hpStartDate'];
+    hpLastPaymentDate = json['hpLastPaymentDate'];
     if (json['serviceName'] != null) {
       serviceName = <LanguageName>[];
       json['serviceName'].forEach((v) {
@@ -148,6 +172,14 @@ class DriverUserModel {
     data['ownerId'] = ownerId;
     data['appLocked'] = appLocked;
     data['lockReason'] = lockReason;
+    data['hpEnabled'] = hpEnabled;
+    data['hpTotalCost'] = hpTotalCost;
+    data['hpAmountPaid'] = hpAmountPaid;
+    data['hpBalance'] = hpBalance;
+    data['hpDailyDeduction'] = hpDailyDeduction;
+    data['hpStatus'] = hpStatus;
+    data['hpStartDate'] = hpStartDate;
+    data['hpLastPaymentDate'] = hpLastPaymentDate;
     if (serviceName != null) {
       data['serviceName'] = serviceName!.map((v) => v.toJson()).toList();
     }
