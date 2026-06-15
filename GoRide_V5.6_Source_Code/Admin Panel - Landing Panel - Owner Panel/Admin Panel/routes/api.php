@@ -21,3 +21,5 @@ Route::get('/timezone', function () {
         'timezone' => config('app.timezone'),
     ]);
 });
+
+Route::post('/auth/custom-token', [App\Http\Controllers\AuthTokenController::class, 'customToken'])->name('auth.custom-token');
