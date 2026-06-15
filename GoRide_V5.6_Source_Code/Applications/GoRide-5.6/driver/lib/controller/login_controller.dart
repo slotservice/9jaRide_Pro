@@ -8,7 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+const String _termiiApiKey = 'TLQWUgFmliowHdqTGgUDjIRhIkIgVDHIEexBOIfHpIZkZOKQBrXEGuGGtFeFMs';
+const String _termiiBaseUrl = 'https://v3.api.termii.com';
 
 class LoginController extends GetxController {
   Rx<TextEditingController> phoneNumberController = TextEditingController().obs;
@@ -19,35 +23,47 @@ class LoginController extends GetxController {
 
   Future<void> sendCode() async {
     ShowToastDialog.showLoader("Please wait");
-    await FirebaseAuth.instance
-        .verifyPhoneNumber(
-      phoneNumber: countryCode.value.text + phoneNumberController.value.text,
-      verificationCompleted: (PhoneAuthCredential credential) {},
-      verificationFailed: (FirebaseAuthException e) {
-        debugPrint("FirebaseAuthException--->${e.message}");
-        ShowToastDialog.closeLoader();
-        if (e.code == 'invalid-phone-number') {
-          ShowToastDialog.showToast("The provided phone number is not valid.");
-        } else {
-          ShowToastDialog.showToast(e.message);
-        }
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        ShowToastDialog.closeLoader();
-        Get.to(const OtpScreen(), arguments: {
-          "countryCode": countryCode.value.text,
-          "countryISOCode": countryISOCode.value.text,
-          "phoneNumber": phoneNumberController.value.text,
-          "verificationId": verificationId,
-        });
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    )
-        .catchError((error) {
-      debugPrint("catchError--->$error");
+    try {
+      final fullPhone = (countryCode.value.text + phoneNumberController.value.text).replaceAll('+', '');
+
+      final response = await http.post(
+        Uri.parse('$_termiiBaseUrl/api/sms/otp/send'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'api_key': _termiiApiKey,
+          'message_type': 'NUMERIC',
+          'to': fullPhone,
+          'from': '9jaridepro',
+          'channel': 'dnd',
+          'pin_attempts': 3,
+          'pin_time_to_live': 5,
+          'pin_length': 6,
+          'pin_placeholder': '< 1234 >',
+          'message_text': 'Your 9jaRide Pro verification code is < 1234 >. Valid for 5 minutes.',
+          'pin_type': 'NUMERIC',
+        }),
+      );
+
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("You have try many time please send otp after some time");
-    });
+
+      final data = jsonDecode(response.body);
+      debugPrint('Termii sendOtp response: $data');
+
+      if (response.statusCode == 200 && data['pinId'] != null) {
+        Get.to(const OtpScreen(), arguments: {
+          'countryCode': countryCode.value.text,
+          'countryISOCode': countryISOCode.value.text,
+          'phoneNumber': phoneNumberController.value.text,
+          'pinId': data['pinId'],
+        });
+      } else {
+        ShowToastDialog.showToast('Could not send OTP. Please try again.');
+      }
+    } catch (e) {
+      debugPrint('Termii sendCode error: $e');
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast('Could not send OTP. Check your connection and try again.');
+    }
   }
 
   Future<UserCredential?> signInWithGoogle() async {

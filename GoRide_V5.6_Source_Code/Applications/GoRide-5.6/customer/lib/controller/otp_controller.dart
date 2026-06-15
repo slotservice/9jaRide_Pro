@@ -7,7 +7,7 @@ class OtpController extends GetxController {
   RxString countryCode = "".obs;
   RxString countryISOCode = "".obs;
   RxString phoneNumber = "".obs;
-  RxString verificationId = "".obs;
+  RxString pinId = "".obs;
 
   @override
   void onInit() {
@@ -18,10 +18,10 @@ class OtpController extends GetxController {
   Future<void> getArgument() async {
     dynamic argumentData = Get.arguments;
     if (argumentData != null) {
-      countryCode.value = argumentData['countryCode'];
-      countryISOCode.value = argumentData['countryISOCode'];
-      phoneNumber.value = argumentData['phoneNumber'];
-      verificationId.value = argumentData['verificationId'];
+      countryCode.value = argumentData['countryCode'] ?? '';
+      countryISOCode.value = argumentData['countryISOCode'] ?? '';
+      phoneNumber.value = argumentData['phoneNumber'] ?? '';
+      pinId.value = argumentData['pinId'] ?? '';
     }
     update();
   }

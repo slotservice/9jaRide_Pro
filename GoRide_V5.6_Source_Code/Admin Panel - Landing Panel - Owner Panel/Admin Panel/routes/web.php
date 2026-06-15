@@ -506,3 +506,6 @@ Route::middleware(['auth'])->prefix('api/hp')->group(function () {
 Route::post('/api/kill-switch/{driverId}/lock', [App\Http\Controllers\KillSwitchController::class, 'lock'])->name('kill-switch.lock');
 Route::post('/api/kill-switch/{driverId}/unlock', [App\Http\Controllers\KillSwitchController::class, 'unlock'])->name('kill-switch.unlock');
 Route::get('/api/kill-switch/{driverId}/status', [App\Http\Controllers\KillSwitchController::class, 'status'])->name('kill-switch.status');
+
+// Auth — Firebase custom token (called by mobile app after Termii OTP verification)
+Route::post('/api/auth/custom-token', [App\Http\Controllers\AuthTokenController::class, 'customToken'])->name('auth.custom-token');
