@@ -33,7 +33,7 @@ class LoginController extends GetxController {
           'api_key': _termiiApiKey,
           'message_type': 'NUMERIC',
           'to': fullPhone,
-          'from': 'N-Alert',
+          'from': 'naijaride',
           'channel': 'dnd',
           'pin_attempts': 3,
           'pin_time_to_live': 5,
