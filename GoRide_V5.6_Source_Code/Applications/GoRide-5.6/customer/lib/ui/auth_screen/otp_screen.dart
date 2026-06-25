@@ -49,7 +49,7 @@ class OtpScreen extends StatelessWidget {
       final termiiData = jsonDecode(termiiRes.body);
       debugPrint('Termii verify response: $termiiData');
 
-      if (termiiData['verified'] != 'True') {
+      if (termiiData['verified'] != true) {
         ShowToastDialog.closeLoader();
         ShowToastDialog.showToast("Code is Invalid".tr);
         return;
