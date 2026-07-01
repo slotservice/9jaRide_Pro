@@ -91,4 +91,9 @@ class UserController extends Controller
     return view('users.chat', compact('id'));
   }
 
+  public function userDocuments($id)
+  {
+    return view('users.documentIndex', compact('id'));
+  }
+
 }

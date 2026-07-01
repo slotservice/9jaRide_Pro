@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 
 
@@ -559,7 +559,7 @@
 
 
 
-            if(xendit.enable) {
+            if(xendit && xendit.enable) {
 
                 jQuery(".xendit_active_label span").addClass('badge-success');
 
@@ -587,7 +587,7 @@
 
 
 
-            if(midtrans.enable) {
+            if(midtrans && midtrans.enable) {
 
                 jQuery(".midtrans_active_label span").addClass('badge-success');
 

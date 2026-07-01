@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 
 
@@ -428,7 +428,7 @@
 
 
 
-            if(orangePay.enable) {
+            if(orangePay && orangePay.enable) {
 
                 jQuery(".orangepay_active_label span").addClass('badge-success');
 
@@ -442,7 +442,7 @@
 
 
 
-            if(midtrans.enable) {
+            if(midtrans && midtrans.enable) {
 
                 jQuery(".midtrans_active_label span").addClass('badge-success');
 

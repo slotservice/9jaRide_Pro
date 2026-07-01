@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <div class="page-wrapper">
@@ -228,19 +228,19 @@
             }
 
             var orangePay=paymentSnapshots.data().orangePay;
-            if(orangePay.enable) {
+            if(orangePay && orangePay.enable) {
                 jQuery(".orangepay_active_label span").addClass('badge-success');
                 jQuery(".orangepay_active_label span").text('Active');
             }
 
             var midtrans=paymentSnapshots.data().midtrans;
-            if(midtrans.enable) {
+            if(midtrans && midtrans.enable) {
                 jQuery(".midtrans_active_label span").addClass('badge-success');
                 jQuery(".midtrans_active_label span").text('Active');
             }
 
             var xendit=paymentSnapshots.data().xendit;
-            if(xendit.enable) {
+            if(xendit && xendit.enable) {
                 jQuery(".xendit_active_label span").addClass('badge-success');
                 jQuery(".xendit_active_label span").text('Active');
             }

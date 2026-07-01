@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 
 
@@ -414,7 +414,7 @@
 
 
 
-            if(xendit.enable) {
+            if(xendit && xendit.enable) {
 
                 jQuery(".xendit_active_label span").addClass('badge-success');
 
@@ -428,7 +428,7 @@
 
 
 
-            if(orangePay.enable) {
+            if(orangePay && orangePay.enable) {
 
                 jQuery(".orangepay_active_label span").addClass('badge-success');
 

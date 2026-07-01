@@ -299,6 +299,7 @@
                                 childData.countryCode = childData.countryCode;
                             }
                             var chatViewRoute = '{{ route('users.chat', ':id') }}'.replace(':id', id);
+                            var userDocRoute = '/users/document/' + id;
                             let unreadHtml = '';
 
                             if (childData.unreadCount > 0) {
@@ -316,6 +317,7 @@
                                 '<span class="action-btn">' +
                                 '<a href="' + userview + '"><i class="mdi mdi-eye"></i> </a>' +
                                 '<a href="' + route1 + '"><i class="mdi mdi-lead-pencil"></i> </a>' +
+                                '<a href="' + userDocRoute + '" title="KYC Documents"><i class="mdi mdi-file-document"></i> </a>' +
                                 '<?php if (in_array("user.delete", json_decode(@session("user_permissions")))) { ?>' +
                                 '<a id="' + childData.id + '" class="delete-btn" name="user-delete" href="javascript:void(0)"><i class="mdi mdi-delete"></i> </a>' +
                                 '<?php } ?>' +

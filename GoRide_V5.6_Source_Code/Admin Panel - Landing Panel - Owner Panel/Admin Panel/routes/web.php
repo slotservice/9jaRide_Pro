@@ -39,6 +39,10 @@ Route::middleware(['permission:users,user.view'])->group(function () {
     Route::get('/users/view/{id}', [App\Http\Controllers\UserController::class, 'view'])->name('users.view');
 });
 
+Route::middleware(['permission:users,user.view'])->group(function () {
+    Route::get('/users/document/{id}', [App\Http\Controllers\UserController::class, 'userDocuments'])->name('users.document');
+});
+
 Route::middleware(['permission:drivers,driver.list'])->group(function () {
     Route::get('/drivers', [App\Http\Controllers\DriverController::class, 'index'])->name('drivers');
 });
