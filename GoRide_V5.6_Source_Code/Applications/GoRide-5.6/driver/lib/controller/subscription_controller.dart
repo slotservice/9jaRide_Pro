@@ -367,7 +367,7 @@ class SubscriptionController extends GetxController {
   ///PayStack Payment Method
   Future<void> payStackPayment(String totalAmount) async {
     await PayStackURLGen.payStackURLGen(
-            amount: (double.parse(totalAmount) * 100).toString(), currency: "ZAR", secretKey: paymentModel.value.payStack!.secretKey.toString(), userModel: driverUserModel.value)
+            amount: (double.parse(totalAmount) * 100).toString(), currency: "NGN", secretKey: paymentModel.value.payStack!.secretKey.toString(), userModel: driverUserModel.value)
         .then((value) async {
       if (value != null && value.toString().isNotEmpty) {
         PayStackUrlModel payStackModel = value;
