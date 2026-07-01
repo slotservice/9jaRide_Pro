@@ -973,6 +973,8 @@ span .img-flag {
                     var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     jQuery("#uploding_json_file").text("{{trans('lang.file_is_uploading')}}");
                 }, function (error) {
+                    console.error('JSON credentials upload failed:', error);
+                    jQuery("#uploding_json_file").text("Upload failed: " + error.message);
                 }, function () {
                     uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
                         jQuery("#uploding_json_file").text("{{trans('lang.upload_is_completed')}}");
