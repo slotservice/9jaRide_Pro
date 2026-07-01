@@ -581,7 +581,7 @@ span .img-flag {
                 contactData.phone = contactData.phone;
             }
             $("#contact_us_phone_number").val('+'+EditPhoneNumber(contactData.phone));
-            $("#contact_us_address").text(contactData.address);
+            $("#contact_us_address").val(contactData.address);
             $("#support_url").val(contactData.supportURL);
         });
         logoRef.get().then(async function(snapshots) {
@@ -714,7 +714,7 @@ span .img-flag {
             var subject  = $("#contact_us_subject").val();
             var email = $("#contact_us_email").val();
             var phone = $("#contact_us_phone_number").val();
-            var address =$("#contact_us_address").text();
+            var address =$("#contact_us_address").val();
             var supportURL=$('#support_url').val();
             var minimumDepositToRideAccept = $(".minimum_deposit_amount").val();
             var minimumAmountToWithdrawal = $(".minimum_withdrawal_amount").val();
