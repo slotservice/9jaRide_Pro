@@ -161,7 +161,12 @@ class OtpScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset("assets/images/login_image.png"),
+                  Container(
+                    width: double.infinity,
+                    height: 220,
+                    color: Colors.black,
+                    child: Image.asset("assets/images/login_image.png", fit: BoxFit.contain),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
