@@ -20,7 +20,9 @@ class OSMMapController extends GetxController {
       return;
     }
 
-    final url = Uri.parse('https://nominatim.openstreetmap.org/search?q=$query&format=json&addressdetails=1&limit=10');
+    final center = pickedPlace.value?.coordinates;
+    final viewboxParam = center != null ? '&viewbox=${center.longitude - 2},${center.latitude + 2},${center.longitude + 2},${center.latitude - 2}' : '';
+    final url = Uri.parse('https://nominatim.openstreetmap.org/search?q=$query&format=json&addressdetails=1&limit=10&countrycodes=ng$viewboxParam');
 
     final response = await http.get(url, headers: {
       'User-Agent': 'FlutterMapApp/1.0 (menil.siddhiinfosoft@gmail.com)',
