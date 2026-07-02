@@ -50,6 +50,7 @@ class OrderMapController extends GetxController {
 
   Future<void> acceptOrder() async {
     ShowToastDialog.showLoader("Please wait".tr);
+    try {
       List<dynamic> newAcceptedDriverId = [];
       if (orderModel.value.acceptedDriverId != null) {
         newAcceptedDriverId = orderModel.value.acceptedDriverId!;
@@ -94,8 +95,7 @@ class OrderMapController extends GetxController {
 
       DriverIdAcceptReject driverIdAcceptReject =
           DriverIdAcceptReject(driverId: FireStoreUtils.getCurrentUid(), acceptedRejectTime: cloudFirestore.Timestamp.now(), offerAmount: finalAmount.value.toString());
-      FireStoreUtils.acceptRide(orderModel.value, driverIdAcceptReject).then((value) async {
-        ShowToastDialog.closeLoader();
+      await FireStoreUtils.acceptRide(orderModel.value, driverIdAcceptReject).then((value) async {
         ShowToastDialog.showToast("Ride Accepted".tr);
         if (driverModel.value.ownerId == null) {
           if (driverModel.value.subscriptionTotalOrders != "-1") {
@@ -111,6 +111,12 @@ class OrderMapController extends GetxController {
         }
         Get.back(result: true);
       });
+    } catch (e) {
+      debugPrint("acceptOrder error :: $e");
+      ShowToastDialog.showToast("Something went wrong: $e");
+    } finally {
+      ShowToastDialog.closeLoader();
+    }
   }
 
   Rx<OrderModel> orderModel = OrderModel().obs;
