@@ -553,7 +553,7 @@ class HomeScreen extends StatelessWidget {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      controller.selectedType.value.prices?[0].isAcNonAc == true
+                                      (controller.selectedType.value.prices?.isNotEmpty == true && controller.selectedType.value.prices![0].isAcNonAc == true)
                                           ? Obx(
                                               () => Column(
                                                 children: [
@@ -702,82 +702,87 @@ class HomeScreen extends StatelessWidget {
                                             // showDialog(context: context, builder: (BuildContext context) => warningDailog());
                                           } else {
                                             ShowToastDialog.showLoader("Please wait");
-                                            OrderModel orderModel = OrderModel();
-                                            orderModel.id = Constant.getUuid();
-                                            orderModel.userId = FireStoreUtils.getCurrentUid();
-                                            orderModel.sourceLocationName = controller.sourceLocationController.value.text;
-                                            orderModel.destinationLocationName = controller.destinationLocationController.value.text;
-                                            orderModel.sourceLocationLAtLng = controller.sourceLocationLAtLng.value;
-                                            orderModel.destinationLocationLAtLng = controller.destinationLocationLAtLng.value;
-                                            orderModel.distance = controller.distance.value;
-                                            orderModel.acNonAcCharges = '';
-                                            orderModel.duration = controller.duration.value;
-                                            orderModel.distanceType = Constant.distanceType;
-                                            orderModel.offerRate = controller.selectedType.value.offerRate == true ? controller.offerYourRateController.value.text : controller.amount.value;
-                                            orderModel.serviceId = controller.selectedType.value.id;
-                                            GeoFirePoint position =
-                                                Geoflutterfire().point(latitude: controller.sourceLocationLAtLng.value.latitude!, longitude: controller.sourceLocationLAtLng.value.longitude!);
+                                            try {
+                                              OrderModel orderModel = OrderModel();
+                                              orderModel.id = Constant.getUuid();
+                                              orderModel.userId = FireStoreUtils.getCurrentUid();
+                                              orderModel.sourceLocationName = controller.sourceLocationController.value.text;
+                                              orderModel.destinationLocationName = controller.destinationLocationController.value.text;
+                                              orderModel.sourceLocationLAtLng = controller.sourceLocationLAtLng.value;
+                                              orderModel.destinationLocationLAtLng = controller.destinationLocationLAtLng.value;
+                                              orderModel.distance = controller.distance.value;
+                                              orderModel.acNonAcCharges = '';
+                                              orderModel.duration = controller.duration.value;
+                                              orderModel.distanceType = Constant.distanceType;
+                                              orderModel.offerRate = controller.selectedType.value.offerRate == true ? controller.offerYourRateController.value.text : controller.amount.value;
+                                              orderModel.serviceId = controller.selectedType.value.id;
+                                              GeoFirePoint position =
+                                                  Geoflutterfire().point(latitude: controller.sourceLocationLAtLng.value.latitude!, longitude: controller.sourceLocationLAtLng.value.longitude!);
 
-                                            orderModel.position = Positions(geoPoint: position.geoPoint, geohash: position.hash);
-                                            orderModel.createdDate = Timestamp.now();
-                                            orderModel.status = Constant.ridePlaced;
-                                            orderModel.paymentType = controller.selectedPaymentMethod.value;
-                                            orderModel.paymentStatus = false;
-                                            orderModel.service = controller.selectedType.value;
-                                            AdminCommission? adminCommissionGlobal;
-                                            if (Constant.adminCommission?.isEnabled != true) {
-                                              adminCommissionGlobal = Constant.adminCommission ?? AdminCommission();
-                                              adminCommissionGlobal.amount = '0';
-                                            }
-                                            log("controller.selectedType.value.adminCommission?.isEnabled :: ${controller.selectedType.value.adminCommission?.isEnabled} :: ${Constant.adminCommission?.isEnabled}");
-                                            orderModel.adminCommission = controller.selectedType.value.adminCommission?.isEnabled == false
-                                                ? controller.selectedType.value.adminCommission!
-                                                : Constant.adminCommission?.isEnabled == false
-                                                    ? adminCommissionGlobal
-                                                    : Constant.adminCommission;
-                                            orderModel.otp = Constant.getReferralCode();
-                                            orderModel.isAcSelected = controller.selectedType.value.prices?[0].isAcNonAc == true ? controller.isAcSelected.value : false;
-                                            orderModel.taxList = Constant.taxList;
-                                            if (controller.selectedTakingRide.value.fullName != "Myself") {
-                                              orderModel.someOneElse = controller.selectedTakingRide.value;
-                                            }
-
-                                            for (int i = 0; i < controller.zoneList.length; i++) {
-                                              if (Constant.isPointInPolygon(
-                                                      LatLng(double.parse(controller.sourceLocationLAtLng.value.latitude.toString()),
-                                                          double.parse(controller.sourceLocationLAtLng.value.longitude.toString())),
-                                                      controller.zoneList[i].area!) ==
-                                                  true) {
-                                                controller.selectedZone.value = controller.zoneList[i];
-                                                break;
+                                              orderModel.position = Positions(geoPoint: position.geoPoint, geohash: position.hash);
+                                              orderModel.createdDate = Timestamp.now();
+                                              orderModel.status = Constant.ridePlaced;
+                                              orderModel.paymentType = controller.selectedPaymentMethod.value;
+                                              orderModel.paymentStatus = false;
+                                              orderModel.service = controller.selectedType.value;
+                                              AdminCommission? adminCommissionGlobal;
+                                              if (Constant.adminCommission?.isEnabled != true) {
+                                                adminCommissionGlobal = Constant.adminCommission ?? AdminCommission();
+                                                adminCommissionGlobal.amount = '0';
                                               }
-                                            }
-                                            if (controller.selectedZone.value.id != null) {
-                                              orderModel.zoneId = controller.selectedZone.value.id;
-                                              orderModel.zone = controller.selectedZone.value;
-                                              await FireStoreUtils.sendOrderDataFuture(orderModel).then((eventData) async {
-                                                for (var driver in eventData) {
-                                                  if (driver.fcmToken != null) {
-                                                    Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order", "orderId": orderModel.id};
-                                                    await SendNotification.sendOneNotification(
-                                                        token: driver.fcmToken.toString(),
-                                                        title: 'New Ride Available'.tr,
-                                                        body: 'A customer has placed a ride near your location.'.tr,
-                                                        payload: playLoad);
-                                                  }
+                                              log("controller.selectedType.value.adminCommission?.isEnabled :: ${controller.selectedType.value.adminCommission?.isEnabled} :: ${Constant.adminCommission?.isEnabled}");
+                                              orderModel.adminCommission = controller.selectedType.value.adminCommission?.isEnabled == false
+                                                  ? controller.selectedType.value.adminCommission!
+                                                  : Constant.adminCommission?.isEnabled == false
+                                                      ? adminCommissionGlobal
+                                                      : Constant.adminCommission;
+                                              orderModel.otp = Constant.getReferralCode();
+                                              bool hasAcNonAcPrice = controller.selectedType.value.prices?.isNotEmpty == true && controller.selectedType.value.prices![0].isAcNonAc == true;
+                                              orderModel.isAcSelected = hasAcNonAcPrice ? controller.isAcSelected.value : false;
+                                              orderModel.taxList = Constant.taxList;
+                                              if (controller.selectedTakingRide.value.fullName != "Myself") {
+                                                orderModel.someOneElse = controller.selectedTakingRide.value;
+                                              }
+
+                                              for (int i = 0; i < controller.zoneList.length; i++) {
+                                                if (Constant.isPointInPolygon(
+                                                        LatLng(double.parse(controller.sourceLocationLAtLng.value.latitude.toString()),
+                                                            double.parse(controller.sourceLocationLAtLng.value.longitude.toString())),
+                                                        controller.zoneList[i].area!) ==
+                                                    true) {
+                                                  controller.selectedZone.value = controller.zoneList[i];
+                                                  break;
                                                 }
-                                              });
-                                              await FireStoreUtils.setOrder(orderModel).then((value) {
-                                                ShowToastDialog.showToast("Ride Placed successfully".tr);
-                                                controller.dashboardController.selectedDrawerIndex(2);
-                                                ShowToastDialog.closeLoader();
-                                              });
-                                            } else {
+                                              }
+                                              if (controller.selectedZone.value.id != null) {
+                                                orderModel.zoneId = controller.selectedZone.value.id;
+                                                orderModel.zone = controller.selectedZone.value;
+                                                await FireStoreUtils.sendOrderDataFuture(orderModel).then((eventData) async {
+                                                  for (var driver in eventData) {
+                                                    if (driver.fcmToken != null) {
+                                                      Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order", "orderId": orderModel.id};
+                                                      await SendNotification.sendOneNotification(
+                                                          token: driver.fcmToken.toString(),
+                                                          title: 'New Ride Available'.tr,
+                                                          body: 'A customer has placed a ride near your location.'.tr,
+                                                          payload: playLoad);
+                                                    }
+                                                  }
+                                                });
+                                                await FireStoreUtils.setOrder(orderModel).then((value) {
+                                                  ShowToastDialog.showToast("Ride Placed successfully".tr);
+                                                  controller.dashboardController.selectedDrawerIndex(2);
+                                                });
+                                              } else {
+                                                ShowToastDialog.showToast(
+                                                  "Services are currently unavailable on the selected location. Please reach out to the administrator for assistance.",
+                                                );
+                                              }
+                                            } catch (e, stackTrace) {
+                                              log("Book Ride error :: $e\n$stackTrace");
+                                              ShowToastDialog.showToast("Something went wrong: $e");
+                                            } finally {
                                               ShowToastDialog.closeLoader();
-                                              ShowToastDialog.showToast(
-                                                "Services are currently unavailable on the selected location. Please reach out to the administrator for assistance.",
-                                              );
-                                              return;
                                             }
                                           }
                                         },
