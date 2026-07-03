@@ -220,6 +220,15 @@ class HpTrackerScreen extends StatelessWidget {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(child: Padding(padding: EdgeInsets.all(24), child: CircularProgressIndicator()));
                         }
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Text('Error loading payment history: ${snapshot.error}'.tr,
+                                  textAlign: TextAlign.center, style: GoogleFonts.poppins(color: Colors.grey, fontSize: 13)),
+                            ),
+                          );
+                        }
                         if (!snapshot.hasData || snapshot.data!.isEmpty) {
                           return Center(
                             child: Padding(

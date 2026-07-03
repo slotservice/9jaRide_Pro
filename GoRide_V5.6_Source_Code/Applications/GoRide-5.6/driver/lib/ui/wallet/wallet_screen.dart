@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant/show_toast_dialog.dart';
@@ -1352,22 +1354,28 @@ class WalletScreen extends StatelessWidget {
                               ShowToastDialog.showToast("Withdraw amount must be greater or equal to ${Constant.amountShow(amount: Constant.minimumAmountToWithdrawal.toString())}".tr);
                             } else {
                               ShowToastDialog.showLoader("Please wait".tr);
-                              WithdrawModel withdrawModel = WithdrawModel();
-                              withdrawModel.id = Constant.getUuid();
-                              withdrawModel.userId = FireStoreUtils.getCurrentUid();
-                              withdrawModel.paymentStatus = "pending";
-                              withdrawModel.amount = controller.withdrawalAmountController.value.text;
-                              withdrawModel.note = controller.noteController.value.text;
-                              withdrawModel.createdDate = Timestamp.now();
+                              try {
+                                WithdrawModel withdrawModel = WithdrawModel();
+                                withdrawModel.id = Constant.getUuid();
+                                withdrawModel.userId = FireStoreUtils.getCurrentUid();
+                                withdrawModel.paymentStatus = "pending";
+                                withdrawModel.amount = controller.withdrawalAmountController.value.text;
+                                withdrawModel.note = controller.noteController.value.text;
+                                withdrawModel.createdDate = Timestamp.now();
 
-                              await FireStoreUtils.updatedDriverWallet(amount: "-${controller.withdrawalAmountController.value.text}");
+                                await FireStoreUtils.updatedDriverWallet(amount: "-${controller.withdrawalAmountController.value.text}");
 
-                              await FireStoreUtils.setWithdrawRequest(withdrawModel).then((value) {
-                                controller.getUser();
+                                await FireStoreUtils.setWithdrawRequest(withdrawModel).then((value) {
+                                  controller.getUser();
+                                  ShowToastDialog.showToast("Request sent to admin".tr);
+                                  Get.back();
+                                });
+                              } catch (e, stackTrace) {
+                                log("Withdrawal error :: $e\n$stackTrace");
+                                ShowToastDialog.showToast("Something went wrong: $e");
+                              } finally {
                                 ShowToastDialog.closeLoader();
-                                ShowToastDialog.showToast("Request sent to admin".tr);
-                                Get.back();
-                              });
+                              }
                             }
                           },
                         )

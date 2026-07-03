@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
@@ -231,71 +233,77 @@ class OrderScreen extends StatelessWidget {
                                                 btnHeight: 44,
                                                 onPress: () async {
                                                   ShowToastDialog.showLoader("Please wait..".tr);
-                                                  orderModel.paymentStatus = true;
-                                                  orderModel.status = Constant.rideComplete;
-                                                  orderModel.updateDate = Timestamp.now();
+                                                  try {
+                                                    orderModel.paymentStatus = true;
+                                                    orderModel.status = Constant.rideComplete;
+                                                    orderModel.updateDate = Timestamp.now();
 
-                                                  String? couponAmount = "0.0";
-                                                  if (orderModel.coupon != null) {
-                                                    if (orderModel.coupon?.code != null) {
-                                                      if (orderModel.coupon!.type == "fix") {
-                                                        couponAmount = orderModel.coupon!.amount.toString();
-                                                      } else {
-                                                        couponAmount = ((double.parse(orderModel.finalRate.toString()) * double.parse(orderModel.coupon!.amount.toString())) / 100).toString();
+                                                    String? couponAmount = "0.0";
+                                                    if (orderModel.coupon != null) {
+                                                      if (orderModel.coupon?.code != null) {
+                                                        if (orderModel.coupon!.type == "fix") {
+                                                          couponAmount = orderModel.coupon!.amount.toString();
+                                                        } else {
+                                                          couponAmount = ((double.parse(orderModel.finalRate.toString()) * double.parse(orderModel.coupon!.amount.toString())) / 100).toString();
+                                                        }
                                                       }
                                                     }
-                                                  }
 
-                                                  await FireStoreUtils.getDriverFirstOrderOrNot(driverId: orderModel.driverId!, orderType: 'order').then((value) async {
-                                                    if (value == true) {
-                                                      await FireStoreUtils.updateDriverReferralAmount(orderModel);
-                                                    }
-                                                  });
+                                                    await FireStoreUtils.getDriverFirstOrderOrNot(driverId: orderModel.driverId!, orderType: 'order').then((value) async {
+                                                      if (value == true) {
+                                                        await FireStoreUtils.updateDriverReferralAmount(orderModel);
+                                                      }
+                                                    });
 
-                                                  await FireStoreUtils.getCustomerFirstOrderOrNot(customerId: orderModel.userId!, orderType: 'order').then((value) async {
-                                                    if (value == true) {
-                                                      await FireStoreUtils.updateReferralAmount(orderModel);
-                                                    }
-                                                  });
+                                                    await FireStoreUtils.getCustomerFirstOrderOrNot(customerId: orderModel.userId!, orderType: 'order').then((value) async {
+                                                      if (value == true) {
+                                                        await FireStoreUtils.updateReferralAmount(orderModel);
+                                                      }
+                                                    });
 
-                                                  await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                                                    if (value != null) {
-                                                      await SendNotification.sendOneNotification(
-                                                          token: value.fcmToken.toString(), title: 'Cash Payment confirmed'.tr, body: 'Driver has confirmed your cash payment'.tr, payload: {});
-                                                    }
-                                                  });
+                                                    await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                                                      if (value != null) {
+                                                        await SendNotification.sendOneNotification(
+                                                            token: value.fcmToken.toString(), title: 'Cash Payment confirmed'.tr, body: 'Driver has confirmed your cash payment'.tr, payload: {});
+                                                      }
+                                                    });
 
-                                                  if (orderModel.adminCommission?.amount != '0' && orderModel.adminCommission?.amount != '0.0' && orderModel.adminCommission?.amount != null) {
-                                                    WalletTransactionModel adminCommissionWallet = WalletTransactionModel(
-                                                        id: Constant.getUuid(),
-                                                        amount:
-                                                            "-${Constant.calculateAdminCommission(amount: (double.parse(orderModel.finalRate.toString()) - double.parse(couponAmount.toString())).toString(), adminCommission: orderModel.adminCommission)}",
-                                                        createdDate: Timestamp.now(),
-                                                        paymentType: "wallet".tr,
-                                                        transactionId: orderModel.id,
-                                                        orderType: "city",
-                                                        userType: orderModel.ownerId == null ? "driver" : 'owner',
-                                                        userId: orderModel.ownerId == null ? orderModel.driverId.toString() : orderModel.ownerId.toString(),
-                                                        note: "Admin commission debited".tr);
-
-                                                    await FireStoreUtils.setWalletTransaction(adminCommissionWallet);
-                                                    if (orderModel.ownerId == null) {
-                                                      await FireStoreUtils.updatedDriverWallet(
+                                                    if (orderModel.adminCommission?.amount != '0' && orderModel.adminCommission?.amount != '0.0' && orderModel.adminCommission?.amount != null) {
+                                                      WalletTransactionModel adminCommissionWallet = WalletTransactionModel(
+                                                          id: Constant.getUuid(),
                                                           amount:
-                                                              "-${Constant.calculateAdminCommission(amount: (double.parse(orderModel.finalRate.toString()) - double.parse(couponAmount.toString())).toString(), adminCommission: orderModel.adminCommission)}");
-                                                    } else {
-                                                      await FireStoreUtils.updatedOwnerWallet(
-                                                          ownerId: orderModel.ownerId!,
-                                                          amount:
-                                                              "-${Constant.calculateAdminCommission(amount: (double.parse(orderModel.finalRate.toString()) - double.parse(couponAmount.toString())).toString(), adminCommission: orderModel.adminCommission)}");
+                                                              "-${Constant.calculateAdminCommission(amount: (double.parse(orderModel.finalRate.toString()) - double.parse(couponAmount.toString())).toString(), adminCommission: orderModel.adminCommission)}",
+                                                          createdDate: Timestamp.now(),
+                                                          paymentType: "wallet".tr,
+                                                          transactionId: orderModel.id,
+                                                          orderType: "city",
+                                                          userType: orderModel.ownerId == null ? "driver" : 'owner',
+                                                          userId: orderModel.ownerId == null ? orderModel.driverId.toString() : orderModel.ownerId.toString(),
+                                                          note: "Admin commission debited".tr);
+
+                                                      await FireStoreUtils.setWalletTransaction(adminCommissionWallet);
+                                                      if (orderModel.ownerId == null) {
+                                                        await FireStoreUtils.updatedDriverWallet(
+                                                            amount:
+                                                                "-${Constant.calculateAdminCommission(amount: (double.parse(orderModel.finalRate.toString()) - double.parse(couponAmount.toString())).toString(), adminCommission: orderModel.adminCommission)}");
+                                                      } else {
+                                                        await FireStoreUtils.updatedOwnerWallet(
+                                                            ownerId: orderModel.ownerId!,
+                                                            amount:
+                                                                "-${Constant.calculateAdminCommission(amount: (double.parse(orderModel.finalRate.toString()) - double.parse(couponAmount.toString())).toString(), adminCommission: orderModel.adminCommission)}");
+                                                      }
                                                     }
-                                                  }
-                                                  await FireStoreUtils.setOrder(orderModel).then((value) async {
+                                                    await FireStoreUtils.setOrder(orderModel).then((value) async {
+                                                      if (value == true) {
+                                                        ShowToastDialog.showToast("Payment Confirm successfully".tr);
+                                                      }
+                                                    });
+                                                  } catch (e, stackTrace) {
+                                                    log("Confirm cash payment error :: $e\n$stackTrace");
+                                                    ShowToastDialog.showToast("Something went wrong: $e");
+                                                  } finally {
                                                     ShowToastDialog.closeLoader();
-                                                    if (value == true) {
-                                                      ShowToastDialog.showToast("Payment Confirm successfully".tr);
-                                                    }
-                                                  });
+                                                  }
                                                 },
                                               ))
                                         ],

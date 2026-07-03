@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
@@ -127,26 +129,32 @@ class ActiveOrderScreen extends StatelessWidget {
                                                   btnHeight: 44,
                                                   iconVisibility: false,
                                                   onPress: () async {
-                                                    orderModel.status = Constant.rideComplete;
                                                     ShowToastDialog.showLoader("Please wait".tr);
-                                                    await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                                                      if (value != null) {
-                                                        if (value.fcmToken != null) {
-                                                          Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order_complete", "orderId": orderModel.id};
+                                                    try {
+                                                      orderModel.status = Constant.rideComplete;
+                                                      await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                                                        if (value != null) {
+                                                          if (value.fcmToken != null) {
+                                                            Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order_complete", "orderId": orderModel.id};
 
-                                                          await SendNotification.sendOneNotification(
-                                                              token: value.fcmToken.toString(), title: 'Ride complete!'.tr, body: 'Please complete your payment.'.tr, payload: playLoad);
+                                                            await SendNotification.sendOneNotification(
+                                                                token: value.fcmToken.toString(), title: 'Ride complete!'.tr, body: 'Please complete your payment.'.tr, payload: playLoad);
+                                                          }
                                                         }
-                                                      }
-                                                    });
+                                                      });
 
-                                                    await FireStoreUtils.setOrder(orderModel).then((value) {
-                                                      if (value == true) {
-                                                        ShowToastDialog.showToast("Ride Complete successfully".tr);
-                                                        controller.homeController.selectedIndex.value = 3;
-                                                      }
-                                                    });
-                                                    ShowToastDialog.closeLoader();
+                                                      await FireStoreUtils.setOrder(orderModel).then((value) {
+                                                        if (value == true) {
+                                                          ShowToastDialog.showToast("Ride Complete successfully".tr);
+                                                          controller.homeController.selectedIndex.value = 3;
+                                                        }
+                                                      });
+                                                    } catch (e, stackTrace) {
+                                                      log("Complete ride error :: $e\n$stackTrace");
+                                                      ShowToastDialog.showToast("Something went wrong: $e");
+                                                    } finally {
+                                                      ShowToastDialog.closeLoader();
+                                                    }
                                                   },
                                                 )
                                               : orderModel.status == Constant.rideHold || orderModel.status == Constant.rideHoldAccepted
@@ -229,14 +237,20 @@ class ActiveOrderScreen extends StatelessWidget {
                                                   iconVisibility: false,
                                                   onPress: () async {
                                                     ShowToastDialog.showLoader("Please wait...".tr);
-                                                    orderModel.status = Constant.rideInProgress;
+                                                    try {
+                                                      orderModel.status = Constant.rideInProgress;
 
-                                                    await FireStoreUtils.setOrder(orderModel).then((value) {
-                                                      if (value == true) {
-                                                        ShowToastDialog.closeLoader();
-                                                        ShowToastDialog.showToast("Ride hold request has been rejected.".tr);
-                                                      }
-                                                    });
+                                                      await FireStoreUtils.setOrder(orderModel).then((value) {
+                                                        if (value == true) {
+                                                          ShowToastDialog.showToast("Ride hold request has been rejected.".tr);
+                                                        }
+                                                      });
+                                                    } catch (e, stackTrace) {
+                                                      log("Reject hold error :: $e\n$stackTrace");
+                                                      ShowToastDialog.showToast("Something went wrong: $e");
+                                                    } finally {
+                                                      ShowToastDialog.closeLoader();
+                                                    }
                                                   },
                                                 ),
                                               ),
@@ -250,21 +264,27 @@ class ActiveOrderScreen extends StatelessWidget {
                                                   btnHeight: 45,
                                                   onPress: () async {
                                                     ShowToastDialog.showLoader("Please wait...".tr);
-                                                    orderModel.status = Constant.rideHoldAccepted;
-                                                    orderModel.acceptHoldTime = Timestamp.now();
+                                                    try {
+                                                      orderModel.status = Constant.rideHoldAccepted;
+                                                      orderModel.acceptHoldTime = Timestamp.now();
 
-                                                    await FireStoreUtils.setOrder(orderModel).then((value) {
-                                                      if (value == true) {
-                                                        ShowToastDialog.closeLoader();
-                                                        ShowToastDialog.showToast("Ride has been put on hold.".tr);
-                                                      }
-                                                    });
-                                                    await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                                                      if (value != null) {
-                                                        await SendNotification.sendOneNotification(
-                                                            token: value.fcmToken.toString(), title: 'Ride Hold Accepted'.tr, body: 'Driver has accepted your ride hold request'.tr, payload: {});
-                                                      }
-                                                    });
+                                                      await FireStoreUtils.setOrder(orderModel).then((value) {
+                                                        if (value == true) {
+                                                          ShowToastDialog.showToast("Ride has been put on hold.".tr);
+                                                        }
+                                                      });
+                                                      await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                                                        if (value != null) {
+                                                          await SendNotification.sendOneNotification(
+                                                              token: value.fcmToken.toString(), title: 'Ride Hold Accepted'.tr, body: 'Driver has accepted your ride hold request'.tr, payload: {});
+                                                        }
+                                                      });
+                                                    } catch (e, stackTrace) {
+                                                      log("Accept hold error :: $e\n$stackTrace");
+                                                      ShowToastDialog.showToast("Something went wrong: $e");
+                                                    } finally {
+                                                      ShowToastDialog.closeLoader();
+                                                    }
                                                   },
                                                 ),
                                               )
@@ -278,38 +298,44 @@ class ActiveOrderScreen extends StatelessWidget {
                                             btnHeight: 45,
                                             onPress: () async {
                                               ShowToastDialog.showLoader("Please wait...".tr);
-                                              orderModel.status = Constant.rideInProgress;
-                                              DateTime acceptTime = orderModel.acceptHoldTime!.toDate();
-                                              int rideHoldTimeInSeconds = DateTime.now().difference(acceptTime).inSeconds;
-                                              int rideHoldTimeInMinutes = (rideHoldTimeInSeconds / 60).ceil();
+                                              try {
+                                                orderModel.status = Constant.rideInProgress;
+                                                DateTime acceptTime = orderModel.acceptHoldTime!.toDate();
+                                                int rideHoldTimeInSeconds = DateTime.now().difference(acceptTime).inSeconds;
+                                                int rideHoldTimeInMinutes = (rideHoldTimeInSeconds / 60).ceil();
 
-                                              int chargePerInterval = int.parse(orderModel.service?.firstPrice.holdingMinuteCharge ?? '0.0');
-                                              int holdingInterval = int.parse(orderModel.service?.firstPrice.holdingMinute ?? '0.0');
+                                                int chargePerInterval = int.parse(orderModel.service?.firstPrice.holdingMinuteCharge ?? '0.0');
+                                                int holdingInterval = int.parse(orderModel.service?.firstPrice.holdingMinute ?? '0.0');
 
-                                              int intervals = rideHoldTimeInMinutes ~/ holdingInterval;
-                                              int extraTime = rideHoldTimeInMinutes % holdingInterval;
+                                                int intervals = rideHoldTimeInMinutes ~/ holdingInterval;
+                                                int extraTime = rideHoldTimeInMinutes % holdingInterval;
 
-                                              int totalHoldingCharges = intervals * chargePerInterval;
+                                                int totalHoldingCharges = intervals * chargePerInterval;
 
-                                              if (extraTime > 0 || rideHoldTimeInSeconds % 60 > 0) {
-                                                totalHoldingCharges += chargePerInterval;
+                                                if (extraTime > 0 || rideHoldTimeInSeconds % 60 > 0) {
+                                                  totalHoldingCharges += chargePerInterval;
+                                                }
+                                                orderModel.acceptHoldTime = null;
+                                                orderModel.rideHoldTimeMinutes = rideHoldTimeInMinutes.toString();
+                                                orderModel.totalHoldingCharges = totalHoldingCharges.toString();
+
+                                                await FireStoreUtils.setOrder(orderModel).then((value) {
+                                                  if (value == true) {
+                                                    ShowToastDialog.showToast("Ride hold has ended".tr);
+                                                  }
+                                                });
+                                                await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                                                  if (value != null) {
+                                                    await SendNotification.sendOneNotification(
+                                                        token: value.fcmToken.toString(), title: 'Ride Hold Ended'.tr, body: 'Driver has ended the ride hold.'.tr, payload: {});
+                                                  }
+                                                });
+                                              } catch (e, stackTrace) {
+                                                log("End hold error :: $e\n$stackTrace");
+                                                ShowToastDialog.showToast("Something went wrong: $e");
+                                              } finally {
+                                                ShowToastDialog.closeLoader();
                                               }
-                                              orderModel.acceptHoldTime = null;
-                                              orderModel.rideHoldTimeMinutes = rideHoldTimeInMinutes.toString();
-                                              orderModel.totalHoldingCharges = totalHoldingCharges.toString();
-
-                                              await FireStoreUtils.setOrder(orderModel).then((value) {
-                                                if (value == true) {
-                                                  ShowToastDialog.closeLoader();
-                                                  ShowToastDialog.showToast("Ride hold has ended".tr);
-                                                }
-                                              });
-                                              await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                                                if (value != null) {
-                                                  await SendNotification.sendOneNotification(
-                                                      token: value.fcmToken.toString(), title: 'Ride Hold Ended'.tr, body: 'Driver has ended the ride hold.'.tr, payload: {});
-                                                }
-                                              });
                                             },
                                           )
                                         : SizedBox.shrink(),
@@ -373,22 +399,28 @@ class ActiveOrderScreen extends StatelessWidget {
               if (orderModel.otp.toString() == controller.otpController.value.text) {
                 Get.back();
                 ShowToastDialog.showLoader("Please wait...".tr);
-                orderModel.status = Constant.rideInProgress;
-                await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                  if (value != null) {
-                    await SendNotification.sendOneNotification(
-                        token: value.fcmToken.toString(), title: 'Ride Started'.tr, body: 'The ride has officially started. Please follow the designated route to the destination.'.tr, payload: {});
+                try {
+                  orderModel.status = Constant.rideInProgress;
+                  await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                    if (value != null) {
+                      await SendNotification.sendOneNotification(
+                          token: value.fcmToken.toString(), title: 'Ride Started'.tr, body: 'The ride has officially started. Please follow the designated route to the destination.'.tr, payload: {});
+                    }
+                  });
+                  if (controller.drivermodel.value?.ownerId != null) {
+                    orderModel.ownerId = controller.drivermodel.value?.ownerId;
                   }
-                });
-                if (controller.drivermodel.value?.ownerId != null) {
-                  orderModel.ownerId = controller.drivermodel.value?.ownerId;
+                  await FireStoreUtils.setOrder(orderModel).then((value) {
+                    if (value == true) {
+                      ShowToastDialog.showToast("Customer pickup successfully".tr);
+                    }
+                  });
+                } catch (e, stackTrace) {
+                  log("OTP verify (pickup) error :: $e\n$stackTrace");
+                  ShowToastDialog.showToast("Something went wrong: $e");
+                } finally {
+                  ShowToastDialog.closeLoader();
                 }
-                await FireStoreUtils.setOrder(orderModel).then((value) {
-                  if (value == true) {
-                    ShowToastDialog.closeLoader();
-                    ShowToastDialog.showToast("Customer pickup successfully".tr);
-                  }
-                });
               } else {
                 ShowToastDialog.showToast(
                   "OTP Invalid".tr,

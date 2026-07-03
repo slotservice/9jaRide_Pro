@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer/constant/collection_name.dart';
 import 'package:customer/constant/constant.dart';
@@ -337,18 +339,31 @@ class InterCityOrderScreen extends StatelessWidget {
                                                               title: "SOS".tr,
                                                               btnHeight: 44,
                                                               onPress: () async {
-                                                                await FireStoreUtils.getSOS(orderModel.id.toString()).then((value) {
-                                                                  if (value != null) {
-                                                                    ShowToastDialog.showToast("Your request is ${value.status}");
-                                                                  } else {
-                                                                    SosModel sosModel = SosModel();
-                                                                    sosModel.id = Constant.getUuid();
-                                                                    sosModel.orderId = orderModel.id;
-                                                                    sosModel.status = "Initiated";
-                                                                    sosModel.orderType = "intercity";
-                                                                    FireStoreUtils.setSOS(sosModel);
-                                                                  }
-                                                                });
+                                                                ShowToastDialog.showLoader("Please wait".tr);
+                                                                try {
+                                                                  await FireStoreUtils.getSOS(orderModel.id.toString()).then((value) async {
+                                                                    if (value != null) {
+                                                                      ShowToastDialog.showToast("Your request is ${value.status}");
+                                                                    } else {
+                                                                      SosModel sosModel = SosModel();
+                                                                      sosModel.id = Constant.getUuid();
+                                                                      sosModel.orderId = orderModel.id;
+                                                                      sosModel.status = "Initiated";
+                                                                      sosModel.orderType = "intercity";
+                                                                      bool? isAdded = await FireStoreUtils.setSOS(sosModel);
+                                                                      if (isAdded == true) {
+                                                                        ShowToastDialog.showToast("SOS request sent".tr);
+                                                                      } else {
+                                                                        ShowToastDialog.showToast("Failed to send SOS request. Please try again.".tr);
+                                                                      }
+                                                                    }
+                                                                  });
+                                                                } catch (e, stackTrace) {
+                                                                  log("SOS error :: $e\n$stackTrace");
+                                                                  ShowToastDialog.showToast("Something went wrong: $e");
+                                                                } finally {
+                                                                  ShowToastDialog.closeLoader();
+                                                                }
                                                               },
                                                             )),
                                                         Visibility(

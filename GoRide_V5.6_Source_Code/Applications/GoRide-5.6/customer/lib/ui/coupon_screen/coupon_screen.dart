@@ -225,23 +225,25 @@ class CouponScreen extends StatelessWidget {
                                     onPress: () async {
                                       if (controller.couponController.value.text.isNotEmpty) {
                                         ShowToastDialog.showLoader("Please wait".tr);
-                                        await FireStoreUtils.fireStore
-                                            .collection(CollectionName.coupon)
-                                            .where('code', isEqualTo: controller.couponController.value.text)
-                                            .where('enable', isEqualTo: true)
-                                            .where('validity', isGreaterThanOrEqualTo: Timestamp.now())
-                                            .get()
-                                            .then((value) {
-                                          ShowToastDialog.closeLoader();
+                                        try {
+                                          QuerySnapshot value = await FireStoreUtils.fireStore
+                                              .collection(CollectionName.coupon)
+                                              .where('code', isEqualTo: controller.couponController.value.text)
+                                              .where('enable', isEqualTo: true)
+                                              .where('validity', isGreaterThanOrEqualTo: Timestamp.now())
+                                              .get();
                                           if (value.docs.isNotEmpty) {
-                                            CouponModel couponModel = CouponModel.fromJson(value.docs.first.data());
+                                            CouponModel couponModel = CouponModel.fromJson(value.docs.first.data() as Map<String, dynamic>);
                                             Get.back(result: couponModel);
                                           } else {
                                             ShowToastDialog.showToast("Coupon code is Invalid".tr);
                                           }
-                                        }).catchError((error) {
-                                          log(error.toString());
-                                        });
+                                        } catch (e, stackTrace) {
+                                          log("Apply coupon error :: $e\n$stackTrace");
+                                          ShowToastDialog.showToast("Something went wrong: $e");
+                                        } finally {
+                                          ShowToastDialog.closeLoader();
+                                        }
                                       } else {
                                         ShowToastDialog.showToast("Please Enter coupon code".tr);
                                       }

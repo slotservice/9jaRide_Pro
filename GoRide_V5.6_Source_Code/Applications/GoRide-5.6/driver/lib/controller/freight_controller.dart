@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
@@ -49,6 +51,7 @@ class FreightController extends GetxController {
 
   Future<void> acceptOrder(InterCityOrderModel orderModel) async {
     ShowToastDialog.showLoader("Please wait".tr);
+    try {
       List<dynamic> newAcceptedDriverId = [];
       if (orderModel.acceptedDriverId != null) {
         newAcceptedDriverId = orderModel.acceptedDriverId!;
@@ -76,7 +79,6 @@ class FreightController extends GetxController {
       });
 
       await FireStoreUtils.acceptInterCityRide(orderModel, driverIdAcceptReject).then((value) async {
-        ShowToastDialog.closeLoader();
         ShowToastDialog.showToast("Ride Accepted".tr);
         Get.back();
         if (value != null && value == true) {
@@ -96,6 +98,12 @@ class FreightController extends GetxController {
           selectedIndex.value = 1;
         }
       });
+    } catch (e, stackTrace) {
+      log("Accept freight order error :: $e\n$stackTrace");
+      ShowToastDialog.showToast("Something went wrong: $e");
+    } finally {
+      ShowToastDialog.closeLoader();
+    }
   }
 
   Rx<DriverUserModel> driverModel = DriverUserModel().obs;

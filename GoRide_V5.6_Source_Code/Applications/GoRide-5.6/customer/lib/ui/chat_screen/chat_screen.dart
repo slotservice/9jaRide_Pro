@@ -124,6 +124,9 @@ class _ChatScreensState extends State<ChatScreens> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Constant.loader(isDarkTheme: themeChange.getThem());
                       }
+                      if (snapshot.hasError) {
+                        return Center(child: Text("Something went wrong: ${snapshot.error}".tr));
+                      }
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                         return SizedBox();
                       }

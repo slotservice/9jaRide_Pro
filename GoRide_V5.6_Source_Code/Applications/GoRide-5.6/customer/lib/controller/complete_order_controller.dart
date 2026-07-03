@@ -92,9 +92,12 @@ class CompleteOrderController extends GetxController {
     double kmCharge = 0.0;
 
     if (orderModel.value.driverId != null && orderModel.value.driverId!.isNotEmpty) {
-      String nonAcPerKmRateData = driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId).nonAcPerKmRate ?? '1.0';
-      String acPerKmRateData = driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId).acPerKmRate ?? '1.0';
-      String perKmRateData = driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId).perKmRate ?? '1.0';
+      String nonAcPerKmRateData =
+          driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId, orElse: () => RateModel()).nonAcPerKmRate ?? '1.0';
+      String acPerKmRateData =
+          driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId, orElse: () => RateModel()).acPerKmRate ?? '1.0';
+      String perKmRateData =
+          driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId, orElse: () => RateModel()).perKmRate ?? '1.0';
       nonAcChargeValue = double.tryParse(nonAcPerKmRateData) ?? 1.0;
       acChargeValue = double.tryParse(acPerKmRateData) ?? 1.0;
       kmCharge = double.tryParse(perKmRateData) ?? 1.0;

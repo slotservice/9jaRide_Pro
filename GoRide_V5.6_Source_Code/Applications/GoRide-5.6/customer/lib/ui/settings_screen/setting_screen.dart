@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:customer/constant/constant.dart';
 import 'package:customer/constant/show_toast_dialog.dart';
@@ -207,16 +208,22 @@ class SettingScreen extends StatelessWidget {
       child: Text("OK".tr),
       onPressed: () async {
         ShowToastDialog.showLoader("Please wait".tr);
-        // await controller.deleteUserFromServer();
-        await FireStoreUtils.deleteUser().then((value) {
+        try {
+          // await controller.deleteUserFromServer();
+          await FireStoreUtils.deleteUser().then((value) {
+            if (value == true) {
+              ShowToastDialog.showToast("Account delete".tr);
+              Get.offAll(const LoginScreen());
+            } else {
+              ShowToastDialog.showToast("Please contact to administrator".tr);
+            }
+          });
+        } catch (e, stackTrace) {
+          log("Delete account error :: $e\n$stackTrace");
+          ShowToastDialog.showToast("Something went wrong: $e");
+        } finally {
           ShowToastDialog.closeLoader();
-          if (value == true) {
-            ShowToastDialog.showToast("Account delete".tr);
-            Get.offAll(const LoginScreen());
-          } else {
-            ShowToastDialog.showToast("Please contact to administrator".tr);
-          }
-        });
+        }
       },
     );
     Widget cancel = TextButton(

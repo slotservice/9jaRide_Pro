@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -242,23 +243,27 @@ class ProfileScreen extends StatelessWidget {
                                           title: "Update Profile".tr,
                                           onPress: () async {
                                             ShowToastDialog.showLoader("Please wait".tr);
-                                            print("======>${controller.profileImage.value}");
+                                            try {
+                                              if (controller.profileImage.value.isNotEmpty && Constant().hasValidUrl(controller.profileImage.value) == false) {
+                                                controller.profileImage.value = await Constant.uploadUserImageToFireStorage(
+                                                    File(controller.profileImage.value), "profileImage/${FireStoreUtils.getCurrentUid()}", File(controller.profileImage.value).path.split('/').last);
+                                              }
 
-                                            if (controller.profileImage.value.isNotEmpty && Constant().hasValidUrl(controller.profileImage.value) == false) {
-                                              controller.profileImage.value = await Constant.uploadUserImageToFireStorage(
-                                                  File(controller.profileImage.value), "profileImage/${FireStoreUtils.getCurrentUid()}", File(controller.profileImage.value).path.split('/').last);
-                                            }
+                                              UserModel userModel = controller.userModel.value;
+                                              userModel.fullName = controller.fullNameController.value.text;
+                                              userModel.profilePic = controller.profileImage.value;
+                                              userModel.specialAssistance = controller.specialAssistance.value;
 
-                                            UserModel userModel = controller.userModel.value;
-                                            userModel.fullName = controller.fullNameController.value.text;
-                                            userModel.profilePic = controller.profileImage.value;
-                                            userModel.specialAssistance = controller.specialAssistance.value;
-
-                                            FireStoreUtils.updateUser(userModel).then((value) {
+                                              await FireStoreUtils.updateUser(userModel).then((value) {
+                                                controller.getData();
+                                                ShowToastDialog.showToast("Profile update successfully".tr);
+                                              });
+                                            } catch (e, stackTrace) {
+                                              log("Update profile error :: $e\n$stackTrace");
+                                              ShowToastDialog.showToast("Something went wrong: $e");
+                                            } finally {
                                               ShowToastDialog.closeLoader();
-                                              controller.getData();
-                                              ShowToastDialog.showToast("Profile update successfully".tr);
-                                            });
+                                            }
                                           },
                                         ),
                                       ],

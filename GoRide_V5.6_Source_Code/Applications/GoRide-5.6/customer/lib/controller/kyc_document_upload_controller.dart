@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,32 +78,38 @@ class KycDocumentUploadController extends GetxController {
   }
 
   Future<void> uploadDocument() async {
-    if (frontImage.value.isNotEmpty && Constant().hasValidUrl(frontImage.value) == false) {
-      String fileName = File(frontImage.value).path.split('/').last;
-      frontImage.value = await Constant.uploadUserImageToFireStorage(
-          File(frontImage.value), 'customerDocument/${FireStoreUtils.getCurrentUid()}', fileName);
-    }
+    try {
+      if (frontImage.value.isNotEmpty && Constant().hasValidUrl(frontImage.value) == false) {
+        String fileName = File(frontImage.value).path.split('/').last;
+        frontImage.value = await Constant.uploadUserImageToFireStorage(
+            File(frontImage.value), 'customerDocument/${FireStoreUtils.getCurrentUid()}', fileName);
+      }
 
-    if (backImage.value.isNotEmpty && Constant().hasValidUrl(backImage.value) == false) {
-      String fileName = File(backImage.value).path.split('/').last;
-      backImage.value = await Constant.uploadUserImageToFireStorage(
-          File(backImage.value), 'customerDocument/${FireStoreUtils.getCurrentUid()}', fileName);
-    }
+      if (backImage.value.isNotEmpty && Constant().hasValidUrl(backImage.value) == false) {
+        String fileName = File(backImage.value).path.split('/').last;
+        backImage.value = await Constant.uploadUserImageToFireStorage(
+            File(backImage.value), 'customerDocument/${FireStoreUtils.getCurrentUid()}', fileName);
+      }
 
-    documents.value.documentId = documentModel.value.id;
-    documents.value.documentNumber = documentNumberController.value.text;
-    documents.value.frontImage = frontImage.value;
-    documents.value.backImage = backImage.value;
-    documents.value.verified = false;
-    if (documentModel.value.expireAt == true) {
-      documents.value.expireAt = Timestamp.fromDate(selectedDate.value!);
-    }
+      documents.value.documentId = documentModel.value.id;
+      documents.value.documentNumber = documentNumberController.value.text;
+      documents.value.frontImage = frontImage.value;
+      documents.value.backImage = backImage.value;
+      documents.value.verified = false;
+      if (documentModel.value.expireAt == true) {
+        documents.value.expireAt = Timestamp.fromDate(selectedDate.value!);
+      }
 
-    bool success = await FireStoreUtils.uploadCustomerDocument(documents.value);
-    ShowToastDialog.closeLoader();
-    if (success) {
-      ShowToastDialog.showToast('Document uploaded successfully'.tr);
-      Get.back();
+      bool success = await FireStoreUtils.uploadCustomerDocument(documents.value);
+      if (success) {
+        ShowToastDialog.showToast('Document uploaded successfully'.tr);
+        Get.back();
+      }
+    } catch (e, stackTrace) {
+      log("uploadDocument error :: $e\n$stackTrace");
+      ShowToastDialog.showToast("Something went wrong: $e");
+    } finally {
+      ShowToastDialog.closeLoader();
     }
   }
 }

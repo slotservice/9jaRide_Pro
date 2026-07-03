@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer/constant/collection_name.dart';
 import 'package:customer/constant/constant.dart';
 import 'package:customer/constant/send_notification.dart';
+import 'package:customer/constant/show_toast_dialog.dart';
 import 'package:customer/controller/intercity_accept_order_controller.dart';
 import 'package:customer/model/driver_user_model.dart';
 import 'package:customer/model/intercity_order_model.dart';
@@ -130,13 +133,21 @@ class InterCityAcceptOrderScreen extends StatelessWidget {
                                         title: "Cancel".tr,
                                         btnHeight: 44,
                                         onPress: () async {
-                                          List<dynamic> acceptDriverId = [];
+                                          ShowToastDialog.showLoader("Please wait".tr);
+                                          try {
+                                            List<dynamic> acceptDriverId = [];
 
-                                          orderModel.status = Constant.rideCanceled;
-                                          orderModel.acceptedDriverId = acceptDriverId;
-                                          await FireStoreUtils.setInterCityOrder(orderModel).then((value) {
-                                            Get.back();
-                                          });
+                                            orderModel.status = Constant.rideCanceled;
+                                            orderModel.acceptedDriverId = acceptDriverId;
+                                            await FireStoreUtils.setInterCityOrder(orderModel).then((value) {
+                                              Get.back();
+                                            });
+                                          } catch (e, stackTrace) {
+                                            log("Cancel intercity order error :: $e\n$stackTrace");
+                                            ShowToastDialog.showToast("Something went wrong: $e");
+                                          } finally {
+                                            ShowToastDialog.closeLoader();
+                                          }
                                         },
                                       )
                                     ],
@@ -296,31 +307,39 @@ class InterCityAcceptOrderScreen extends StatelessWidget {
                                                                                       btnHeight: 45,
                                                                                       iconVisibility: false,
                                                                                       onPress: () async {
-                                                                                        List<dynamic> rejectDriverId = [];
-                                                                                        if (controller.orderModel.value.rejectedDriverId != null) {
-                                                                                          rejectDriverId = controller.orderModel.value.rejectedDriverId!;
-                                                                                        } else {
-                                                                                          rejectDriverId = [];
+                                                                                        ShowToastDialog.showLoader("Please wait".tr);
+                                                                                        try {
+                                                                                          List<dynamic> rejectDriverId = [];
+                                                                                          if (controller.orderModel.value.rejectedDriverId != null) {
+                                                                                            rejectDriverId = controller.orderModel.value.rejectedDriverId!;
+                                                                                          } else {
+                                                                                            rejectDriverId = [];
+                                                                                          }
+                                                                                          rejectDriverId.add(driverModel.id);
+
+                                                                                          List<dynamic> acceptDriverId = [];
+                                                                                          if (controller.orderModel.value.acceptedDriverId != null) {
+                                                                                            acceptDriverId = controller.orderModel.value.acceptedDriverId!;
+                                                                                          } else {
+                                                                                            acceptDriverId = [];
+                                                                                          }
+
+                                                                                          acceptDriverId.remove(driverModel.id);
+
+                                                                                          controller.orderModel.value.rejectedDriverId = rejectDriverId;
+                                                                                          controller.orderModel.value.acceptedDriverId = acceptDriverId;
+                                                                                          await SendNotification.sendOneNotification(
+                                                                                              token: driverModel.fcmToken.toString(),
+                                                                                              title: 'Ride Canceled'.tr,
+                                                                                              body: 'The passenger has canceled the ride. No action is required from your end.'.tr,
+                                                                                              payload: {});
+                                                                                          await FireStoreUtils.setInterCityOrder(controller.orderModel.value);
+                                                                                        } catch (e, stackTrace) {
+                                                                                          log("Reject intercity driver error :: $e\n$stackTrace");
+                                                                                          ShowToastDialog.showToast("Something went wrong: $e");
+                                                                                        } finally {
+                                                                                          ShowToastDialog.closeLoader();
                                                                                         }
-                                                                                        rejectDriverId.add(driverModel.id);
-
-                                                                                        List<dynamic> acceptDriverId = [];
-                                                                                        if (controller.orderModel.value.acceptedDriverId != null) {
-                                                                                          acceptDriverId = controller.orderModel.value.acceptedDriverId!;
-                                                                                        } else {
-                                                                                          acceptDriverId = [];
-                                                                                        }
-
-                                                                                        acceptDriverId.remove(driverModel.id);
-
-                                                                                        controller.orderModel.value.rejectedDriverId = rejectDriverId;
-                                                                                        controller.orderModel.value.acceptedDriverId = acceptDriverId;
-                                                                                        await SendNotification.sendOneNotification(
-                                                                                            token: driverModel.fcmToken.toString(),
-                                                                                            title: 'Ride Canceled'.tr,
-                                                                                            body: 'The passenger has canceled the ride. No action is required from your end.'.tr,
-                                                                                            payload: {});
-                                                                                        await FireStoreUtils.setInterCityOrder(controller.orderModel.value);
                                                                                       },
                                                                                     ),
                                                                                   ),
@@ -333,20 +352,28 @@ class InterCityAcceptOrderScreen extends StatelessWidget {
                                                                                       title: "Accept".tr,
                                                                                       btnHeight: 45,
                                                                                       onPress: () async {
-                                                                                        orderModel.acceptedDriverId = [];
-                                                                                        if (driverModel.ownerId != null) {
-                                                                                          orderModel.ownerId = driverModel.ownerId;
+                                                                                        ShowToastDialog.showLoader("Please wait".tr);
+                                                                                        try {
+                                                                                          orderModel.acceptedDriverId = [];
+                                                                                          if (driverModel.ownerId != null) {
+                                                                                            orderModel.ownerId = driverModel.ownerId;
+                                                                                          }
+                                                                                          orderModel.driverId = driverIdAcceptReject.driverId.toString();
+                                                                                          orderModel.status = Constant.rideActive;
+                                                                                          orderModel.finalRate = driverIdAcceptReject.offerAmount;
+                                                                                          await SendNotification.sendOneNotification(
+                                                                                              token: driverModel.fcmToken.toString(),
+                                                                                              title: 'Ride Confirmed',
+                                                                                              body: 'Your ride request has been accepted by the passenger. Please proceed to the pickup location.'.tr,
+                                                                                              payload: {});
+                                                                                          await FireStoreUtils.setInterCityOrder(orderModel);
+                                                                                          Get.back();
+                                                                                        } catch (e, stackTrace) {
+                                                                                          log("Accept intercity ride error :: $e\n$stackTrace");
+                                                                                          ShowToastDialog.showToast("Something went wrong: $e");
+                                                                                        } finally {
+                                                                                          ShowToastDialog.closeLoader();
                                                                                         }
-                                                                                        orderModel.driverId = driverIdAcceptReject.driverId.toString();
-                                                                                        orderModel.status = Constant.rideActive;
-                                                                                        orderModel.finalRate = driverIdAcceptReject.offerAmount;
-                                                                                        await SendNotification.sendOneNotification(
-                                                                                            token: driverModel.fcmToken.toString(),
-                                                                                            title: 'Ride Confirmed',
-                                                                                            body: 'Your ride request has been accepted by the passenger. Please proceed to the pickup location.'.tr,
-                                                                                            payload: {});
-                                                                                        FireStoreUtils.setInterCityOrder(orderModel);
-                                                                                        Get.back();
                                                                                       },
                                                                                     ),
                                                                                   )

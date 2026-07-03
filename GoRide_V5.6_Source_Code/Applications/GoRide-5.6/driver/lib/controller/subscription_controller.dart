@@ -157,49 +157,55 @@ class SubscriptionController extends GetxController {
 
   Future<void> setOrder() async {
     ShowToastDialog.showLoader("Please wait".tr);
-    driverUserModel.value.subscriptionPlanId = selectedSubscriptionPlan.value.id;
-    driverUserModel.value.subscriptionPlan = selectedSubscriptionPlan.value;
-    driverUserModel.value.subscriptionPlan?.createdAt = Timestamp.now();
-    driverUserModel.value.subscriptionTotalOrders = selectedSubscriptionPlan.value.bookingLimit;
-    driverUserModel.value.subscriptionExpiryDate =
-        selectedSubscriptionPlan.value.expiryDay == '-1' ? null : Constant().addDayInTimestamp(days: selectedSubscriptionPlan.value.expiryDay, date: Timestamp.now());
+    try {
+      driverUserModel.value.subscriptionPlanId = selectedSubscriptionPlan.value.id;
+      driverUserModel.value.subscriptionPlan = selectedSubscriptionPlan.value;
+      driverUserModel.value.subscriptionPlan?.createdAt = Timestamp.now();
+      driverUserModel.value.subscriptionTotalOrders = selectedSubscriptionPlan.value.bookingLimit;
+      driverUserModel.value.subscriptionExpiryDate =
+          selectedSubscriptionPlan.value.expiryDay == '-1' ? null : Constant().addDayInTimestamp(days: selectedSubscriptionPlan.value.expiryDay, date: Timestamp.now());
 
-    SubscriptionHistoryModel subscriptionHistoryData = SubscriptionHistoryModel(
-        id: Constant.getUuid(),
-        createdAt: Timestamp.now(),
-        expiryDate: driverUserModel.value.subscriptionExpiryDate,
-        subscriptionPlan: driverUserModel.value.subscriptionPlan,
-        paymentType: selectedPaymentMethod.value,
-        userId: driverUserModel.value.id);
-
-    await FireStoreUtils.setSubscriptionTransaction(subscriptionHistoryData);
-
-    if (selectedPaymentMethod.value == paymentModel.value.wallet!.name) {
-      WalletTransactionModel transactionModel = WalletTransactionModel(
+      SubscriptionHistoryModel subscriptionHistoryData = SubscriptionHistoryModel(
           id: Constant.getUuid(),
-          amount: totalAmount.value.toString(),
-          createdDate: Timestamp.now(),
+          createdAt: Timestamp.now(),
+          expiryDate: driverUserModel.value.subscriptionExpiryDate,
+          subscriptionPlan: driverUserModel.value.subscriptionPlan,
           paymentType: selectedPaymentMethod.value,
-          userType: "driver",
-          transactionId: DateTime.now().millisecondsSinceEpoch.toString(),
-          userId: FireStoreUtils.getCurrentUid(),
-          note: "Subscription Amount debited".tr);
+          userId: driverUserModel.value.id);
 
-      await FireStoreUtils.setWalletTransaction(transactionModel);
-      driverUserModel.value.walletAmount = (double.parse(driverUserModel.value.walletAmount.toString()) - totalAmount.value).toString();
+      await FireStoreUtils.setSubscriptionTransaction(subscriptionHistoryData);
+
+      if (selectedPaymentMethod.value == paymentModel.value.wallet!.name) {
+        WalletTransactionModel transactionModel = WalletTransactionModel(
+            id: Constant.getUuid(),
+            amount: totalAmount.value.toString(),
+            createdDate: Timestamp.now(),
+            paymentType: selectedPaymentMethod.value,
+            userType: "driver",
+            transactionId: DateTime.now().millisecondsSinceEpoch.toString(),
+            userId: FireStoreUtils.getCurrentUid(),
+            note: "Subscription Amount debited".tr);
+
+        await FireStoreUtils.setWalletTransaction(transactionModel);
+        driverUserModel.value.walletAmount = (double.parse(driverUserModel.value.walletAmount.toString()) - totalAmount.value).toString();
+      }
+
+      await FireStoreUtils.updateDriverUser(driverUserModel.value).then(
+        (value) async {
+          if (isShowing.value == true) {
+            Get.offAll(const DashBoardScreen());
+          } else {
+            Get.back(result: true);
+          }
+          ShowToastDialog.showToast("Success! You’ve unlocked your subscription benefits starting today.".tr);
+        },
+      );
+    } catch (e, stackTrace) {
+      log("Subscription setOrder error :: $e\n$stackTrace");
+      ShowToastDialog.showToast("Something went wrong: $e");
+    } finally {
+      ShowToastDialog.closeLoader();
     }
-
-    await FireStoreUtils.updateDriverUser(driverUserModel.value).then(
-      (value) async {
-        ShowToastDialog.closeLoader();
-        if (isShowing.value == true) {
-          Get.offAll(const DashBoardScreen());
-        } else {
-          Get.back(result: true);
-        }
-        ShowToastDialog.showToast("Success! You’ve unlocked your subscription benefits starting today.".tr);
-      },
-    );
   }
 
   // Strip

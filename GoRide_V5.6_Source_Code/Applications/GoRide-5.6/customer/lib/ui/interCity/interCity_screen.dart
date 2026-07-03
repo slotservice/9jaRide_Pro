@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:bottom_picker/bottom_picker.dart';
@@ -496,6 +497,7 @@ class InterCityScreen extends StatelessWidget {
                                             : "Ride Placed".tr,
                                     btnWidthRatio: Responsive.width(100, context),
                                     onPress: () async {
+                                      try {
                                       bool isPaymentNotCompleted = await FireStoreUtils.paymentStatusCheckIntercity();
 
                                       if (isPaymentNotCompleted) {
@@ -740,6 +742,12 @@ class InterCityScreen extends StatelessWidget {
                                         } else {
                                           ShowToastDialog.showToast("Please select location");
                                         }
+                                      }
+                                      } catch (e, stackTrace) {
+                                        log("Intercity booking error :: $e\n$stackTrace");
+                                        ShowToastDialog.showToast("Something went wrong: $e");
+                                      } finally {
+                                        ShowToastDialog.closeLoader();
                                       }
                                     },
                                   ),

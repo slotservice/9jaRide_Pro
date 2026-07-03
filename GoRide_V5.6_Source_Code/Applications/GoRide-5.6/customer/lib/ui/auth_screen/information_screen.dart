@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:customer/constant/constant.dart';
@@ -144,70 +146,80 @@ class InformationScreen extends StatelessWidget {
                                 FireStoreUtils.checkReferralCodeValidOrNot(controller.referralCodeController.value.text).then((value) async {
                                   if (value == true) {
                                     ShowToastDialog.showLoader("Please wait".tr);
-                                    UserModel userModel = controller.userModel.value;
-                                    userModel.fullName = controller.fullNameController.value.text;
-                                    userModel.email = controller.emailController.value.text;
-                                    userModel.countryCode = controller.countryCode.value.text;
-                                    userModel.countryISOCode = controller.countryISOCode.value.text;
-                                    userModel.phoneNumber = controller.phoneNumberController.value.text;
-                                    userModel.isActive = true;
-                                    userModel.createdAt = Timestamp.now();
+                                    try {
+                                      UserModel userModel = controller.userModel.value;
+                                      userModel.fullName = controller.fullNameController.value.text;
+                                      userModel.email = controller.emailController.value.text;
+                                      userModel.countryCode = controller.countryCode.value.text;
+                                      userModel.countryISOCode = controller.countryISOCode.value.text;
+                                      userModel.phoneNumber = controller.phoneNumberController.value.text;
+                                      userModel.isActive = true;
+                                      userModel.createdAt = Timestamp.now();
 
-                                    await FireStoreUtils.getReferralUserByCode(controller.referralCodeController.value.text).then((value) async {
-                                      if (value != null) {
-                                        ReferralModel ownReferralModel = ReferralModel(
-                                          id: FireStoreUtils.getCurrentUid(),
-                                          referralBy: value.id,
-                                          referralCode: Constant.getReferralCode(),
-                                        );
-                                        await FireStoreUtils.referralAdd(ownReferralModel);
-                                      } else {
-                                        ReferralModel referralModel = ReferralModel(
-                                          id: FireStoreUtils.getCurrentUid(),
-                                          referralBy: "",
-                                          referralCode: Constant.getReferralCode(),
-                                        );
+                                      await FireStoreUtils.getReferralUserByCode(controller.referralCodeController.value.text).then((value) async {
+                                        if (value != null) {
+                                          ReferralModel ownReferralModel = ReferralModel(
+                                            id: FireStoreUtils.getCurrentUid(),
+                                            referralBy: value.id,
+                                            referralCode: Constant.getReferralCode(),
+                                          );
+                                          await FireStoreUtils.referralAdd(ownReferralModel);
+                                        } else {
+                                          ReferralModel referralModel = ReferralModel(
+                                            id: FireStoreUtils.getCurrentUid(),
+                                            referralBy: "",
+                                            referralCode: Constant.getReferralCode(),
+                                          );
 
-                                        await FireStoreUtils.referralAdd(referralModel);
-                                      }
-                                    });
+                                          await FireStoreUtils.referralAdd(referralModel);
+                                        }
+                                      });
 
-                                    await FireStoreUtils.updateUser(userModel).then((value) {
+                                      await FireStoreUtils.updateUser(userModel).then((value) {
+                                        if (value == true) {
+                                          Get.offAll(const KycScreen());
+                                        }
+                                      });
+                                    } catch (e, stackTrace) {
+                                      log("Create account (referral) error :: $e\n$stackTrace");
+                                      ShowToastDialog.showToast("Something went wrong: $e");
+                                    } finally {
                                       ShowToastDialog.closeLoader();
-
-                                      if (value == true) {
-                                        Get.offAll(const KycScreen());
-                                      }
-                                    });
+                                    }
                                   } else {
                                     ShowToastDialog.showToast("Referral code Invalid".tr);
                                   }
                                 });
                               } else {
                                 ShowToastDialog.showLoader("Please wait".tr);
-                                UserModel userModel = controller.userModel.value;
-                                userModel.fullName = controller.fullNameController.value.text;
-                                userModel.email = controller.emailController.value.text;
-                                userModel.countryCode = controller.countryCode.value.text;
-                                userModel.countryISOCode = controller.countryISOCode.value.text;
-                                userModel.phoneNumber = controller.phoneNumberController.value.text;
-                                userModel.isActive = true;
-                                userModel.createdAt = Timestamp.now();
+                                try {
+                                  UserModel userModel = controller.userModel.value;
+                                  userModel.fullName = controller.fullNameController.value.text;
+                                  userModel.email = controller.emailController.value.text;
+                                  userModel.countryCode = controller.countryCode.value.text;
+                                  userModel.countryISOCode = controller.countryISOCode.value.text;
+                                  userModel.phoneNumber = controller.phoneNumberController.value.text;
+                                  userModel.isActive = true;
+                                  userModel.createdAt = Timestamp.now();
 
-                                ReferralModel referralModel = ReferralModel(
-                                  id: FireStoreUtils.getCurrentUid(),
-                                  referralBy: "",
-                                  referralCode: Constant.getReferralCode(),
-                                );
-                                await FireStoreUtils.referralAdd(referralModel);
+                                  ReferralModel referralModel = ReferralModel(
+                                    id: FireStoreUtils.getCurrentUid(),
+                                    referralBy: "",
+                                    referralCode: Constant.getReferralCode(),
+                                  );
+                                  await FireStoreUtils.referralAdd(referralModel);
 
-                                await FireStoreUtils.updateUser(userModel).then((value) {
+                                  await FireStoreUtils.updateUser(userModel).then((value) {
+                                    if (value == true) {
+                                      Get.offAll(const KycScreen());
+                                    }
+                                  });
+                                } catch (e, stackTrace) {
+                                  log("Create account error :: $e\n$stackTrace");
+                                  ShowToastDialog.showToast("Something went wrong: $e");
+                                } finally {
                                   ShowToastDialog.closeLoader();
-                                  print("------>$value");
-                                  if (value == true) {
-                                    Get.offAll(const KycScreen());
-                                  }
-                                });
+                                }
                               }
                             }
                           },
