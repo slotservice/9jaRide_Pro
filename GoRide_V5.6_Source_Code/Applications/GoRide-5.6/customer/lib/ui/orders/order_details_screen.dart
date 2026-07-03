@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:customer/constant/collection_name.dart';
 import 'package:customer/constant/constant.dart';
 import 'package:customer/constant/send_notification.dart';
+import 'package:customer/constant/show_toast_dialog.dart';
 import 'package:customer/controller/order_details_controller.dart';
 import 'package:customer/model/driver_rules_model.dart';
 import 'package:customer/model/driver_user_model.dart';
@@ -347,39 +350,49 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                                       title: "Accept ${Constant.amountShow(amount: driverIdAcceptReject.offerAmount)}".tr,
                                                                                       btnHeight: 45,
                                                                                       onPress: () async {
-                                                                                        orderModel.acceptedDriverId = [];
-                                                                                        orderModel.driverId = driverIdAcceptReject.driverId.toString();
-                                                                                        orderModel.status = Constant.rideActive;
-                                                                                        orderModel.finalRate = driverIdAcceptReject.offerAmount;
-                                                                                        orderModel.vehicleInformation = driverModel.vehicleInformation;
-                                                                                        if (driverModel.ownerId != null) {
-                                                                                          orderModel.ownerId = driverModel.ownerId;
-                                                                                        }
-                                                                                        if (orderModel.isAcSelected == true) {
-                                                                                          String acPerKmRateData = driverModel.vehicleInformation!.rates!
-                                                                                              .firstWhere(
-                                                                                                (prices) => prices.zoneId == orderModel.zoneId,
-                                                                                                orElse: () => RateModel(),
-                                                                                              )
-                                                                                              .acPerKmRate!;
-                                                                                          orderModel.acNonAcCharges = acPerKmRateData;
-                                                                                        } else {
-                                                                                          String nonAcPerKmRateData = driverModel.vehicleInformation!.rates!
-                                                                                              .firstWhere(
-                                                                                                (prices) => prices.zoneId == orderModel.zoneId,
-                                                                                                orElse: () => RateModel(),
-                                                                                              )
-                                                                                              .nonAcPerKmRate!;
-                                                                                          orderModel.acNonAcCharges = nonAcPerKmRateData;
-                                                                                        }
-                                                                                        FireStoreUtils.setOrder(orderModel);
+                                                                                        ShowToastDialog.showLoader("Please wait".tr);
+                                                                                        try {
+                                                                                          orderModel.acceptedDriverId = [];
+                                                                                          orderModel.driverId = driverIdAcceptReject.driverId.toString();
+                                                                                          orderModel.status = Constant.rideActive;
+                                                                                          orderModel.finalRate = driverIdAcceptReject.offerAmount;
+                                                                                          orderModel.vehicleInformation = driverModel.vehicleInformation;
+                                                                                          if (driverModel.ownerId != null) {
+                                                                                            orderModel.ownerId = driverModel.ownerId;
+                                                                                          }
+                                                                                          if (orderModel.isAcSelected == true) {
+                                                                                            String acPerKmRateData = driverModel.vehicleInformation?.rates
+                                                                                                    ?.firstWhere(
+                                                                                                      (prices) => prices.zoneId == orderModel.zoneId && prices.acPerKmRate != null,
+                                                                                                      orElse: () => RateModel(),
+                                                                                                    )
+                                                                                                    .acPerKmRate ??
+                                                                                                '0.0';
+                                                                                            orderModel.acNonAcCharges = acPerKmRateData;
+                                                                                          } else {
+                                                                                            String nonAcPerKmRateData = driverModel.vehicleInformation?.rates
+                                                                                                    ?.firstWhere(
+                                                                                                      (prices) => prices.zoneId == orderModel.zoneId && prices.nonAcPerKmRate != null,
+                                                                                                      orElse: () => RateModel(),
+                                                                                                    )
+                                                                                                    .nonAcPerKmRate ??
+                                                                                                '0.0';
+                                                                                            orderModel.acNonAcCharges = nonAcPerKmRateData;
+                                                                                          }
+                                                                                          await FireStoreUtils.setOrder(orderModel);
 
-                                                                                        await SendNotification.sendOneNotification(
-                                                                                            token: driverModel.fcmToken.toString(),
-                                                                                            title: 'Ride Confirmed'.tr,
-                                                                                            body: 'Your ride request has been accepted by the passenger. Please proceed to the pickup location.'.tr,
-                                                                                            payload: {});
-                                                                                        Get.back();
+                                                                                          await SendNotification.sendOneNotification(
+                                                                                              token: driverModel.fcmToken.toString(),
+                                                                                              title: 'Ride Confirmed'.tr,
+                                                                                              body: 'Your ride request has been accepted by the passenger. Please proceed to the pickup location.'.tr,
+                                                                                              payload: {});
+                                                                                          Get.back();
+                                                                                        } catch (e, stackTrace) {
+                                                                                          log("Accept ride error :: $e\n$stackTrace");
+                                                                                          ShowToastDialog.showToast("Something went wrong: $e");
+                                                                                        } finally {
+                                                                                          ShowToastDialog.closeLoader();
+                                                                                        }
                                                                                       },
                                                                                     ),
                                                                                   )
