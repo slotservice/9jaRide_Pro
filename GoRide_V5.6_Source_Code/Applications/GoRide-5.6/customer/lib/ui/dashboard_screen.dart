@@ -141,7 +141,7 @@ class DashBoardScreen extends StatelessWidget {
                           : Colors.white
                       : themeChange.getThem()
                           ? Colors.white
-                          : AppColors.drawerIcon,
+                          : AppColors.lightprimary,
                 ),
                 const SizedBox(
                   width: 20,

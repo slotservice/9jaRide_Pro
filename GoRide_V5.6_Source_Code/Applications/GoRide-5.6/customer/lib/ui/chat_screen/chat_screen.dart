@@ -377,9 +377,9 @@ class _ChatScreensState extends State<ChatScreens> {
                                               videoUrl: data.url!.url,
                                             ));
                                           },
-                                          child: const Icon(
+                                          child: Icon(
                                             Icons.play_arrow,
-                                            color: Colors.white,
+                                            color: AppColors.lightprimary,
                                           ),
                                         ),
                             ),
@@ -494,8 +494,9 @@ class _ChatScreensState extends State<ChatScreens> {
                                             videoUrl: data.url!.url,
                                           ));
                                         },
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.play_arrow,
+                                          color: AppColors.lightprimary,
                                         ),
                                       ),
                           ),
