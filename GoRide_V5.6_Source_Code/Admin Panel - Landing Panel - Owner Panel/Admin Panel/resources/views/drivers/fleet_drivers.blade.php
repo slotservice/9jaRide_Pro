@@ -222,7 +222,7 @@
                     if (searchValue.length >= 3 || searchValue.length === 0) {
                         $('#overlay').show();
                     }
-                    ref.orderBy('createdAt', 'desc').get().then(async function(querySnapshot) {
+                    ref.get().then(async function(querySnapshot) {
                         if (querySnapshot.empty) {
                             $('.total_count').text(0);
                             console.error("No data found in Firestore.");

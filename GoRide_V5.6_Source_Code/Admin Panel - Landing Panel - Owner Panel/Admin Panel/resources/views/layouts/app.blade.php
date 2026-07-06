@@ -16,7 +16,7 @@
         <?php if (str_replace('_', '-', app()->getLocale()) == 'ar' || @$_COOKIE['is_rtl'] == 'true') { ?>
         <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap-rtl.min.css') }}" rel="stylesheet">
         <?php } ?>
-        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/style.css') }}?v={{ @filemtime(public_path('css/style.css')) ?: '2' }}" rel="stylesheet">
         <?php if (str_replace('_', '-', app()->getLocale()) == 'ar' || @$_COOKIE['is_rtl'] == 'true') { ?>
         <link href="{{ asset('css/style_rtl.css') }}" rel="stylesheet">
         <?php } ?>

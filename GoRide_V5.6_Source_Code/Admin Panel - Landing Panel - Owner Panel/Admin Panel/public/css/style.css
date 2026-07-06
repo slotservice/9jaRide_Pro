@@ -28129,7 +28129,15 @@ border-bottom: 2px solid #fff;
 
 /* --- Readability fix: table column headers were faint (inherited grey #67757c) --- */
 .table thead th,
+.table thead th a,
+.table thead th span,
+.table thead th label,
 table.dataTable thead th,
+table.dataTable thead th.sorting,
+table.dataTable thead th.sorting_asc,
+table.dataTable thead th.sorting_desc,
+.dataTables_scrollHead table thead th,
+.dataTables_wrapper .dataTables_scrollHead thead th,
 .table th {
     color: #22303c !important;
     font-weight: 600 !important;
