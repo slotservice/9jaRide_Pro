@@ -89,7 +89,12 @@ class OtpScreen extends StatelessWidget {
               Get.off(const InformationScreen(), arguments: {
                 "userModel": userModel,
               });
-            } else if (userExit == Constant.currentUserType) {
+            } else {
+              // One phone may hold BOTH a customer and a driver account (same
+              // Firebase uid, separate driver_users doc). Whether this uid is
+              // already a driver or only a customer, route by whether a driver
+              // profile exists: none -> onboard as driver, exists -> log in.
+              // (Do NOT reject cross-role logins - that is intended behaviour.)
               await FireStoreUtils.getDriverProfile(value.user!.uid).then(
                 (driverProfile) async {
                   if (driverProfile == null) {
@@ -146,9 +151,6 @@ class OtpScreen extends StatelessWidget {
                   }
                 },
               );
-            } else {
-              await FirebaseAuth.instance.signOut();
-              ShowToastDialog.showToast('This account is already registered with a different role.'.tr);
             }
           });
         }
