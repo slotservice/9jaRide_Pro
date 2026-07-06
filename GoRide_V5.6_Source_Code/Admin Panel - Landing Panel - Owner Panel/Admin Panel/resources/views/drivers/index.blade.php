@@ -283,6 +283,12 @@
                                     }
                                 }
                             }
+                            // Fallback: service title arrays actually use name/language_code
+                            // (not type/title), so the typed lookups above never match. Use
+                            // the first entry's name so the Service column isn't blank.
+                            if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                                title = serviceName[0].name || serviceName[0].title || '';
+                            }
                             childData.serviceName = title;
                             if (childData.hasOwnProperty('vehicleInformation') && childData.vehicleInformation.vehicleType) {
                                 var vehicleType = '';
