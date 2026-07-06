@@ -46,7 +46,7 @@ class NotificationController extends Controller
                             'body' => $request->message,
                         ],
                         'token' => $fcm_token,
-                        'data' => $payload,
+                        'data' => $flatPayload,
                     ],
                 ];
 
@@ -66,15 +66,27 @@ class NotificationController extends Controller
                 
                 $result = curl_exec($ch);
                 if ($result === FALSE) {
-                    die('FCM Send Error: ' . curl_error($ch));
+                    $curlError = curl_error($ch);
+                    curl_close($ch);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'FCM Send Error: ' . $curlError,
+                    ]);
                 }
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
                 $result=json_decode($result);
 
                 $response = array();
-                $response['success'] = true;
-                $response['message'] = 'Notification successfully sent.';
-                $response['result'] = $result;
+                if ($httpCode >= 200 && $httpCode < 300 && !isset($result->error)) {
+                    $response['success'] = true;
+                    $response['message'] = 'Notification successfully sent.';
+                    $response['result'] = $result;
+                } else {
+                    $response['success'] = false;
+                    $response['message'] = isset($result->error->message) ? $result->error->message : 'FCM rejected the notification.';
+                    $response['result'] = $result;
+                }
 
             }else{
                 $response = array();

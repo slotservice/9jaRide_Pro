@@ -135,12 +135,20 @@
         } else {
             if (active) {
                 database.collection('currency').where('enable', "==", true).get().then(function (snapshots) {
+                    if (!snapshots.docs[0]) { return; }
                     var activeCurrency = snapshots.docs[0].data();
                     var activeCurrencyId = activeCurrency.id;
-                    database.collection('currency').doc(activeCurrencyId).update({'enable': false});
+                    database.collection('currency').doc(activeCurrencyId).update({'enable': false}).catch(function (error) {
+                        $(".error_top").show();
+                        $(".error_top").html("<p>" + error + "</p>");
+                    });
+                }).catch(function (error) {
+                    $(".error_top").show();
+                    $(".error_top").html("<p>" + error + "</p>");
                 });
             } else {
                 database.collection('currency').where('enable', "==", true).get().then(function (snapshots) {
+                    if (!snapshots.docs[0]) { return; }
                     var activeCurrency = snapshots.docs[0].data();
                     var activeCurrencyId = activeCurrency.id;
                     if (snapshots.docs.length == 1 && activeCurrencyId == id) {
@@ -150,8 +158,14 @@
                         return false;
                     } else {
                         database.collection('currency').doc(id).update({'enable': false}).then(function (result) {
+                        }).catch(function (error) {
+                            $(".error_top").show();
+                            $(".error_top").html("<p>" + error + "</p>");
                         });
                     }
+                }).catch(function (error) {
+                    $(".error_top").show();
+                    $(".error_top").html("<p>" + error + "</p>");
                 });
             }
             database.collection('currency').doc(id).set({

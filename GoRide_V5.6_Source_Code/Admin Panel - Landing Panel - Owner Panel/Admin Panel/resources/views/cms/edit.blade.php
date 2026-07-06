@@ -117,7 +117,7 @@
         jQuery("#overlay").show();
 
         ref.get().then(async function (snapshots) {
-            if (snapshots.docs) {
+            if (snapshots.docs && snapshots.docs.length) {
                 var cms = snapshots.docs[0].data();
                 $("#name").val(cms.name);
                 $("#slug").val(cms.slug);
@@ -128,6 +128,11 @@
                 }
                 checkSlug();
             }
+        }).catch(function (error) {
+            jQuery("#overlay").hide();
+            $(".error_top").show();
+            $(".error_top").html("<p>" + error + "</p>");
+            window.scrollTo(0, 0);
         });
         jQuery("#overlay").hide();
 
@@ -200,6 +205,11 @@
                 jQuery("#overlay").hide();
 
                 window.location.href = '{{ route("cms")}}';
+            }).catch(function (error) {
+                jQuery("#overlay").hide();
+                $(".error_top").show();
+                $(".error_top").html("<p>" + error + "</p>");
+                window.scrollTo(0, 0);
             });
         }
     });

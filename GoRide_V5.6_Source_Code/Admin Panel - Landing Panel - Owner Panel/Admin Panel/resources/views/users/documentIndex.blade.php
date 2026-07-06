@@ -188,7 +188,12 @@
                 : 0;
 
             customerDocRef.get().then(function (doc) {
-                var objects = doc.data().documents;
+                var objects = doc.data() ? doc.data().documents : null;
+                if (keydataId < 0 || !objects || !objects[keydataId]) {
+                    jQuery("#overlay").hide();
+                    alert("{{ trans('lang.doc_not_found') }}");
+                    return;
+                }
                 var objectToupdate = objects[keydataId];
                 objectToupdate.verified = verified;
                 objectToupdate.status = status;
@@ -203,7 +208,13 @@
                     jQuery("#overlay").hide();
                     alert(error);
                 });
+            }).catch(function (error) {
+                jQuery("#overlay").hide();
+                alert(error);
             });
+        }).catch(function (error) {
+            jQuery("#overlay").hide();
+            alert(error);
         });
     });
 

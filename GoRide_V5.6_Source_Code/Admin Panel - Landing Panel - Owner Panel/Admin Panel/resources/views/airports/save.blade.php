@@ -107,7 +107,7 @@ $(document).ready(async function () {
         .where('id', '==', requestId)
         .get()
         .then(function (snapshots) {
-            if (snapshots.docs[0].data()) {
+            if (snapshots.docs[0] && snapshots.docs[0].data()) {
                 var doc = snapshots.docs[0].data();
                 if (doc.enable) {
                     $('.service_active').prop('checked', true);
@@ -120,6 +120,10 @@ $(document).ready(async function () {
                 .attr('state', doc.state)
                 .attr('country', doc.country);
             }
+        }).catch(function (error) {
+            $("#data-table_processing").hide();
+            $('.error_top').show();
+            $('.error_top').html("<p>" + error + "</p>");
         });
     }
 
@@ -257,6 +261,11 @@ $(document).on('click', '.edit-form-btn', function () {
         $("#data-table_processing").hide();
         window.location.href = '{{ url("airports")}}';
 
+    }).catch(function (error) {
+        $("#data-table_processing").hide();
+        window.scroll(0, 0);
+        $('.error_top').show();
+        $('.error_top').html("<p>" + error + "</p>");
     });
 });
 

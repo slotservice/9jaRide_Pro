@@ -268,7 +268,14 @@
             var keydataId=docrefSnapshot.data()&&docrefSnapshot.data().documents? docrefSnapshot.data().documents.findIndex((doc) => doc.documentId==docId):0;
             database.collection('driver_document').doc(id)
                 .get().then((doc) => {
-                    var objects=doc.data().documents;
+                    var objects=doc.data()?doc.data().documents:null;
+                    if(keydataId<0||!objects||!objects[keydataId]) {
+                        jQuery("#overlay").hide();
+                        $(".error_top").show();
+                        $(".error_top").html("<p>"+notFound+"</p>");
+                        window.scrollTo(0,0);
+                        return;
+                    }
                     var objectToupdate=objects[keydataId];
                     objectToupdate.verified=verified;
                     objectToupdate.status=status;
@@ -302,11 +309,20 @@
                         $("#documents-tab").click();
                         $(".error_top").html("");
                     }).catch(function(error) {
+                        jQuery("#overlay").hide();
                         $(".error_top").show();
                         $(".error_top").html("");
                         $(".error_top").append("<p>"+error+"</p>");
                     });
-                })
+                }).catch(function(error) {
+                    jQuery("#overlay").hide();
+                    $(".error_top").show();
+                    $(".error_top").html("<p>"+error+"</p>");
+                });
+        }).catch(function(error) {
+            jQuery("#overlay").hide();
+            $(".error_top").show();
+            $(".error_top").html("<p>"+error+"</p>");
         });
 
     });

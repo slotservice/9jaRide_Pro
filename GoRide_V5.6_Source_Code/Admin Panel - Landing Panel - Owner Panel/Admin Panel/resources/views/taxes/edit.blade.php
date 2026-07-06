@@ -153,6 +153,11 @@
                     $('.tax_active').prop('checked', true);
                 }
                 jQuery("#overlay").hide();
+            }).catch(function (error) {
+                jQuery("#overlay").hide();
+                $(".error_top").show();
+                $(".error_top").html("<p>" + error + "</p>");
+                window.scrollTo(0, 0);
             });
 
             $(".edit-setting-btn").click(function () {
@@ -187,6 +192,11 @@
                     }).then(function (result) {
                         jQuery("#overlay").hide();
                         window.location.href = '{{ route("tax")}}';
+                    }).catch(function (error) {
+                        jQuery("#overlay").hide();
+                        $(".error_top").show();
+                        $(".error_top").html("<p>" + error + "</p>");
+                        window.scrollTo(0, 0);
                     });
                 }
             })

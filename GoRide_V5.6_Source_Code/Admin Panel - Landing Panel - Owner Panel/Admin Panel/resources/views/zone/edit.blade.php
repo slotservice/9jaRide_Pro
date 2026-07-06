@@ -251,7 +251,7 @@
     $(document).ready(function() {
         fetchLanguages().then(createLanguageTabs);
         ref.get().then(async function(snapshots) {
-            if(snapshots.docs) {
+            if(snapshots.docs && snapshots.docs.length) {
                 var zone=snapshots.docs[0].data();
                 if(zone && Array.isArray(zone.name)) {
                     zone.name.forEach(function(titleObj) {
@@ -261,8 +261,9 @@
                         }
                     });
                 }
-                $("#coordinates").val(zone.area);
-                let coordinates = zone.area.map(item => [item.c_, item.h_]);
+                var zoneArea = (zone && Array.isArray(zone.area)) ? zone.area : [];
+                $("#coordinates").val(zoneArea);
+                let coordinates = zoneArea.map(item => [item.c_, item.h_]);
                 document.getElementById('area').value = coordinates;
                 var AREA = document.getElementById('area').value;
                 const values = AREA.split(',');
@@ -295,8 +296,13 @@
                 }
                 default_lat=zone.latitude;
                 default_lng=zone.longitude;
-                geopoints=zone.area;
+                geopoints=zoneArea;
             }
+        }).catch(function(error) {
+            jQuery("#overlay").hide();
+            $(".error_top").show();
+            $(".error_top").html("<p>" + error + "</p>");
+            window.scrollTo(0, 0);
         });
 
         setTimeout(function() {
@@ -347,7 +353,15 @@
                         if (coordinates_parse.endsWith(']]')) {
                             coordinates_parse = coordinates_parse.slice(0, -1);  // Remove the last ']'
                         }
-                        var coordinates = JSON.parse(coordinates_parse);
+                        var coordinates;
+                        try {
+                            coordinates = JSON.parse(coordinates_parse);
+                        } catch (e) {
+                            $(".error_top").show();
+                            $(".error_top").html("<p>{{trans('lang.zone_coordinates_error')}}</p>");
+                            window.scrollTo(0, 0);
+                            return;
+                        }
                         if (coordinates && coordinates.length > 0) {
                             var latitude = coordinates[0].lat;
                             var longitude = coordinates[0].lng;
@@ -361,7 +375,7 @@
                                 }
                             }
 
-                            if (latitude && longitude) {
+                            if (latitude && longitude && area.length >= 3) {
                                 jQuery("#overlay").show();
                                 database.collection('zone').doc(id).set({
                                     'id': id,
@@ -373,13 +387,22 @@
                                 }).then(function (result) {
                                     jQuery("#overlay").hide();
                                     window.location.href = '{{ route("zone")}}';
+                                }).catch(function (error) {
+                                    jQuery("#overlay").hide();
+                                    $(".error_top").show();
+                                    $(".error_top").html("<p>" + error + "</p>");
+                                    window.scrollTo(0, 0);
                                 });
-                            } 
+                            } else {
+                                $(".error_top").show();
+                                $(".error_top").html("<p>{{trans('lang.invalid_coordinates_error')}}</p>");
+                                window.scrollTo(0, 0);
+                            }
                         }
-                        else 
+                        else
                         {
                             console.error("Invalid latitude or longitude");
-                        } 
+                        }
                     }
                     else
                     {
@@ -468,19 +491,30 @@
                             $(".error_top").append("<p>{{trans('lang.zone_coordinates_error')}}</p>");
                             window.scrollTo(0, 0);
                         }
-                        jQuery("#overlay").show();
-                        database.collection('zone').doc(id).set({
-                            'id': id,
-                            'name': names,
-                            'latitude': latitude,
-                            'longitude': longitude,
-                            'area': area,
-                            'publish': publish,
-                        }).then(function (result) {
-                            jQuery("#overlay").hide();
-                            window.location.href = '{{ route("zone")}}';
-                        });
-                    } 
+                        if (typeof area !== 'undefined' && area.length >= 3 && typeof latitude !== 'undefined' && typeof longitude !== 'undefined') {
+                            jQuery("#overlay").show();
+                            database.collection('zone').doc(id).set({
+                                'id': id,
+                                'name': names,
+                                'latitude': latitude,
+                                'longitude': longitude,
+                                'area': area,
+                                'publish': publish,
+                            }).then(function (result) {
+                                jQuery("#overlay").hide();
+                                window.location.href = '{{ route("zone")}}';
+                            }).catch(function (error) {
+                                jQuery("#overlay").hide();
+                                $(".error_top").show();
+                                $(".error_top").html("<p>" + error + "</p>");
+                                window.scrollTo(0, 0);
+                            });
+                        } else {
+                            $(".error_top").show();
+                            $(".error_top").html("<p>{{trans('lang.invalid_coordinates_error')}}</p>");
+                            window.scrollTo(0, 0);
+                        }
+                    }
             }
         });
     });

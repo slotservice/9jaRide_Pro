@@ -618,56 +618,87 @@
         var priceadd = $('#price_add').val();
         var reason = $('#reason').val();
         jQuery("#overlay").show().html("{{trans('lang.saving')}}");
-        database.collection('driver_users').where("id", "==", auth).get().then(function (resultDriver) {
-            if (resultDriver.docs.length) {
-                var driver = resultDriver.docs[0].data();
-                var walletAmount = 0;
-                if (isNaN(driver.walletAmount) || driver.walletAmount == undefined) {
-                    walletAmount = 0;
-                } else {
-                    walletAmount = driver.walletAmount;
-                }
-
-                price = parseFloat(walletAmount) + parseFloat(priceadd);
-                price = price.toString();
-                database.collection('withdrawal_history').doc(id).update({
-                    'paymentStatus': 'rejected',
-                    'adminNote': reason
-                }).then(function (result) {
-                    database.collection('driver_users').doc(driver.id).update({ 'walletAmount': price }).then(function (result) {
-                        window.location.href = '{{ url()->current() }}';
-                    });
-                });
-
-            } else {
-                // alert('{{trans("lang.driver_not_found")}}');
-                database.collection('owner_users').where("id", "==", auth).get().then(function (resultOwner) {
-                    if (resultOwner.docs.length) {
-                        var owner = resultOwner.docs[0].data();
-                        var walletAmount = 0;
-                        if (isNaN(owner.walletAmount) || owner.walletAmount == undefined) {
-                            walletAmount = 0;
-                        } else {
-                            walletAmount = owner.walletAmount;
-                        }
-
-                        price = parseFloat(walletAmount) + parseFloat(priceadd);
-                        price = price.toString();
-                        database.collection('withdrawal_history').doc(id).update({
-                            'paymentStatus': 'rejected',
-                            'adminNote': reason
-                        }).then(function (result) {
-                            database.collection('owner_users').doc(owner.id).update({ 'walletAmount': price }).then(function (result) {
-                                window.location.href = '{{ url()->current() }}';
-                            });
-                        });
-
-                    }else{
-                        alert('{{trans("lang.driver_not_found")}}');
-                    }
-                });
-                
+        database.collection('withdrawal_history').doc(id).get().then(function (payoutSnap) {
+            var payout = payoutSnap.exists ? payoutSnap.data() : null;
+            if (!payout || payout.paymentStatus != 'pending') {
+                jQuery("#overlay").hide();
+                alert('This payout has already been processed.');
+                window.location.href = '{{ url()->current() }}';
+                return;
             }
+            database.collection('driver_users').where("id", "==", auth).get().then(function (resultDriver) {
+                if (resultDriver.docs.length) {
+                    var driver = resultDriver.docs[0].data();
+                    var walletAmount = 0;
+                    if (isNaN(driver.walletAmount) || driver.walletAmount == undefined) {
+                        walletAmount = 0;
+                    } else {
+                        walletAmount = driver.walletAmount;
+                    }
+
+                    price = parseFloat(walletAmount) + parseFloat(priceadd);
+                    price = price.toString();
+                    database.collection('withdrawal_history').doc(id).update({
+                        'paymentStatus': 'rejected',
+                        'adminNote': reason
+                    }).then(function (result) {
+                        database.collection('driver_users').doc(driver.id).update({ 'walletAmount': price }).then(function (result) {
+                            window.location.href = '{{ url()->current() }}';
+                        }).catch(function (error) {
+                            jQuery("#overlay").hide();
+                            alert(error);
+                        });
+                    }).catch(function (error) {
+                        jQuery("#overlay").hide();
+                        alert(error);
+                    });
+
+                } else {
+                    // alert('{{trans("lang.driver_not_found")}}');
+                    database.collection('owner_users').where("id", "==", auth).get().then(function (resultOwner) {
+                        if (resultOwner.docs.length) {
+                            var owner = resultOwner.docs[0].data();
+                            var walletAmount = 0;
+                            if (isNaN(owner.walletAmount) || owner.walletAmount == undefined) {
+                                walletAmount = 0;
+                            } else {
+                                walletAmount = owner.walletAmount;
+                            }
+
+                            price = parseFloat(walletAmount) + parseFloat(priceadd);
+                            price = price.toString();
+                            database.collection('withdrawal_history').doc(id).update({
+                                'paymentStatus': 'rejected',
+                                'adminNote': reason
+                            }).then(function (result) {
+                                database.collection('owner_users').doc(owner.id).update({ 'walletAmount': price }).then(function (result) {
+                                    window.location.href = '{{ url()->current() }}';
+                                }).catch(function (error) {
+                                    jQuery("#overlay").hide();
+                                    alert(error);
+                                });
+                            }).catch(function (error) {
+                                jQuery("#overlay").hide();
+                                alert(error);
+                            });
+
+                        }else{
+                            jQuery("#overlay").hide();
+                            alert('{{trans("lang.driver_not_found")}}');
+                        }
+                    }).catch(function (error) {
+                        jQuery("#overlay").hide();
+                        alert(error);
+                    });
+
+                }
+            }).catch(function (error) {
+                jQuery("#overlay").hide();
+                alert(error);
+            });
+        }).catch(function (error) {
+            jQuery("#overlay").hide();
+            alert(error);
         });
     });
 
@@ -676,8 +707,23 @@
         var id = this.id;
         var auth = $(this).attr('data-auth');
         jQuery("#overlay").show().html("{{trans('lang.saving')}}");
-        database.collection('withdrawal_history').doc(id).update({ 'paymentStatus': 'approved' }).then(function (result) {
-            window.location.href = '{{ url()->current() }}';
+        database.collection('withdrawal_history').doc(id).get().then(function (payoutSnap) {
+            var payout = payoutSnap.exists ? payoutSnap.data() : null;
+            if (!payout || payout.paymentStatus != 'pending') {
+                jQuery("#overlay").hide();
+                alert('This payout has already been processed.');
+                window.location.href = '{{ url()->current() }}';
+                return;
+            }
+            database.collection('withdrawal_history').doc(id).update({ 'paymentStatus': 'approved' }).then(function (result) {
+                window.location.href = '{{ url()->current() }}';
+            }).catch(function (error) {
+                jQuery("#overlay").hide();
+                alert(error);
+            });
+        }).catch(function (error) {
+            jQuery("#overlay").hide();
+            alert(error);
         });
     });
 

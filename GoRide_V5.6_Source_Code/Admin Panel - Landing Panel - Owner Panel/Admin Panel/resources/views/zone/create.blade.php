@@ -252,13 +252,27 @@
 
                 if(mapType == "ONLINE"){
                     var coordinates_parse = coordinates_object;
-                    var coordinates = $.parseJSON(coordinates_parse);
+                    var coordinates;
+                    try {
+                        coordinates = $.parseJSON(coordinates_parse);
+                    } catch (e) {
+                        $(".error_top").show();
+                        $(".error_top").html("<p>{{trans('lang.invalid_coordinates_error')}}</p>");
+                        window.scrollTo(0, 0);
+                        return;
+                    }
                     var latitude = coordinates[0].lat;
                     var longitude = coordinates[0].lng;
                     var area = [];
                     for (let i = 0; i < coordinates.length; i++) {
                         var item = coordinates[i];
                         area.push(new firebase.firestore.GeoPoint(item.lat,item.lng));
+                    }
+                    if (area.length < 3) {
+                        $(".error_top").show();
+                        $(".error_top").html("<p>{{trans('lang.invalid_coordinates_error')}}</p>");
+                        window.scrollTo(0, 0);
+                        return;
                     }
                     jQuery("#overlay").show();
 
@@ -272,6 +286,11 @@
                     }).then(function(result) {
                         jQuery("#overlay").hide();
                         window.location.href='{{ route("zone")}}';
+                    }).catch(function(error) {
+                        jQuery("#overlay").hide();
+                        $(".error_top").show();
+                        $(".error_top").html("<p>" + error + "</p>");
+                        window.scrollTo(0, 0);
                     });
                 }
                 else
@@ -348,7 +367,7 @@
                         }
                     }
                     jQuery("#overlay").show();
-                    if (latitude && longitude && area.length > 0) {
+                    if (latitude && longitude && area.length >= 3) {
                         database.collection('zone').doc(id).set({
                             'id': id,
                             'name': names,
@@ -359,10 +378,16 @@
                         }).then(function (result) {
                             jQuery("#overlay").hide();
                             window.location.href = '{{ route("zone")}}';
+                        }).catch(function (error) {
+                            jQuery("#overlay").hide();
+                            $(".error_top").show();
+                            $(".error_top").html("<p>" + error + "</p>");
+                            window.scrollTo(0, 0);
                         });
-                    } 
+                    }
                     else
                     {
+                        jQuery("#overlay").hide();
                         console.error("Invalid latitude, longitude, or area:", latitude, longitude, area);
                         $(".error_top").show();
                         $(".error_top").html("<p>{{trans('lang.invalid_coordinates_error')}}</p>");

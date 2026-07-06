@@ -173,13 +173,20 @@ $(document).ready(async function() {
         const surgeMultiplier = parseFloat($("#surgeMultiplier").val()) || 1;
         // Save to Firebase
         jQuery("#overlay").show();
-        await database.collection('surge_zones').doc(id).update({
-            id,
-            name: names,
-            surgeMultiplier,
-        });
-        jQuery("#overlay").hide();
-        window.location.href = '{{ route("surgezone") }}';
+        try {
+            await database.collection('surge_zones').doc(id).update({
+                id,
+                name: names,
+                surgeMultiplier,
+            });
+            jQuery("#overlay").hide();
+            window.location.href = '{{ route("surgezone") }}';
+        } catch (error) {
+            jQuery("#overlay").hide();
+            $(".error_top").show();
+            $(".error_top").html("<p>" + error + "</p>");
+            window.scrollTo(0, 0);
+        }
     });
 });
 
