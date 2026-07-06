@@ -25,6 +25,10 @@ class DocumentController extends Controller
         $user = Auth::user();
         $id = Auth::id();
         $exist = VendorUser::where('user_id', $id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id = $exist->uuid;
         return view("documents.index")->with('id', $id);
     }
@@ -33,6 +37,10 @@ class DocumentController extends Controller
         $user = Auth::user();
         $userId = Auth::id();
         $exist = VendorUser::where('user_id', $userId)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id = $exist->uuid;
         return view("documents.document_upload", compact('id', 'docId'));
     }

@@ -16,14 +16,22 @@ class DriverController extends Controller
     {
         $user = Auth::user();
         $id = Auth::id();
-        $exist = VendorUser::where('user_id',$id)->first();        
+        $exist = VendorUser::where('user_id',$id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id=$exist->uuid;
         return view("drivers.index")->with('id',$id);
     }
     public function createDriver(){       
         $user = Auth::user();
         $id = Auth::id();
-        $exist = VendorUser::where('user_id',$id)->first();        
+        $exist = VendorUser::where('user_id',$id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id=$exist->uuid;
         return view("drivers.create")->with('id',$id);
     }
@@ -32,7 +40,11 @@ class DriverController extends Controller
     {
         $user = Auth::user();
         $id = Auth::id();
-        $exist = VendorUser::where('user_id',$id)->first();        
+        $exist = VendorUser::where('user_id',$id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id=$exist->uuid;
     	return view('drivers.edit')->with('driverId', $driverId)->with('id',$id);
     }
@@ -41,7 +53,11 @@ class DriverController extends Controller
     {
         $user = Auth::user();
         $id = Auth::id();
-        $exist = VendorUser::where('user_id',$id)->first();        
+        $exist = VendorUser::where('user_id',$id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id=$exist->uuid;
         return view('drivers.view')->with('driverId', $driverId)->with('id',$id);
     }

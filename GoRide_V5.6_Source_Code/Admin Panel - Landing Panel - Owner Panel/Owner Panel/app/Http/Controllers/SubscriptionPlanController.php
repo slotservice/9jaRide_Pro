@@ -20,7 +20,11 @@ class SubscriptionPlanController extends Controller
     {
         $user = Auth::user();
         $id = Auth::id();
-        $exist = VendorUser::where('user_id',$id)->first();        
+        $exist = VendorUser::where('user_id',$id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id=$exist->uuid;
         return view('subscription_plans.history')->with('id',$id);
     }

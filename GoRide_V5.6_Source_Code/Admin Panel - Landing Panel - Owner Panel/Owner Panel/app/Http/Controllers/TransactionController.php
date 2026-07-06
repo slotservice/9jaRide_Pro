@@ -21,7 +21,11 @@ class TransactionController extends Controller
     {
         $user = Auth::user();
         $id = Auth::id();
-        $exist = VendorUser::where('user_id',$id)->first();        
+        $exist = VendorUser::where('user_id',$id)->first();
+        if (!$exist) {
+            \Illuminate\Support\Facades\Auth::logout();
+            return redirect()->route('login');
+        }
         $id=$exist->uuid;
         return view("transaction.owner_transaction")->with('id',$id);
     }

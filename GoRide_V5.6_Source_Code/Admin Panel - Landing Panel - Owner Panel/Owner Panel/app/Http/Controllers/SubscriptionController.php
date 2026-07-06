@@ -22,6 +22,10 @@ class SubscriptionController extends Controller
         $user = Auth::user();
         $userId = Auth::id();
         $exist = VendorUser::where('user_id', $userId)->first();
+        if (!$exist) {
+            Auth::logout();
+            return redirect()->route('login');
+        }
         $userId = $exist->uuid;
         return view("change_subscription_plans.show")->with('userId', $userId);
     }
@@ -30,6 +34,10 @@ class SubscriptionController extends Controller
         $user = Auth::user();
         $userId = Auth::id();
         $exist = VendorUser::where('user_id', $userId)->first();
+        if (!$exist) {
+            Auth::logout();
+            return redirect()->route('login');
+        }
         $userId = $exist->uuid;
         $planId = $id;
         return view("change_subscription_plans.checkout")->with('userId',$userId)->with( 'planId',$planId);
@@ -52,6 +60,9 @@ class SubscriptionController extends Controller
         $user_email = User::where('email', $email)->first();
         // $user = VendorUser::where('email', $email)->first();
         $user = VendorUser::where('user_id', $user_email->id)->first();
+        if (!$user_email || !$user) {
+            return redirect()->route('failed');
+        }
         $cart = Session::get('cart', []);
         if (@$cart['cart_order']) {
             if ($cart['cart_order']['payment_method'] == 'razorpay') {
@@ -432,6 +443,9 @@ class SubscriptionController extends Controller
         $user_email = User::where('email', $email)->first();
         $user = VendorUser::where('user_id', $user_email->id)->first();
         // $user = VendorUser::where('email', $email)->first();
+        if (!$user_email || !$user) {
+            return redirect()->route('failed');
+        }
         if (isset($_GET['xendit_token'])) {
             $xendit_payment = Session::get('xendit_payment_token');
             if ($xendit_payment == $_GET['xendit_token']) {
@@ -538,6 +552,9 @@ class SubscriptionController extends Controller
         // $user = VendorUser::where('email', $email)->first();
         $user_email = User::where('email', $email)->first();
         $user = VendorUser::where('user_id', $user_email->id)->first();
+        if (!$user_email || !$user) {
+            return redirect()->route('failed');
+        }
         $cart = Session::get('cart', []);
         $api_secret = $cart['cart_order']['razorpaySecret'];
         $api_key = $cart['cart_order']['razorpayKey'];

@@ -23,8 +23,12 @@ class UserController extends Controller
   {
       $user = Auth::user();
       $id = Auth::id();
-      $vendorUser = VendorUser::where('user_id',$id)->first();        
-      $id=$vendorUser->uuid;   
+      $vendorUser = VendorUser::where('user_id',$id)->first();
+      if (!$vendorUser) {
+          \Illuminate\Support\Facades\Auth::logout();
+          return redirect()->route('login');
+      }
+      $id=$vendorUser->uuid;
       return view('users.profile', compact(['user','id','vendorUser']));
   }
 
