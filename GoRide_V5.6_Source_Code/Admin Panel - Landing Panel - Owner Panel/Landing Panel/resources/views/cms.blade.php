@@ -18,9 +18,10 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        database.collection('cms_pages').where('slug','==','{!! $slug !!}').get().then(async function (snapshots) {
+        database.collection('cms_pages').where('slug','==',@json($slug)).get().then(async function (snapshots) {
             var title = document.getElementById('cms_title');
             var description = document.getElementById('cms_description');
+            if (!snapshots || snapshots.empty || !snapshots.docs.length) { return; }
             var data = snapshots.docs[0].data();
             title.innerHTML=data.name;
             description.innerHTML=data.description;

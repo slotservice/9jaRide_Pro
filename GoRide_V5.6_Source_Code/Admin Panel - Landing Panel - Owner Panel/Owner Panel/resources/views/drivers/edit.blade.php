@@ -376,7 +376,17 @@ foreach ($countries as $keycountry => $valuecountry) {
         });
        
         ref.get().then(async function(snapshots) {
+            if (!snapshots || !snapshots.docs || !snapshots.docs.length) {
+                window.location.href = "{{ route('drivers') }}";
+                return;
+            }
             var driverUser=snapshots.docs[0].data();
+            // Ownership guard: an owner may only edit their own drivers.
+            if (driverUser.ownerId !== "{{ $id }}") {
+                alert("You are not authorized to access this driver.");
+                window.location.href = "{{ route('drivers') }}";
+                return;
+            }
             $(".user_name").val(driverUser.fullName);
             $(".user_email").val(shortEmail(driverUser.email)).prop("disabled", true);
             var countryCode=driverUser.countryCode.includes('+')? driverUser.countryCode.slice(1):driverUser.countryCode;

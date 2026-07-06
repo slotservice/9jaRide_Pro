@@ -495,7 +495,7 @@ Route::middleware(['permission:hire-purchase,hp.view'])->group(function () {
 });
 
 // Hire Purchase API (server-side Firestore operations)
-Route::middleware(['auth'])->prefix('api/hp')->group(function () {
+Route::middleware(['auth', 'permission:hire-purchase'])->prefix('api/hp')->group(function () {
     Route::get('/drivers', [App\Http\Controllers\HirePurchaseController::class, 'listDrivers'])->name('hp.api.drivers');
     Route::get('/driver/{id}', [App\Http\Controllers\HirePurchaseController::class, 'getDriver'])->name('hp.api.driver');
     Route::post('/assign', [App\Http\Controllers\HirePurchaseController::class, 'assignDriver'])->name('hp.api.assign');
@@ -507,6 +507,8 @@ Route::middleware(['auth'])->prefix('api/hp')->group(function () {
 });
 
 // Kill Switch API
-Route::post('/api/kill-switch/{driverId}/lock', [App\Http\Controllers\KillSwitchController::class, 'lock'])->name('kill-switch.lock');
-Route::post('/api/kill-switch/{driverId}/unlock', [App\Http\Controllers\KillSwitchController::class, 'unlock'])->name('kill-switch.unlock');
-Route::get('/api/kill-switch/{driverId}/status', [App\Http\Controllers\KillSwitchController::class, 'status'])->name('kill-switch.status');
+Route::middleware(['auth', 'permission:hire-purchase'])->group(function () {
+    Route::post('/api/kill-switch/{driverId}/lock', [App\Http\Controllers\KillSwitchController::class, 'lock'])->name('kill-switch.lock');
+    Route::post('/api/kill-switch/{driverId}/unlock', [App\Http\Controllers\KillSwitchController::class, 'unlock'])->name('kill-switch.unlock');
+    Route::get('/api/kill-switch/{driverId}/status', [App\Http\Controllers\KillSwitchController::class, 'status'])->name('kill-switch.status');
+});

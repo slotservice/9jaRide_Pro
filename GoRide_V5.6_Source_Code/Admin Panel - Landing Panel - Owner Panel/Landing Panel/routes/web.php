@@ -18,4 +18,4 @@ use App\Http\Controllers\ReportController;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('{slug}', [App\Http\Controllers\HomeController::class, 'cmspage'])->name('cmspage');
+Route::get('{slug}', [App\Http\Controllers\HomeController::class, 'cmspage'])->where('slug', '[A-Za-z0-9\-_]+')->name('cmspage');

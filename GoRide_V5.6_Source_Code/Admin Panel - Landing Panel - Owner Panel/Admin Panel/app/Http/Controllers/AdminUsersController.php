@@ -53,6 +53,11 @@ class AdminUsersController extends Controller
             return Redirect()->back()->with(['message' => $error]);
         }
 
+        // Only the super administrator (user id 1) may assign the super-admin role.
+        if ((int) $role === 1 && Auth::id() !== 1) {
+            return Redirect()->back()->with(['message' => 'You are not allowed to assign the super administrator role.']);
+        }
+
         User::create([
             'name' => $name,
             'email' => $email,
@@ -82,6 +87,22 @@ class AdminUsersController extends Controller
         $old_password = $request->input('old_password');
         $email = $request->input('email');
         $role = ($id == 1) ? 1 : $request->input('role');
+
+        $targetUser = User::find($id);
+        if (!$targetUser) {
+            return Redirect()->back()->with(['message' => 'User not found']);
+        }
+        // Only the super administrator (user id 1) may modify a super-admin account
+        // or grant the super-admin role to anyone.
+        if (Auth::id() !== 1) {
+            if ((int) $id === 1 || (int) $targetUser->role_id === 1) {
+                return Redirect()->back()->with(['message' => 'You are not allowed to modify a super administrator account.']);
+            }
+            if ((int) $role === 1) {
+                return Redirect()->back()->with(['message' => 'You are not allowed to assign the super administrator role.']);
+            }
+        }
+
         if ($password == '') {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|max:255',
@@ -127,15 +148,21 @@ class AdminUsersController extends Controller
     {
         $id = json_decode($id);
 
-        if (is_array($id)) {
+        $ids = is_array($id) ? $id : [$id];
 
-            for ($i = 0; $i < count($id); $i++) {
-                $users = User::find($id[$i]);
-                $users->delete();
+        foreach ($ids as $delId) {
+            // Never allow deleting the super administrator account.
+            if ((int) $delId === 1) {
+                continue;
             }
-
-        } else {
-            $user = User::find($id);
+            $user = User::find($delId);
+            if (!$user) {
+                continue;
+            }
+            // Only the super administrator may delete another super-admin account.
+            if ((int) $user->role_id === 1 && Auth::id() !== 1) {
+                continue;
+            }
             $user->delete();
         }
 

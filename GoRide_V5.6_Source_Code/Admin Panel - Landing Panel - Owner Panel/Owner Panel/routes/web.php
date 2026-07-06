@@ -54,8 +54,8 @@ Route::post('payments/stripepaymentintent', [App\Http\Controllers\PaymentControl
 Route::get('payment/success', [App\Http\Controllers\PaymentController::class, 'paymentsuccess'])->name('payment.success');
 Route::get('payment/failed', [App\Http\Controllers\PaymentController::class, 'paymentfailed'])->name('payment.failed');
 Route::get('payment/pending', [App\Http\Controllers\PaymentController::class, 'paymentpending'])->name('payment.pending');
-Route::post('store-firebase-service', [App\Providers\FirebaseAuthService::class, 'storeFirebaseService'])->name('store-firebase-service');
-Route::post('get-firebase-token', [App\Providers\FirebaseAuthService::class, 'getFirebaseToken']);
+Route::post('store-firebase-service', [App\Providers\FirebaseAuthService::class, 'storeFirebaseService'])->middleware('auth')->name('store-firebase-service');
+Route::post('get-firebase-token', [App\Providers\FirebaseAuthService::class, 'getFirebaseToken'])->middleware('auth');
 Route::get('subscription-plan', [App\Http\Controllers\SubscriptionController::class, 'show'])->name('subscription-plan.show');
 Route::get('subscription-plan/checkout/{id}', [App\Http\Controllers\SubscriptionController::class, 'checkout'])->name('subscription-plans.checkout');
 Route::post('payment-proccessing', [App\Http\Controllers\SubscriptionController::class, 'orderProccessing'])->name('payment-proccessing');

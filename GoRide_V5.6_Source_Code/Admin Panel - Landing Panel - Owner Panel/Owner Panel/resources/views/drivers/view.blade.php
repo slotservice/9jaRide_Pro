@@ -393,7 +393,17 @@
 
 
         ref.get().then(async function(snapshot) {
+            if (!snapshot || !snapshot.exists) {
+                window.location.href = "{{ route('drivers') }}";
+                return;
+            }
             let data = snapshot.data();
+            // Ownership guard: an owner may only view their own drivers.
+            if (data.ownerId !== "{{ $id }}") {
+                alert("You are not authorized to access this driver.");
+                window.location.href = "{{ route('drivers') }}";
+                return;
+            }
             $(".user-name").text(data.fullName);
             $(".user-email").text(shortEmail(data.email));
             data.countryCode = data.countryCode.includes('+') ? data.countryCode.slice(1) : data.countryCode;
