@@ -9,10 +9,32 @@ use Braintree;
 
 class PaymentController extends Controller
 {
-   
+    // Reject calls for a payment gateway that is not enabled server-side. These
+    // routes are unauthenticated + CSRF-exempt and accept client-supplied secret
+    // keys (C2); the guard ensures a disabled gateway (all except Paystack/cash/
+    // wallet today) cannot be driven through these endpoints. Fails closed.
+    private function gatewayEnabled(string $gateway): bool
+    {
+        try {
+            $db = app(\Kreait\Firebase\Contract\Firestore::class)->database();
+            $snap = $db->collection('settings')->document('payment')->snapshot();
+            if (!$snap->exists()) {
+                return false;
+            }
+            $data = $snap->data();
+            $g = $data[$gateway] ?? null;
+            return is_array($g) && (($g['enable'] ?? false) === true);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
     public function getPaytmChecksum(Request $request)
-    {   
-        $input=$request->all();   
+    {
+        if (!$this->gatewayEnabled('paytm')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
+        $input=$request->all();
         
         $paytmParams = array();
 
@@ -30,8 +52,11 @@ class PaymentController extends Controller
     }
 
     public function validateChecksum(Request $request)
-    {   
-        $input=$request->all();   
+    {
+        if (!$this->gatewayEnabled('paytm')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
+        $input=$request->all();
         
         $paytmParams = array();
 
@@ -69,9 +94,11 @@ class PaymentController extends Controller
 
 
     public function initiatePaytmPayment(Request $request)
-    { 
-        
-        $inputs=$request->all();  
+    {
+        if (!$this->gatewayEnabled('paytm')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
+        $inputs=$request->all();
         $paytmParams = array();
 
         $paytmParams["body"] = array(
@@ -118,13 +145,18 @@ class PaymentController extends Controller
     }
 
     public function paytmPaymentcallback(Request $request)
-    {   
-        return response()->json(array('success'=>true,'data'=>$request->all()));  
+    {
+        if (!$this->gatewayEnabled('paytm')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
+        return response()->json(array('success'=>true,'data'=>$request->all()));
     }
 
     public function getPaypalClienttoken(Request $request){
+        if (!$this->gatewayEnabled('paypal')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
 
-        
         $input=$request->all();
         $gateway = new Braintree\Gateway([
             'environment' => $input['environment'],
@@ -139,6 +171,9 @@ class PaymentController extends Controller
     }
 
     public function createBraintreePayment(Request $request){
+        if (!$this->gatewayEnabled('paypal')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
 
         $input=$request->all();
         $nonceFromTheClient=$input['nonceFromTheClient'];
@@ -165,7 +200,10 @@ class PaymentController extends Controller
 
     public function createStripePaymentIntent(Request $request)
     {
-        
+        if (!$this->gatewayEnabled('strip')) {
+            return response()->json(['error' => 'Payment method not available'], 403);
+        }
+
         $input=$request->all();
         $stripeSecret=$input['stripesecret'];
         $amount = bcmul($input["amount"], 100);
