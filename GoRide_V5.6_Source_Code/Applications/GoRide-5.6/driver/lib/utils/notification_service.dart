@@ -5,6 +5,8 @@ import 'package:driver/model/driver_user_model.dart';
 import 'package:driver/model/intercity_order_model.dart';
 import 'package:driver/model/order_model.dart';
 import 'package:driver/model/user_model.dart';
+import 'package:driver/constant/show_toast_dialog.dart';
+import 'package:driver/ui/auth_screen/login_screen.dart';
 import 'package:driver/ui/chat_screen/chat_screen.dart';
 import 'package:driver/ui/help_support_screen/help_support_screen.dart';
 import 'package:driver/ui/home_screens/order_map_screen.dart';
@@ -12,6 +14,7 @@ import 'package:driver/ui/order_intercity_screen/complete_intecity_order_screen.
 import 'package:driver/ui/order_screen/complete_order_screen.dart';
 import 'package:driver/utils/Preferences.dart';
 import 'package:driver/utils/fire_store_utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -53,10 +56,9 @@ class NotificationService {
   }
 
   Future<void> setupInteractedMessage() async {
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      FirebaseMessaging.onBackgroundMessage((message) => firebaseMessageBackgroundHandle(message));
-    }
+    // Register the background handler unconditionally at cold start, otherwise
+    // background/terminated data-only pushes are silently dropped.
+    FirebaseMessaging.onBackgroundMessage((message) => firebaseMessageBackgroundHandle(message));
 
     // if (initialMessage != null) {
     //   log('Message also contained a notification: ${initialMessage.notification!.body}');
@@ -90,6 +92,18 @@ class NotificationService {
     final data = payload;
 
     if (data != null) {
+      // Kill switch: do not honor any pending-ride/chat route if the driver
+      // account has been locked by admin.
+      final currentUid = FireStoreUtils.getCurrentUid();
+      if (FirebaseAuth.instance.currentUser != null) {
+        final DriverUserModel? currentDriver = await FireStoreUtils.getDriverProfile(currentUid);
+        if (currentDriver?.appLocked == true) {
+          await FirebaseAuth.instance.signOut();
+          ShowToastDialog.showToast('Your account has been locked by admin. Reason: ${currentDriver?.lockReason ?? 'HP payment overdue'}');
+          Get.offAll(const LoginScreen());
+          return;
+        }
+      }
       // display(message);
       if (data['type'] == "admin_chat") {
         DriverUserModel? driver = await FireStoreUtils.getDriverProfile(data['driverId']);

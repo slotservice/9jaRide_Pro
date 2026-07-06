@@ -67,17 +67,21 @@ class DashBoardScreen extends StatelessWidget {
                               GestureDetector(
                                 onTap: () async {
                                   ShowToastDialog.showLoader("Please wait");
-                                  if (driverModel.documentVerification == false && Constant.isVerifyDocument == true) {
+                                  try {
+                                    if (driverModel.documentVerification == false && Constant.isVerifyDocument == true) {
+                                      ShowToastDialog.closeLoader();
+                                      _showAlertDialog(context, "document");
+                                    } else if (driverModel.vehicleInformation == null || driverModel.serviceId == null) {
+                                      ShowToastDialog.closeLoader();
+                                      _showAlertDialog(context, "vehicleInformation");
+                                    } else {
+                                      driverModel.isOnline = true;
+                                      await FireStoreUtils.updateDriverUser(driverModel);
+                                      ShowToastDialog.closeLoader();
+                                    }
+                                  } catch (e) {
                                     ShowToastDialog.closeLoader();
-                                    _showAlertDialog(context, "document");
-                                  } else if (driverModel.vehicleInformation == null || driverModel.serviceId == null) {
-                                    ShowToastDialog.closeLoader();
-                                    _showAlertDialog(context, "vehicleInformation");
-                                  } else {
-                                    driverModel.isOnline = true;
-                                    await FireStoreUtils.updateDriverUser(driverModel);
-
-                                    ShowToastDialog.closeLoader();
+                                    ShowToastDialog.showToast("Something went wrong: $e");
                                   }
                                 },
                                 child: Align(

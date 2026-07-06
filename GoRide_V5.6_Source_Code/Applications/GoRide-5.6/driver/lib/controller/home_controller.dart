@@ -52,6 +52,10 @@ class HomeController extends GetxController {
           Get.offAll(const LoginScreen());
         }
       }
+    }, onError: (error) {
+      // Do not fail open on stream errors — surface the problem instead of
+      // silently ignoring a possible kill-switch state.
+      ShowToastDialog.showToast("Unable to verify account status. Please try again.".tr);
     });
 
     updateCurrentLocation();

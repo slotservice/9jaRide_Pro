@@ -87,6 +87,8 @@ class AcceptedOrders extends StatelessWidget {
                                           case ConnectionState.done:
                                             if (snapshot.hasError) {
                                               return Text(snapshot.error.toString());
+                                            } else if (!snapshot.hasData || snapshot.data == null) {
+                                              return const SizedBox();
                                             } else {
                                               DriverIdAcceptReject driverIdAcceptReject = snapshot.data!;
                                               return Padding(

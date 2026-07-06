@@ -45,11 +45,26 @@ class PayStackURLGen {
 
     debugPrint(response.body);
     final data = jsonDecode(response.body);
-    if (data["status"] == true) {
-      if (data["message"] == "Verification successful") {}
+
+    // Top-level "status" only reflects that the verify API call succeeded,
+    // not that the payment itself succeeded. The real transaction status is
+    // nested at data.data.status.
+    if (data["status"] != true || data["data"] == null) {
+      return false;
+    }
+    if (data["data"]["status"] != "success") {
+      return false;
     }
 
-    return data["status"];
+    // Validate the paid amount before crediting. Paystack returns the amount
+    // in the smallest currency unit (i.e. amount * 100).
+    final paidAmount = data["data"]["amount"] is num ? data["data"]["amount"] as num : num.tryParse(data["data"]["amount"].toString());
+    final double expectedAmount = (double.tryParse(amount) ?? 0) * 100;
+    if (paidAmount == null || paidAmount < expectedAmount) {
+      return false;
+    }
+
+    return true;
 
     //PayPalClientSettleModel.fromJson(data);
   }

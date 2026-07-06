@@ -210,31 +210,43 @@ class FireStoreUtils {
   }
 
   static Future<bool?> updatedCustomerWalletById({required double referralAmount, required String customerId}) async {
-    bool isAdded = false;
-    await getCustomer(customerId).then((value) async {
-      if (value != null) {
-        UserModel userModel = value;
-        userModel.walletAmount = (double.parse(userModel.walletAmount ?? '0.0') + referralAmount).toStringAsFixed(2);
-        await FireStoreUtils.updateCustomer(userModel).then((value) {
-          isAdded = value;
-        });
-      }
-    });
-    return isAdded;
+    // Use a transaction so concurrent balance writes don't clobber each other.
+    // (walletAmount is stored as a String, so FieldValue.increment is not usable.)
+    try {
+      final docRef = fireStore.collection(CollectionName.users).doc(customerId);
+      await fireStore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(docRef);
+        if (!snapshot.exists) {
+          throw Exception("Customer not found");
+        }
+        final currentWallet = double.parse((snapshot.data()?['walletAmount'] ?? '0.0').toString());
+        final newWallet = (currentWallet + referralAmount).toStringAsFixed(2);
+        transaction.update(docRef, {'walletAmount': newWallet});
+      });
+      return true;
+    } catch (e) {
+      log("updatedCustomerWalletById error :: $e");
+      return false;
+    }
   }
 
   static Future<bool?> updatedDriverWalletById({required double referralAmount, required String driverId}) async {
-    bool isAdded = false;
-    await getDriverProfile(driverId).then((value) async {
-      if (value != null) {
-        DriverUserModel userModel = value;
-        userModel.walletAmount = (double.parse(userModel.walletAmount ?? '0.0') + referralAmount).toStringAsFixed(2);
-        await FireStoreUtils.updateDriverUser(userModel).then((value) {
-          isAdded = value;
-        });
-      }
-    });
-    return isAdded;
+    try {
+      final docRef = fireStore.collection(CollectionName.driverUsers).doc(driverId);
+      await fireStore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(docRef);
+        if (!snapshot.exists) {
+          throw Exception("Driver not found");
+        }
+        final currentWallet = double.parse((snapshot.data()?['walletAmount'] ?? '0.0').toString());
+        final newWallet = (currentWallet + referralAmount).toStringAsFixed(2);
+        transaction.update(docRef, {'walletAmount': newWallet});
+      });
+      return true;
+    } catch (e) {
+      log("updatedDriverWalletById error :: $e");
+      return false;
+    }
   }
 
   static Future<PaymentModel?> getPayment() async {
@@ -642,31 +654,42 @@ class FireStoreUtils {
   }
 
   static Future<bool?> updatedDriverWallet({required String amount}) async {
-    bool isAdded = false;
-    await getDriverProfile(FireStoreUtils.getCurrentUid()).then((value) async {
-      if (value != null) {
-        DriverUserModel userModel = value;
-        userModel.walletAmount = (double.parse(userModel.walletAmount.toString()) + double.parse(amount)).toString();
-        await FireStoreUtils.updateDriverUser(userModel).then((value) {
-          isAdded = value;
-        });
-      }
-    });
-    return isAdded;
+    // Transaction guards against concurrent balance writes clobbering each other.
+    try {
+      final docRef = fireStore.collection(CollectionName.driverUsers).doc(FireStoreUtils.getCurrentUid());
+      await fireStore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(docRef);
+        if (!snapshot.exists) {
+          throw Exception("Driver not found");
+        }
+        final currentWallet = double.parse((snapshot.data()?['walletAmount'] ?? '0.0').toString());
+        final newWallet = (currentWallet + double.parse(amount)).toString();
+        transaction.update(docRef, {'walletAmount': newWallet});
+      });
+      return true;
+    } catch (e) {
+      log("updatedDriverWallet error :: $e");
+      return false;
+    }
   }
 
   static Future<bool?> updatedOwnerWallet({required String amount, required String ownerId}) async {
-    bool isAdded = false;
-    await getOwnerProfile(ownerId).then((value) async {
-      if (value != null) {
-        OwnerUserModel userModel = value;
-        userModel.walletAmount = (double.parse(userModel.walletAmount.toString()) + double.parse(amount)).toString();
-        await FireStoreUtils.updateOwnerUser(userModel).then((value) {
-          isAdded = value;
-        });
-      }
-    });
-    return isAdded;
+    try {
+      final docRef = fireStore.collection(CollectionName.ownerUsers).doc(ownerId);
+      await fireStore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(docRef);
+        if (!snapshot.exists) {
+          throw Exception("Owner not found");
+        }
+        final currentWallet = double.parse((snapshot.data()?['walletAmount'] ?? '0.0').toString());
+        final newWallet = (currentWallet + double.parse(amount)).toString();
+        transaction.update(docRef, {'walletAmount': newWallet});
+      });
+      return true;
+    } catch (e) {
+      log("updatedOwnerWallet error :: $e");
+      return false;
+    }
   }
 
   static Future<List<LanguageModel>?> getLanguage() async {
@@ -954,13 +977,13 @@ class FireStoreUtils {
       final interCityOrders = await fireStore.collection(CollectionName.ordersIntercity).where('userId', isEqualTo: customerId).where('status', isEqualTo: Constant.rideComplete).get();
 
       if (orderType == 'order') {
-        if (normalOrders.docs.length <= 1 && interCityOrders.docs.isEmpty) {
+        if (normalOrders.docs.isEmpty && interCityOrders.docs.isEmpty) {
           return true;
         } else {
           return false;
         }
       } else {
-        if (interCityOrders.docs.length <= 1 && normalOrders.docs.isEmpty) {
+        if (interCityOrders.docs.isEmpty && normalOrders.docs.isEmpty) {
           return true;
         } else {
           return false;
@@ -978,13 +1001,13 @@ class FireStoreUtils {
       final interCityOrders = await fireStore.collection(CollectionName.ordersIntercity).where('driverId', isEqualTo: driverId).where('status', isEqualTo: Constant.rideComplete).get();
 
       if (orderType == 'order') {
-        if (normalOrders.docs.length <= 1 && interCityOrders.docs.isEmpty) {
+        if (normalOrders.docs.isEmpty && interCityOrders.docs.isEmpty) {
           return true;
         } else {
           return false;
         }
       } else {
-        if (interCityOrders.docs.length <= 1 && normalOrders.docs.isEmpty) {
+        if (interCityOrders.docs.isEmpty && normalOrders.docs.isEmpty) {
           return true;
         } else {
           return false;

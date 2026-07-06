@@ -1,14 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MidtransScreen extends StatefulWidget {
   final String initialURl;
+  final String serverKey;
+  final bool isSandbox;
 
-  const MidtransScreen({super.key, required this.initialURl});
+  const MidtransScreen({super.key, required this.initialURl, required this.serverKey, required this.isSandbox});
 
   @override
   State<MidtransScreen> createState() => _MidtransScreenState();
@@ -38,26 +41,42 @@ class _MidtransScreenState extends State<MidtransScreen> {
           }),
           onNavigationRequest: (NavigationRequest navigation) async {
             log("Midtrans :: ${navigation.url}");
-            if (Platform.isIOS) {
-              if (navigation.url.contains('/success')) {
-                Get.back(result: true);
-              } else if (navigation.url.contains('/failed')) {
-                Get.back(result: false);
-              }
-            } else {
-              String? orderId = Uri.parse(navigation.url)
-                  .queryParameters['merchant_order_id'];
-              if (orderId != null) {
-                Get.back(result: true);
-              } else {
-                Get.back(result: false);
-              }
+            String? orderId =
+                Uri.parse(navigation.url).queryParameters['merchant_order_id'];
+            if (orderId != null) {
+              // The finish callback being reached does NOT mean the payment
+              // succeeded. Verify the real transaction status against the
+              // Midtrans status API before treating it as paid.
+              final bool verified = await _verifyMidtransStatus(orderId);
+              Get.back(result: verified);
             }
             return NavigationDecision.navigate;
           },
         ),
       )
       ..loadRequest(Uri.parse(widget.initialURl));
+  }
+
+  Future<bool> _verifyMidtransStatus(String orderId) async {
+    try {
+      final String base = widget.isSandbox ? 'https://api.sandbox.midtrans.com/v2' : 'https://api.midtrans.com/v2';
+      final String auth = 'Basic ${base64Encode(utf8.encode('${widget.serverKey}:'))}';
+      final response = await http.get(
+        Uri.parse('$base/$orderId/status'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': auth,
+        },
+      );
+      log("Midtrans status :: ${response.body}");
+      final data = jsonDecode(response.body);
+      final status = data['transaction_status'];
+      final fraud = data['fraud_status'];
+      return status == 'settlement' || (status == 'capture' && (fraud == null || fraud == 'accept'));
+    } catch (e) {
+      log("Midtrans status error :: $e");
+      return false;
+    }
   }
 
   @override

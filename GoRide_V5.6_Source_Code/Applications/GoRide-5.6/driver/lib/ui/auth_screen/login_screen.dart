@@ -182,14 +182,25 @@ class LoginScreen extends StatelessWidget {
                                       });
                                     } else if (userExit == Constant.currentUserType) {
                                       String token = await NotificationService.getToken();
-                                      DriverUserModel userModel = DriverUserModel();
-
-                                      userModel.fcmToken = token;
-                                      await FireStoreUtils.updateDriverUser(userModel);
                                       await FireStoreUtils.getDriverProfile(FirebaseAuth.instance.currentUser!.uid).then(
                                         (value) async {
                                           if (value != null) {
                                             DriverUserModel userModel = value;
+                                            // Update the fcmToken on the REAL profile (updateDriverUser
+                                            // does .set() with no merge, so writing a bare model would
+                                            // create a junk doc / wipe the profile).
+                                            userModel.fcmToken = token;
+                                            await FireStoreUtils.updateDriverUser(userModel);
+                                            if (userModel.isActive == false) {
+                                              await FirebaseAuth.instance.signOut();
+                                              ShowToastDialog.showToast("This user is disable please contact administrator".tr);
+                                              return;
+                                            }
+                                            if (userModel.appLocked == true) {
+                                              await FirebaseAuth.instance.signOut();
+                                              ShowToastDialog.showToast('Your account has been locked by admin. Reason: ${userModel.lockReason ?? 'HP payment overdue'}');
+                                              return;
+                                            }
                                             bool isPlanExpire = false;
                                             if (userModel.subscriptionPlan?.id != null) {
                                               if (userModel.subscriptionExpiryDate == null) {
@@ -289,6 +300,16 @@ class LoginScreen extends StatelessWidget {
                                             (value) async {
                                               if (value != null) {
                                                 DriverUserModel userModel = value;
+                                                if (userModel.isActive == false) {
+                                                  await FirebaseAuth.instance.signOut();
+                                                  ShowToastDialog.showToast("This user is disable please contact administrator".tr);
+                                                  return;
+                                                }
+                                                if (userModel.appLocked == true) {
+                                                  await FirebaseAuth.instance.signOut();
+                                                  ShowToastDialog.showToast('Your account has been locked by admin. Reason: ${userModel.lockReason ?? 'HP payment overdue'}');
+                                                  return;
+                                                }
                                                 bool isPlanExpire = false;
                                                 if (userModel.subscriptionPlan?.id != null) {
                                                   if (userModel.subscriptionExpiryDate == null) {

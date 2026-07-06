@@ -101,6 +101,8 @@ class AcceptedIntercityOrders extends StatelessWidget {
                                                     case ConnectionState.done:
                                                       if (snapshot.hasError) {
                                                         return Text(snapshot.error.toString());
+                                                      } else if (!snapshot.hasData || snapshot.data == null) {
+                                                        return const SizedBox();
                                                       } else {
                                                         DriverIdAcceptReject driverIdAcceptReject = snapshot.data!;
                                                         return Text(Constant.amountShow(amount: driverIdAcceptReject.offerAmount.toString()),

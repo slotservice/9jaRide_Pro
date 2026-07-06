@@ -402,7 +402,7 @@ class CompleteOrderScreen extends StatelessWidget {
                                                         Row(
                                                           children: [
                                                             Text(
-                                                              "(-${Constant.amountShow(amount: Constant.calculateAdminCommission(amount: (double.parse(controller.orderModel.value.finalRate.toString()) - double.parse(controller.couponAmount.value.toString())).toString(), adminCommission: controller.orderModel.value.adminCommission).toString())})",
+                                                              "(-${Constant.amountShow(amount: Constant.calculateAdminCommission(amount: (double.parse(controller.subTotal.value.toString()) - double.parse(controller.couponAmount.value.toString())).toString(), adminCommission: controller.orderModel.value.adminCommission).toString())})",
                                                               style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.red),
                                                             ),
                                                           ],

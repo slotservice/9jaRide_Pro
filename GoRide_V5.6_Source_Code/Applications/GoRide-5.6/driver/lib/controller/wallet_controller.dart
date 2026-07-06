@@ -724,6 +724,8 @@ class WalletController extends GetxController {
       if (url != '') {
         Get.to(() => MidtransScreen(
                   initialURl: url,
+                  serverKey: paymentModel.value.midtrans!.serverKey!,
+                  isSandbox: paymentModel.value.midtrans!.isSandbox ?? false,
                 ))!
             .then((value) {
           if (value == true) {

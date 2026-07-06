@@ -38,6 +38,13 @@ class SplashController extends GetxController {
                 (value) async {
                   if (value != null) {
                     DriverUserModel userModel = value;
+                    // Kill switch: a locked driver must not be let back in.
+                    if (userModel.appLocked == true) {
+                      await FirebaseAuth.instance.signOut();
+                      ShowToastDialog.showToast('Your account has been locked by admin. Reason: ${userModel.lockReason ?? 'HP payment overdue'}');
+                      Get.offAll(const LoginScreen());
+                      return;
+                    }
                     bool isPlanExpire = false;
                     if (userModel.subscriptionPlan?.id != null) {
                       if (userModel.subscriptionExpiryDate == null) {

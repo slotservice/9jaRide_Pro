@@ -59,6 +59,11 @@ class LiveTrackingController extends GetxController {
                 driverUserModel.value = DriverUserModel.fromJson(event.data()!);
                 // log("source.value :: ${driverUserModel.value.location!.latitude} :: ${orderModel.value.destinationLocationLAtLng!.latitude}");
 
+                // Driver may not have a GPS location yet (before first ping) —
+                // skip drawing until it is available to avoid a null crash.
+                if (driverUserModel.value.location == null) {
+                  return;
+                }
                 if (Constant.selectedMapType != 'osm') {
                   if (orderModel.value.status == Constant.rideInProgress) {
                     getPolyline(
@@ -87,12 +92,16 @@ class LiveTrackingController extends GetxController {
                   }
                 }
               }
+            }, onError: (error) {
+              log("Live tracking driver stream error :: $error");
             });
 
             if (orderModel.value.status == Constant.rideComplete) {
               Get.back();
             }
           }
+        }, onError: (error) {
+          log("Live tracking order stream error :: $error");
         });
       } else {
         InterCityOrderModel argumentOrderModel = argumentData['interCityOrderModel'];
@@ -104,6 +113,10 @@ class LiveTrackingController extends GetxController {
             FireStoreUtils.fireStore.collection(CollectionName.driverUsers).doc(argumentOrderModel.driverId).snapshots().listen((event) {
               if (event.data() != null) {
                 driverUserModel.value = DriverUserModel.fromJson(event.data()!);
+                // Skip drawing until the driver location is available.
+                if (driverUserModel.value.location == null) {
+                  return;
+                }
                 if (Constant.selectedMapType != 'osm') {
                   if (intercityOrderModel.value.status == Constant.rideInProgress) {
                     getPolyline(
@@ -132,12 +145,16 @@ class LiveTrackingController extends GetxController {
                   }
                 }
               }
+            }, onError: (error) {
+              log("Live tracking driver stream error :: $error");
             });
 
             if (intercityOrderModel.value.status == Constant.rideComplete) {
               Get.back();
             }
           }
+        }, onError: (error) {
+          log("Live tracking intercity order stream error :: $error");
         });
       }
     }
@@ -150,6 +167,9 @@ class LiveTrackingController extends GetxController {
   BitmapDescriptor? driverIcon;
 
   void getPolyline({required double? sourceLatitude, required double? sourceLongitude, required double? destinationLatitude, required double? destinationLongitude}) async {
+    if (driverUserModel.value.location == null) {
+      return;
+    }
     if (sourceLatitude != null && sourceLongitude != null && destinationLatitude != null && destinationLongitude != null) {
       List<LatLng> polylineCoordinates = [];
       PolylineRequest polylineRequest = PolylineRequest(

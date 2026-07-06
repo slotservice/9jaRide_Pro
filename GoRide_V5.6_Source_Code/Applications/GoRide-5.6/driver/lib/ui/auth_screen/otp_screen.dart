@@ -104,7 +104,7 @@ class OtpScreen extends StatelessWidget {
               Get.off(const InformationScreen(), arguments: {
                 "userModel": userModel,
               });
-            } else if (userExit == Constant.currentUserType || userExit != '') {
+            } else if (userExit == Constant.currentUserType) {
               await FireStoreUtils.getDriverProfile(value.user!.uid).then(
                 (driverProfile) async {
                   if (driverProfile == null) {
@@ -121,6 +121,11 @@ class OtpScreen extends StatelessWidget {
                     if (userModel.isActive == false) {
                       await FirebaseAuth.instance.signOut();
                       ShowToastDialog.showToast("This user is disable please contact administrator".tr);
+                      return;
+                    }
+                    if (userModel.appLocked == true) {
+                      await FirebaseAuth.instance.signOut();
+                      ShowToastDialog.showToast('Your account has been locked by admin. Reason: ${userModel.lockReason ?? 'HP payment overdue'}');
                       return;
                     }
                     bool isPlanExpire = false;
@@ -156,6 +161,9 @@ class OtpScreen extends StatelessWidget {
                   }
                 },
               );
+            } else {
+              await FirebaseAuth.instance.signOut();
+              ShowToastDialog.showToast('This account is already registered with a different role.'.tr);
             }
           });
         }

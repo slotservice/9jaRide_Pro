@@ -40,9 +40,17 @@ class IntercityController extends GetxController {
 
   Future<void> acceptOrder(InterCityOrderModel orderModel) async {
     ShowToastDialog.showLoader("Please wait".tr);
+    try {
+      // Race guard: re-read fresh and abort if the ride is no longer available.
+      final InterCityOrderModel? freshOrder = await FireStoreUtils.getInterCityOrder(orderModel.id.toString());
+      if (freshOrder == null || freshOrder.status != Constant.ridePlaced || (freshOrder.driverId != null && freshOrder.driverId!.isNotEmpty)) {
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast("This ride is no longer available.".tr);
+        return;
+      }
       List<dynamic> newAcceptedDriverId = [];
-      if (orderModel.acceptedDriverId != null) {
-        newAcceptedDriverId = orderModel.acceptedDriverId!;
+      if (freshOrder.acceptedDriverId != null) {
+        newAcceptedDriverId = freshOrder.acceptedDriverId!;
       } else {
         newAcceptedDriverId = [];
       }
@@ -66,7 +74,6 @@ class IntercityController extends GetxController {
       });
 
       await FireStoreUtils.acceptInterCityRide(orderModel, driverIdAcceptReject).then((value) async {
-        ShowToastDialog.closeLoader();
         ShowToastDialog.showToast("Ride Accepted".tr);
         Get.back();
         if (value != null && value == true) {
@@ -85,6 +92,12 @@ class IntercityController extends GetxController {
         }
         homeController.selectedIndex.value = 1;
       });
+    } catch (e, stackTrace) {
+      log("Accept intercity order error :: $e\n$stackTrace");
+      ShowToastDialog.showToast("Something went wrong: $e");
+    } finally {
+      ShowToastDialog.closeLoader();
+    }
   }
 
   Future<void> getOrder() async {

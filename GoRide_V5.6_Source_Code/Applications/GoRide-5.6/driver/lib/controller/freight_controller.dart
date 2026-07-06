@@ -52,9 +52,16 @@ class FreightController extends GetxController {
   Future<void> acceptOrder(InterCityOrderModel orderModel) async {
     ShowToastDialog.showLoader("Please wait".tr);
     try {
+      // Race guard: re-read fresh and abort if the ride is no longer available.
+      final InterCityOrderModel? freshOrder = await FireStoreUtils.getInterCityOrder(orderModel.id.toString());
+      if (freshOrder == null || freshOrder.status != Constant.ridePlaced || (freshOrder.driverId != null && freshOrder.driverId!.isNotEmpty)) {
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast("This ride is no longer available.".tr);
+        return;
+      }
       List<dynamic> newAcceptedDriverId = [];
-      if (orderModel.acceptedDriverId != null) {
-        newAcceptedDriverId = orderModel.acceptedDriverId!;
+      if (freshOrder.acceptedDriverId != null) {
+        newAcceptedDriverId = freshOrder.acceptedDriverId!;
       } else {
         newAcceptedDriverId = [];
       }

@@ -33,7 +33,21 @@ class CompleteOrderController extends GetxController {
   DateTime startNightTimeString = DateTime.now();
   DateTime endNightTimeString = DateTime.now();
 
+  // Night charge applies when the current time falls in the configured window.
+  // Handle windows that span midnight (end <= start) with an OR condition.
+  bool isNightCharge() {
+    if (endNightTimeString.isAfter(startNightTimeString)) {
+      return currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString);
+    } else {
+      return currentTime.isAfter(startNightTimeString) || currentTime.isBefore(endNightTimeString);
+    }
+  }
+
   Future<void> calculateAmount() async {
+    // Refresh the timestamp each run so the night-charge check uses the real
+    // current time, not the controller-construction time.
+    currentTime = DateTime.now();
+    currentDate = DateTime.now();
     String formatTime(String? time) {
       if (time == null || !time.contains(":")) {
         return "00:00";
@@ -93,8 +107,8 @@ class CompleteOrderController extends GetxController {
     basicFareCharge.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
     holdingCharge.value = double.parse(orderModel.value.totalHoldingCharges.toString());
     if (distance <= double.parse(orderModel.value.service?.firstPrice.basicFare ?? '0.0')) {
-      if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-        amount.value = amount.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
+      if (isNightCharge()) {
+        amount.value = basicFareCharge.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
       } else {
         amount.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
       }
@@ -110,7 +124,7 @@ class CompleteOrderController extends GetxController {
           : kmCharge;
       amount.value = (perKmCharge * extraDist);
 
-      if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+      if (isNightCharge()) {
         totalChargeOfMinute.value = totalChargeOfMinute.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
         basicFareCharge.value = basicFareCharge.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
         holdingCharge.value = holdingCharge.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
@@ -118,9 +132,15 @@ class CompleteOrderController extends GetxController {
     }
 
     if (orderModel.value.finalRate != null && orderModel.value.finalRate != '0.0') {
-      amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value - holdingCharge.value;
+      // Do NOT subtract holdingCharge here — it must be added on top of the
+      // billed subTotal (see subTotal below), not cancelled out.
+      amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value;
     } else {
-      amount.value = amount.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
+      // Night multiplier must be gated by the time-of-day night window, and
+      // applied to the basic fare component, not the running amount.
+      if (isNightCharge()) {
+        amount.value = basicFareCharge.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
+      }
     }
 
     subTotal.value = amount.value + basicFareCharge.value + totalChargeOfMinute.value + holdingCharge.value;

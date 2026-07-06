@@ -416,27 +416,33 @@ class VehicleInformationScreen extends StatelessWidget {
                                                 ShowToastDialog.showLoader("Please wait".tr);
 
                                                 if (controller.selectedServiceType.value.id == null || controller.selectedServiceType.value.id!.isEmpty) {
+                                                  ShowToastDialog.closeLoader();
                                                   ShowToastDialog.showToast("Please select service".tr);
                                                   return;
                                                 }
 
                                                 if (controller.vehicleNumberController.value.text.isEmpty) {
+                                                  ShowToastDialog.closeLoader();
                                                   ShowToastDialog.showToast(
                                                     "Please enter Vehicle number".tr,
                                                   );
                                                 } else if (controller.registrationDateController.value.text.isEmpty) {
+                                                  ShowToastDialog.closeLoader();
                                                   ShowToastDialog.showToast(
                                                     "Please select registration date".tr,
                                                   );
                                                 } else if (controller.selectedColor.value.isEmpty) {
+                                                  ShowToastDialog.closeLoader();
                                                   ShowToastDialog.showToast(
                                                     "Please enter Vehicle color".tr,
                                                   );
                                                 } else if (controller.seatsController.value.text.isEmpty) {
+                                                  ShowToastDialog.closeLoader();
                                                   ShowToastDialog.showToast(
                                                     "Please enter seats".tr,
                                                   );
                                                 } else if (controller.selectedZone.isEmpty) {
+                                                  ShowToastDialog.closeLoader();
                                                   ShowToastDialog.showToast(
                                                     "Please select Zone".tr,
                                                   );
@@ -445,22 +451,42 @@ class VehicleInformationScreen extends StatelessWidget {
                                                     ZoneModel zoneModel = await FireStoreUtils.getZoneById(zoneId: controller.selectedPrices[index].zoneId!);
                                                     if (controller.selectedPrices[index].isAcNonAc == true) {
                                                       if (controller.acPerKmRate[index].text.isEmpty) {
+                                                        ShowToastDialog.closeLoader();
                                                         ShowToastDialog.showToast(
                                                           "${'Please enter A/C Per'.tr} ${Constant.distanceType} ${'Rate for'.tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}.".tr,
                                                         );
                                                         return;
-                                                      } else if (double.parse(controller.selectedPrices[index].acCharge.toString()) < double.parse(controller.acPerKmRate[index].text)) {
+                                                      }
+                                                      final double? acRateValue = double.tryParse(controller.acPerKmRate[index].text);
+                                                      if (acRateValue == null || acRateValue <= 0) {
+                                                        ShowToastDialog.closeLoader();
+                                                        ShowToastDialog.showToast(
+                                                          "${"Please enter a valid A/C Per".tr} ${Constant.distanceType} ${"Rate for".tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}.".tr,
+                                                        );
+                                                        return;
+                                                      } else if (double.parse(controller.selectedPrices[index].acCharge.toString()) < acRateValue) {
+                                                        ShowToastDialog.closeLoader();
                                                         ShowToastDialog.showToast(
                                                           "${"Maximum allowed value is".tr} ${controller.selectedPrices[index].acCharge.toString()} ${"Please enter a lower A/c value for".tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}."
                                                               .tr,
                                                         );
                                                         return;
                                                       } else if (controller.nonAcPerKmRate[index].text.isEmpty) {
+                                                        ShowToastDialog.closeLoader();
                                                         ShowToastDialog.showToast(
                                                           "${"Please enter Non A/C Per".tr} ${Constant.distanceType} ${'Rate for'} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}.".tr,
                                                         );
                                                         return;
-                                                      } else if (double.parse(controller.selectedPrices[index].nonAcCharge.toString()) < double.parse(controller.nonAcPerKmRate[index].text)) {
+                                                      }
+                                                      final double? nonAcRateValue = double.tryParse(controller.nonAcPerKmRate[index].text);
+                                                      if (nonAcRateValue == null || nonAcRateValue <= 0) {
+                                                        ShowToastDialog.closeLoader();
+                                                        ShowToastDialog.showToast(
+                                                          "${"Please enter a valid Non A/C Per".tr} ${Constant.distanceType} ${"Rate for".tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}.".tr,
+                                                        );
+                                                        return;
+                                                      } else if (double.parse(controller.selectedPrices[index].nonAcCharge.toString()) < nonAcRateValue) {
+                                                        ShowToastDialog.closeLoader();
                                                         ShowToastDialog.showToast(
                                                           "${"Maximum allowed value is".tr} ${controller.selectedPrices[index].nonAcCharge.toString()} ${"Please enter a lower Non A/c value for".tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}."
                                                               .tr,
@@ -470,11 +496,21 @@ class VehicleInformationScreen extends StatelessWidget {
                                                     } else if (controller.selectedPrices[index].isAcNonAc == false) {
                                                       ZoneModel zoneData = await FireStoreUtils.getZoneById(zoneId: controller.selectedPrices[index].zoneId!);
                                                       if (controller.acNonAcWithoutPerKmRate[index].text.isEmpty) {
+                                                        ShowToastDialog.closeLoader();
                                                         ShowToastDialog.showToast(
                                                           "${"Please enter Per".tr} ${Constant.distanceType} ${"Rate for".tr} ${Constant.localizationName(zoneData.name)} ${'Zone'.tr}.".tr,
                                                         );
                                                         return;
-                                                      } else if (double.parse(controller.selectedPrices[index].kmCharge.toString()) < double.parse(controller.acNonAcWithoutPerKmRate[index].text)) {
+                                                      }
+                                                      final double? perKmRateValue = double.tryParse(controller.acNonAcWithoutPerKmRate[index].text);
+                                                      if (perKmRateValue == null || perKmRateValue <= 0) {
+                                                        ShowToastDialog.closeLoader();
+                                                        ShowToastDialog.showToast(
+                                                          "${"Please enter a valid Per".tr} ${Constant.distanceType} ${"Rate for".tr} ${Constant.localizationName(zoneData.name)} ${'Zone'.tr}.".tr,
+                                                        );
+                                                        return;
+                                                      } else if (double.parse(controller.selectedPrices[index].kmCharge.toString()) < perKmRateValue) {
+                                                        ShowToastDialog.closeLoader();
                                                         ShowToastDialog.showToast(
                                                           "${"Maximum allowed value is".tr} ${controller.selectedPrices[index].kmCharge.toString()} ${"Please enter a lower price for".tr} ${Constant.localizationName(zoneData.name)} ${'Zone'.tr}."
                                                               .tr,

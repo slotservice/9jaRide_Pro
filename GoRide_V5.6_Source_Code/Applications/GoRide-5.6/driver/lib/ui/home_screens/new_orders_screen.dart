@@ -137,8 +137,10 @@ class NewOrderScreen extends StatelessWidget {
                               basicFare = double.parse(orderModel.service?.firstPrice.basicFareCharge ?? '0.0');
 
                               if (distance <= double.parse(orderModel.service?.firstPrice.basicFare ?? '0.0')) {
-                                if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-                                  amount = amount * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
+                                if (endNightTimeString.isAfter(startNightTimeString)
+                                    ? (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString))
+                                    : (currentTime.isAfter(startNightTimeString) || currentTime.isBefore(endNightTimeString))) {
+                                  amount = double.parse(orderModel.service?.firstPrice.basicFareCharge ?? '0.0') * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
                                 } else {
                                   amount = double.parse(orderModel.service?.firstPrice.basicFareCharge ?? '0.0');
                                 }
@@ -154,7 +156,9 @@ class NewOrderScreen extends StatelessWidget {
                                     : kmCharge;
                                 amount = (perKmCharge * extraDist);
 
-                                if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+                                if (endNightTimeString.isAfter(startNightTimeString)
+                                    ? (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString))
+                                    : (currentTime.isAfter(startNightTimeString) || currentTime.isBefore(endNightTimeString))) {
                                   amount = amount * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
                                   totalChargeOfMinute = totalChargeOfMinute * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');
                                   basicFare = basicFare * double.parse(orderModel.service?.firstPrice.nightCharge ?? '0.0');

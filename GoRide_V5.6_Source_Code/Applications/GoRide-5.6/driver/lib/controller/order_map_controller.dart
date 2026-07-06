@@ -51,9 +51,18 @@ class OrderMapController extends GetxController {
   Future<void> acceptOrder() async {
     ShowToastDialog.showLoader("Please wait".tr);
     try {
+      // Race guard: re-read the order fresh and ensure it is still unassigned
+      // before writing our bid, so a full-document overwrite can't revert an
+      // already-assigned ride or clobber another driver's concurrent bid.
+      final OrderModel? freshOrder = await FireStoreUtils.getOrder(orderModel.value.id.toString());
+      if (freshOrder == null || freshOrder.status != Constant.ridePlaced || (freshOrder.driverId != null && freshOrder.driverId!.isNotEmpty)) {
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast("This ride is no longer available.".tr);
+        return;
+      }
       List<dynamic> newAcceptedDriverId = [];
-      if (orderModel.value.acceptedDriverId != null) {
-        newAcceptedDriverId = orderModel.value.acceptedDriverId!;
+      if (freshOrder.acceptedDriverId != null) {
+        newAcceptedDriverId = freshOrder.acceptedDriverId!;
       } else {
         newAcceptedDriverId = [];
       }
@@ -169,7 +178,21 @@ class OrderMapController extends GetxController {
   RxDouble totalChargeOfMinute = 0.0.obs;
   RxDouble basicFare = 0.0.obs;
 
+  // Night charge applies when the current time falls in the configured window.
+  // Handle windows that span midnight (end <= start) with an OR condition.
+  bool isNightCharge() {
+    if (endNightTimeString.isAfter(startNightTimeString)) {
+      return currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString);
+    } else {
+      return currentTime.isAfter(startNightTimeString) || currentTime.isBefore(endNightTimeString);
+    }
+  }
+
   Future<void> calculateAmount() async {
+    // Refresh the timestamp each run so the night-charge check uses the real
+    // current time, not the controller-construction time.
+    currentTime = DateTime.now();
+    currentDate = DateTime.now();
     String formatTime(String? time) {
       if (time == null || !time.contains(":")) {
         return "00:00";
@@ -218,9 +241,12 @@ class OrderMapController extends GetxController {
     totalChargeOfMinute.value = double.parse(durationValueInMinutes.toString()) * double.parse(orderModel.value.service?.firstPrice.perMinuteCharge ?? '0.0');
     basicFare.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
 
+    // Reset before recomputing so the night multiplier does not compound on
+    // each location tick (calculateAmount runs repeatedly).
+    amount.value = 0.0;
     if (distance <= double.parse(orderModel.value.service?.firstPrice.basicFare ?? '0.0')) {
-      if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
-        amount.value = amount.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
+      if (isNightCharge()) {
+        amount.value = basicFare.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
       } else {
         amount.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
       }
@@ -236,7 +262,7 @@ class OrderMapController extends GetxController {
           : kmCharge;
       amount.value = (perKmCharge * extraDist);
 
-      if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+      if (isNightCharge()) {
         amount.value = amount.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
         totalChargeOfMinute.value = totalChargeOfMinute.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
         basicFare.value = basicFare.value * double.parse(orderModel.value.service?.firstPrice.nightCharge ?? '0.0');
