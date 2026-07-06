@@ -80,13 +80,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         return GetMaterialApp(
             title: '9jaRide Pro',
             debugShowCheckedModeBanner: false,
-            theme: Styles.themeData(
-                themeChangeProvider.darkTheme == 0
-                    ? true
-                    : themeChangeProvider.darkTheme == 1
-                        ? false
-                        : themeChangeProvider.getSystemThem(),
-                context),
+            theme: Styles.themeData(false, context), // Rider app locked to light/white theme (no dark mode)
             localizationsDelegates: const [
               CountryLocalizations.delegate,
             ],

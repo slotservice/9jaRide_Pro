@@ -15,13 +15,8 @@ class DarkThemeProvider with ChangeNotifier {
   }
 
   bool getThem() {
-    if (_darkTheme == 0) {
-      return true;
-    } else if (_darkTheme == 1) {
-      return false;
-    } else {
-      return getSystemThem();
-    }
+    // Rider app is locked to the light/white theme (no dark mode) per client request.
+    return false;
   }
 
   bool getSystemThem() {
