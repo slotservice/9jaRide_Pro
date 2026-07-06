@@ -31,10 +31,10 @@ class KycDocumentUploadScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: AppColors.background,
             centerTitle: true,
-            title: Text(title, style: GoogleFonts.poppins(color: Colors.white)),
+            title: Text(title, style: GoogleFonts.poppins(color: AppColors.lightprimary)),
             leading: InkWell(
               onTap: () => Get.back(),
-              child: const Icon(Icons.arrow_back, color: Colors.white),
+              child: const Icon(Icons.arrow_back, color: AppColors.lightprimary),
             ),
           ),
           backgroundColor: AppColors.background,

@@ -100,7 +100,7 @@ class _ChatScreensState extends State<ChatScreens> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
-        title: Text("${widget.driverName.toString()}\n#${widget.orderId.toString()}", maxLines: 2, style: GoogleFonts.poppins(color: Colors.white, fontSize: 14)),
+        title: Text("${widget.driverName.toString()}\n#${widget.orderId.toString()}", maxLines: 2, style: GoogleFonts.poppins(color: AppColors.lightprimary, fontSize: 14)),
         leading: InkWell(
             onTap: () {
               Get.offAll(DashBoardScreen());

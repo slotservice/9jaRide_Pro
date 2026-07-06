@@ -106,7 +106,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
       appBar: widget.isShowAppbar == true
           ? AppBar(
               elevation: 2,
-              title: Text('Help & Support'.tr, maxLines: 2, style: GoogleFonts.poppins(color: Colors.white, fontSize: 14)),
+              title: Text('Help & Support'.tr, maxLines: 2, style: GoogleFonts.poppins(color: AppColors.lightprimary, fontSize: 14)),
               leading: InkWell(
                   onTap: () {
                     Get.offAll(DashBoardScreen());

@@ -34,12 +34,12 @@ class KycScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Identity Verification'.tr,
-                      style: GoogleFonts.poppins(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w600),
+                      style: GoogleFonts.poppins(color: AppColors.lightprimary, fontSize: 22, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Upload your documents to verify your identity.'.tr,
-                      style: GoogleFonts.poppins(color: Colors.white70, fontSize: 13),
+                      style: GoogleFonts.poppins(color: Colors.black87, fontSize: 13),
                     ),
                   ],
                 ),
