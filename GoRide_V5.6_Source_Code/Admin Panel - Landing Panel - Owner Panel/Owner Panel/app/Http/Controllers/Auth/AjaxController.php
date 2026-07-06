@@ -24,7 +24,30 @@ class AjaxController extends Controller
 
    
     public function setToken(Request $request)
-    {        
+    {
+        // Security: verify the caller actually completed a Firebase sign-in for the
+        // account being logged into. Without this, anyone could POST a victim's
+        // phone/email/id and be logged in as them (account takeover). The client
+        // must send the Firebase ID token obtained from the completed OTP / Google
+        // sign-in; we verify it server-side and require its uid to match the
+        // owner account id being authenticated.
+        $idToken = $request->input('idToken');
+        if (empty($idToken)) {
+            return response()->json(['access' => false, 'error' => 'Authentication token required'], 401);
+        }
+        try {
+            $firebaseAuth = (new \Kreait\Firebase\Factory)
+                ->withServiceAccount(storage_path('app/firebase/credentials.json'))
+                ->createAuth();
+            $verifiedToken = $firebaseAuth->verifyIdToken($idToken);
+        } catch (\Throwable $e) {
+            return response()->json(['access' => false, 'error' => 'Invalid authentication token'], 401);
+        }
+        $verifiedUid = $verifiedToken->claims()->get('sub');
+        if (empty($verifiedUid) || $verifiedUid !== $request->id) {
+            return response()->json(['access' => false, 'error' => 'Authentication mismatch'], 401);
+        }
+
         $uuid        = $request->id;
         $phone       = $request->phone;
         $email       = $request->email;

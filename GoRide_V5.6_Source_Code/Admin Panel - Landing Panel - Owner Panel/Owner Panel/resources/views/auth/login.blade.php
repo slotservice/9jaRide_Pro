@@ -415,9 +415,10 @@ foreach ($countries as $keycountry => $valuecountry) {
                     data: {
                         id: uid,
                         userId: uid,
+                        idToken: await firebase.auth().currentUser.getIdToken(),
                         phone: phoneNumber,
                         password: '',
-                        fullName: fullName,                           
+                        fullName: fullName,
                         profilePicture: imageURL,
                         provider: "google",
                         isSubscribed:isSubscribed,
@@ -514,7 +515,18 @@ foreach ($countries as $keycountry => $valuecountry) {
 
         var fullPhoneNumber='+'+countryCode+phone;                
 
-        database.collection("owner_users").where('countryCode','==','+'+countryCode).where('phoneNumber','==',phone).get().then(function(snapshots_login) {
+        if (!window.confirmationResult) {
+            $('#form_error').html("{{trans('lang.please_enter_otp')}}");
+            return;
+        }
+
+        var verifiedIdToken = '';
+        window.confirmationResult.confirm(code).then(function(otpResult) {
+            return otpResult.user.getIdToken();
+        }).then(function(idToken) {
+            verifiedIdToken = idToken;
+            return database.collection("owner_users").where('countryCode','==','+'+countryCode).where('phoneNumber','==',phone).get();
+        }).then(function(snapshots_login) {
 
             if(snapshots_login.empty) {
                 $('#form_error').html("{{trans('lang.no_user_found_with_this_phone_number')}}");
@@ -548,6 +560,7 @@ foreach ($countries as $keycountry => $valuecountry) {
                         data: {
                             id: uid,
                             userId: uid,
+                            idToken: verifiedIdToken,
                             phone: phoneNumber,
                             password: '',
                             fullName: fullName,
