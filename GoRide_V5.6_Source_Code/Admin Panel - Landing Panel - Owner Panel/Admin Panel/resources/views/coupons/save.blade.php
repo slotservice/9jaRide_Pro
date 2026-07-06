@@ -216,6 +216,11 @@
             $(".error_top").html("");
             $(".error_top").append("<p>{{trans('lang.coupon_amount_error')}}</p>");
             window.scrollTo(0,0);
+        } else if(type=='percentage' && parseFloat(amount)>100) {
+            $(".error_top").show();
+            $(".error_top").html("");
+            $(".error_top").append("<p>Percentage discount cannot exceed 100%.</p>");
+            window.scrollTo(0,0);
         } else if(code=='') {
             $(".error_top").show();
             $(".error_top").html("");
