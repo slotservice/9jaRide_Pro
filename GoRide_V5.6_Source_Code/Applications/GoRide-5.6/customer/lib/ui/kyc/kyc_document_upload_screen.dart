@@ -34,7 +34,7 @@ class KycDocumentUploadScreen extends StatelessWidget {
             title: Text(title, style: GoogleFonts.poppins(color: AppColors.lightprimary)),
             leading: InkWell(
               onTap: () => Get.back(),
-              child: const Icon(Icons.arrow_back, color: AppColors.lightprimary),
+              child: Icon(Icons.arrow_back, color: AppColors.lightprimary),
             ),
           ),
           backgroundColor: AppColors.background,
