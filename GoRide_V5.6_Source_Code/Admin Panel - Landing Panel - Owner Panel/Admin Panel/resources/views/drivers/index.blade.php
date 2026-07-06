@@ -667,9 +667,9 @@
             var unreadCount = 0;
             await database.collection('chat_admin').doc(driverId).collection("thread")
                 .where("seen", "==", false)
-                .where("senderId", "!=", "admin") // Only count messages sent by user
                 .onSnapshot(snapshot => {
-                    unreadCount = snapshot.size;
+                    // Filter out admin messages in code so the query needs no composite index.
+                    unreadCount = snapshot.docs.filter(d => (d.data().senderId !== "admin")).length;
                 });
             return unreadCount;
         }
