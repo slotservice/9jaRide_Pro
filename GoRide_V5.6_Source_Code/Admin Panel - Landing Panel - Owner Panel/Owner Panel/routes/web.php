@@ -55,7 +55,12 @@ Route::get('payment/success', [App\Http\Controllers\PaymentController::class, 'p
 Route::get('payment/failed', [App\Http\Controllers\PaymentController::class, 'paymentfailed'])->name('payment.failed');
 Route::get('payment/pending', [App\Http\Controllers\PaymentController::class, 'paymentpending'])->name('payment.pending');
 Route::post('store-firebase-service', [App\Providers\FirebaseAuthService::class, 'storeFirebaseService'])->middleware('auth')->name('store-firebase-service');
-Route::post('get-firebase-token', [App\Providers\FirebaseAuthService::class, 'getFirebaseToken'])->middleware('auth');
+// NOTE: get-firebase-token is intentionally NOT auth-gated: the login page itself
+// calls it (via jquery.validate.js) to sign the browser into Firebase before the
+// owner is authenticated, so gating it would break owner login. C4 (unauthenticated
+// token mint for the shared UID) must instead be mitigated via Firestore security
+// rules that constrain what that shared identity can read/write.
+Route::post('get-firebase-token', [App\Providers\FirebaseAuthService::class, 'getFirebaseToken']);
 Route::get('subscription-plan', [App\Http\Controllers\SubscriptionController::class, 'show'])->name('subscription-plan.show');
 Route::get('subscription-plan/checkout/{id}', [App\Http\Controllers\SubscriptionController::class, 'checkout'])->name('subscription-plans.checkout');
 Route::post('payment-proccessing', [App\Http\Controllers\SubscriptionController::class, 'orderProccessing'])->name('payment-proccessing');

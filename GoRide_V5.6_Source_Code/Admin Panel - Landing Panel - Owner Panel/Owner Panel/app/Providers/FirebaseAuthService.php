@@ -43,10 +43,9 @@ class FirebaseAuthService
 
     public function getFirebaseToken()
     {
-        if (!auth()->check()) {
-            abort(403);
-        }
-
+        // Not auth-gated by design: the login page calls this before the owner is
+        // authenticated so the browser can sign into Firebase to read owner_users.
+        // See the route definition note. C4 mitigation belongs in Firestore rules.
         if (request()->cookie('firebase_token')) {
             return request()->cookie('firebase_token');
         }
