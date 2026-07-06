@@ -142,26 +142,35 @@ class AddDriverController extends GetxController {
     setVehicleDetails();
     if (driverModel.value.id == null) {
       FirebaseAuth driverAccountAuth;
-      if (Platform.isIOS) {
-        FirebaseApp secondaryApp = await Firebase.initializeApp(
-          name: 'SecondaryApp',
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
-        driverAccountAuth = FirebaseAuth.instanceFor(app: secondaryApp);
-      } else {
-        // Android: use secondary app
-        FirebaseApp secondaryApp = await Firebase.initializeApp(
-          name: 'SecondaryApp',
-          options: Firebase.app().options,
-        );
-        driverAccountAuth = FirebaseAuth.instanceFor(app: secondaryApp);
+      try {
+        if (Platform.isIOS) {
+          FirebaseApp secondaryApp = await Firebase.initializeApp(
+            name: 'SecondaryApp',
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          driverAccountAuth = FirebaseAuth.instanceFor(app: secondaryApp);
+        } else {
+          // Android: use secondary app
+          FirebaseApp secondaryApp = await Firebase.initializeApp(
+            name: 'SecondaryApp',
+            options: Firebase.app().options,
+          );
+          driverAccountAuth = FirebaseAuth.instanceFor(app: secondaryApp);
+        }
+      } catch (e) {
+        debugPrint("SecondaryApp init error--->$e");
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+        return;
       }
 
       await driverAccountAuth
           .verifyPhoneNumber(
         phoneNumber: countryCode.value.text + phoneNumberController.value.text,
         forceResendingToken: resendToken.value == 0 ? null : resendToken.value,
-        verificationCompleted: (PhoneAuthCredential credential) {},
+        verificationCompleted: (PhoneAuthCredential credential) {
+          ShowToastDialog.closeLoader();
+        },
         verificationFailed: (FirebaseAuthException e) {
           debugPrint("FirebaseAuthException--->${e.message}");
           ShowToastDialog.closeLoader();

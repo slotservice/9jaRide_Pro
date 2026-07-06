@@ -1353,22 +1353,27 @@ class WalletScreen extends StatelessWidget {
                               ShowToastDialog.showToast("Withdraw amount must be greater or equal to ${Constant.amountShow(amount: Constant.minimumAmountToWithdrawal.toString())}".tr);
                             } else {
                               ShowToastDialog.showLoader("Please wait".tr);
-                              WithdrawModel withdrawModel = WithdrawModel();
-                              withdrawModel.id = Constant.getUuid();
-                              withdrawModel.userId = FireStoreUtils.getCurrentUid();
-                              withdrawModel.paymentStatus = "pending";
-                              withdrawModel.amount = controller.withdrawalAmountController.value.text;
-                              withdrawModel.note = controller.noteController.value.text;
-                              withdrawModel.createdDate = Timestamp.now();
+                              try {
+                                WithdrawModel withdrawModel = WithdrawModel();
+                                withdrawModel.id = Constant.getUuid();
+                                withdrawModel.userId = FireStoreUtils.getCurrentUid();
+                                withdrawModel.paymentStatus = "pending";
+                                withdrawModel.amount = controller.withdrawalAmountController.value.text;
+                                withdrawModel.note = controller.noteController.value.text;
+                                withdrawModel.createdDate = Timestamp.now();
 
-                              await FireStoreUtils.updatedOwnerWallet(amount: "-${controller.withdrawalAmountController.value.text}");
-
-                              await FireStoreUtils.setWithdrawRequest(withdrawModel).then((value) {
+                                // Create the withdrawal request record before debiting the wallet so a
+                                // failure never leaves money missing without a matching request.
+                                await FireStoreUtils.setWithdrawRequest(withdrawModel);
+                                await FireStoreUtils.updatedOwnerWallet(amount: "-${controller.withdrawalAmountController.value.text}");
                                 controller.getUser();
-                                ShowToastDialog.closeLoader();
                                 ShowToastDialog.showToast("Request sent to admin".tr);
                                 Get.back();
-                              });
+                              } catch (e) {
+                                ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+                              } finally {
+                                ShowToastDialog.closeLoader();
+                              }
                             }
                           },
                         )

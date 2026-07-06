@@ -206,19 +206,22 @@ class SettingScreen extends StatelessWidget {
       child: Text("OK".tr),
       onPressed: () async {
         ShowToastDialog.showLoader("Please wait".tr);
-        await controller.deleteAllSubscriptionHistoty();
-        await controller.deleteAllDriver();
-        await controller.deleteUserFromServer();
-        await FireStoreUtils.deleteOwnerUser().then((value) {
-          ShowToastDialog.closeLoader();
+        try {
+          await controller.deleteAllSubscriptionHistoty();
+          await controller.deleteAllDriver();
+          await controller.deleteUserFromServer();
+          final value = await FireStoreUtils.deleteOwnerUser();
           if (value == true) {
             ShowToastDialog.showToast("Account delete".tr);
             Get.offAll(const LoginScreen());
           } else {
-            ShowToastDialog.closeLoader();
             ShowToastDialog.showToast("Please contact to administrator".tr);
           }
-        });
+        } catch (e) {
+          ShowToastDialog.showToast("Please contact to administrator".tr);
+        } finally {
+          ShowToastDialog.closeLoader();
+        }
       },
     );
     Widget cancel = TextButton(

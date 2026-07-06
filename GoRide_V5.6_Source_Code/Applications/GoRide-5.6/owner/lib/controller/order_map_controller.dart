@@ -115,9 +115,12 @@ class OrderMapController extends GetxController {
 
     double durationValueInMinutes = convertToMinutes(orderModel.value.duration.toString());
     double distance = double.tryParse(orderModel.value.distance.toString()) ?? 0.0;
-    String nonAcPerKmRateData = driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId).nonAcPerKmRate ?? '1.0';
-    String acPerKmRateData = driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId).acPerKmRate ?? '1.0';
-    String perKmRateData = driverModel.value.vehicleInformation?.rates?.firstWhere((prices) => prices.zoneId == orderModel.value.zoneId).perKmRate ?? '1.0';
+    final ratesList = driverModel.value.vehicleInformation?.rates ?? [];
+    final matchedRates = ratesList.where((prices) => prices.zoneId == orderModel.value.zoneId);
+    final zoneRate = matchedRates.isNotEmpty ? matchedRates.first : null;
+    String nonAcPerKmRateData = zoneRate?.nonAcPerKmRate ?? '1.0';
+    String acPerKmRateData = zoneRate?.acPerKmRate ?? '1.0';
+    String perKmRateData = zoneRate?.perKmRate ?? '1.0';
     double nonAcChargeValue = double.parse(nonAcPerKmRateData);
     double acChargeValue = double.parse(acPerKmRateData);
     double kmCharge = double.parse(perKmRateData);

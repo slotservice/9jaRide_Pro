@@ -124,6 +124,9 @@ class _ChatScreensState extends State<ChatScreens> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Constant.loader(isDarkTheme: themeChange.getThem());
                       }
+                      if (snapshot.hasError) {
+                        return Center(child: Text("Something went wrong: ${snapshot.error}".tr));
+                      }
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                         return SizedBox();
                       }
@@ -218,14 +221,19 @@ class _ChatScreensState extends State<ChatScreens> {
                                 final path = await stopRecording();
                                 if (path != null) {
                                   ShowToastDialog.showLoader("Please wait");
-                                  String? url = await Constant().uploadVoiceMessage(path);
-                                  final duration = await player.setFilePath(path);
-                                  _sendMessage(_messageController.text, Url(url: url), '', 'voice', voiceTimer: duration?.inSeconds);
-                                  ShowToastDialog.closeLoader();
-                                  _messageController.clear();
-                                  setState(() {
-                                    isStartRecording = false;
-                                  });
+                                  try {
+                                    String? url = await Constant().uploadVoiceMessage(path);
+                                    final duration = await player.setFilePath(path);
+                                    _sendMessage(_messageController.text, Url(url: url), '', 'voice', voiceTimer: duration?.inSeconds);
+                                    _messageController.clear();
+                                    setState(() {
+                                      isStartRecording = false;
+                                    });
+                                  } catch (e) {
+                                    ShowToastDialog.showToast("Message sent failed");
+                                  } finally {
+                                    ShowToastDialog.closeLoader();
+                                  }
                                 }
                               },
                               child: Icon(Icons.mic,
@@ -582,8 +590,12 @@ class _ChatScreensState extends State<ChatScreens> {
             Get.back();
             XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
             if (image != null) {
-              Url url = await Constant().uploadChatImageToFireStorage(File(image.path));
-              _sendMessage('', url, '', 'image');
+              try {
+                Url url = await Constant().uploadChatImageToFireStorage(File(image.path));
+                _sendMessage('', url, '', 'image');
+              } catch (e) {
+                ShowToastDialog.showToast("Message sent failed");
+              }
             }
           },
           child: Text("Choose image from gallery".tr),
@@ -594,10 +606,14 @@ class _ChatScreensState extends State<ChatScreens> {
             Navigator.pop(context);
             XFile? galleryVideo = await _imagePicker.pickVideo(source: ImageSource.gallery);
             if (galleryVideo != null) {
-              ChatVideoContainer? videoContainer = await Constant().uploadChatVideoToFireStorage(File(galleryVideo.path));
-              if (videoContainer != null) {
-                _sendMessage('', videoContainer.videoUrl, videoContainer.thumbnailUrl, 'video');
-              } else {
+              try {
+                ChatVideoContainer? videoContainer = await Constant().uploadChatVideoToFireStorage(File(galleryVideo.path));
+                if (videoContainer != null) {
+                  _sendMessage('', videoContainer.videoUrl, videoContainer.thumbnailUrl, 'video');
+                } else {
+                  ShowToastDialog.showToast("Message sent failed");
+                }
+              } catch (e) {
                 ShowToastDialog.showToast("Message sent failed");
               }
             }
@@ -610,8 +626,12 @@ class _ChatScreensState extends State<ChatScreens> {
             Navigator.pop(context);
             XFile? image = await _imagePicker.pickImage(source: ImageSource.camera);
             if (image != null) {
-              Url url = await Constant().uploadChatImageToFireStorage(File(image.path));
-              _sendMessage('', url, '', 'image');
+              try {
+                Url url = await Constant().uploadChatImageToFireStorage(File(image.path));
+                _sendMessage('', url, '', 'image');
+              } catch (e) {
+                ShowToastDialog.showToast("Message sent failed");
+              }
             }
           },
           child: Text("Take a Photo".tr),
@@ -622,10 +642,14 @@ class _ChatScreensState extends State<ChatScreens> {
             Navigator.pop(context);
             XFile? recordedVideo = await _imagePicker.pickVideo(source: ImageSource.camera);
             if (recordedVideo != null) {
-              ChatVideoContainer? videoContainer = await Constant().uploadChatVideoToFireStorage(File(recordedVideo.path));
-              if (videoContainer != null) {
-                _sendMessage('', videoContainer.videoUrl, videoContainer.thumbnailUrl, 'video');
-              } else {
+              try {
+                ChatVideoContainer? videoContainer = await Constant().uploadChatVideoToFireStorage(File(recordedVideo.path));
+                if (videoContainer != null) {
+                  _sendMessage('', videoContainer.videoUrl, videoContainer.thumbnailUrl, 'video');
+                } else {
+                  ShowToastDialog.showToast("Message sent failed");
+                }
+              } catch (e) {
                 ShowToastDialog.showToast("Message sent failed");
               }
             }

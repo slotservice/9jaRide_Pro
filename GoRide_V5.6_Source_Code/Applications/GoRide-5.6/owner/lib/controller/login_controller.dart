@@ -22,7 +22,9 @@ class LoginController extends GetxController {
     await FirebaseAuth.instance
         .verifyPhoneNumber(
       phoneNumber: countryCode.value.text + phoneNumberController.value.text,
-      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationCompleted: (PhoneAuthCredential credential) {
+        ShowToastDialog.closeLoader();
+      },
       verificationFailed: (FirebaseAuthException e) {
         debugPrint("FirebaseAuthException--->${e.message}");
         ShowToastDialog.closeLoader();

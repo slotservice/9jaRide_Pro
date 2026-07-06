@@ -131,6 +131,7 @@ class InformationScreen extends StatelessWidget {
                             ShowToastDialog.showToast("Please enter valid email".tr);
                           } else {
                             ShowToastDialog.showLoader("Please wait".tr);
+                            try {
                             OwnerUserModel userModel = controller.userModel.value;
                             userModel.fullName = controller.fullNameController.value.text;
                             userModel.email = controller.emailController.value.text;
@@ -145,7 +146,6 @@ class InformationScreen extends StatelessWidget {
                             // await FireStoreUtils.referralAdd(referralModel);
 
                             await FireStoreUtils.updateOwnerUser(userModel).then((value) {
-                              ShowToastDialog.closeLoader();
                               if (value == true) {
                                 bool isPlanExpire = false;
                                 if (userModel.subscriptionPlan?.id != null) {
@@ -175,6 +175,11 @@ class InformationScreen extends StatelessWidget {
                               }
                             });
                             // }
+                            } catch (e) {
+                              ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+                            } finally {
+                              ShowToastDialog.closeLoader();
+                            }
                           }
                         }),
                       ],

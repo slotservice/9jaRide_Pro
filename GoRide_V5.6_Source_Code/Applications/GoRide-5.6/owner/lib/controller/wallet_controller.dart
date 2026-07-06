@@ -382,35 +382,40 @@ class WalletController extends GetxController {
     final String orderId = DateTime.now().millisecondsSinceEpoch.toString();
     String getChecksum = "${Constant.globalUrl}payments/getpaytmchecksum";
 
-    final response = await http.post(
-        Uri.parse(
-          getChecksum,
-        ),
-        headers: {},
-        body: {
-          "mid": paymentModel.value.paytm!.paytmMID.toString(),
-          "order_id": orderId,
-          "key_secret": paymentModel.value.paytm!.merchantKey.toString(),
+    try {
+      final response = await http.post(
+          Uri.parse(
+            getChecksum,
+          ),
+          headers: {},
+          body: {
+            "mid": paymentModel.value.paytm!.paytmMID.toString(),
+            "order_id": orderId,
+            "key_secret": paymentModel.value.paytm!.merchantKey.toString(),
+          });
+
+      final data = jsonDecode(response.body);
+      await verifyCheckSum(checkSum: data["code"], amount: amount, orderId: orderId).then((value) {
+        initiatePayment(amount: amount, orderId: orderId).then((value) {
+          String callback = "";
+          if (paymentModel.value.paytm!.isSandbox == true) {
+            callback = "${callback}https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+          } else {
+            callback = "${callback}https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
+          }
+
+          if (value.head.version.isEmpty) {
+            ShowToastDialog.showToast("Payment Failed");
+          } else {
+            GetPaymentTxtTokenModel result = value;
+            startTransaction(context, txnTokenBy: result.body.txnToken, orderId: orderId, amount: amount, callBackURL: callback, isStaging: paymentModel.value.paytm!.isSandbox);
+          }
         });
-
-    final data = jsonDecode(response.body);
-    await verifyCheckSum(checkSum: data["code"], amount: amount, orderId: orderId).then((value) {
-      initiatePayment(amount: amount, orderId: orderId).then((value) {
-        String callback = "";
-        if (paymentModel.value.paytm!.isSandbox == true) {
-          callback = "${callback}https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
-        } else {
-          callback = "${callback}https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=$orderId";
-        }
-
-        if (value.head.version.isEmpty) {
-          ShowToastDialog.showToast("Payment Failed");
-        } else {
-          GetPaymentTxtTokenModel result = value;
-          startTransaction(context, txnTokenBy: result.body.txnToken, orderId: orderId, amount: amount, callBackURL: callback, isStaging: paymentModel.value.paytm!.isSandbox);
-        }
       });
-    });
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+    }
   }
 
   Future<void> startTransaction(context, {required String txnTokenBy, required orderId, required double amount, required callBackURL, required isStaging}) async {
@@ -640,30 +645,36 @@ class WalletController extends GetxController {
       'grant_type': 'client_credentials',
     };
 
-    var response = await http.post(Uri.parse(apiUrl),
-        headers: <String, String>{
-          'Authorization': "Basic ${paymentModel.value.orangePay!.auth!}",
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
-        },
-        body: requestBody);
+    try {
+      var response = await http.post(Uri.parse(apiUrl),
+          headers: <String, String>{
+            'Authorization': "Basic ${paymentModel.value.orangePay!.auth!}",
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+          },
+          body: requestBody);
 
-    // Handle the response
+      // Handle the response
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
 
-      accessToken = responseData['access_token'];
-      // ignore: use_build_context_synchronously
-      return await webpayment(context: context, amountData: amount, currency: currency, orderIdData: orderId);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Color(0xff635bff),
-          content: Text(
-            "Something went wrong, please contact admin.".tr,
-            style: TextStyle(fontSize: 17),
-          )));
+        accessToken = responseData['access_token'];
+        // ignore: use_build_context_synchronously
+        return await webpayment(context: context, amountData: amount, currency: currency, orderIdData: orderId);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Color(0xff635bff),
+            content: Text(
+              "Something went wrong, please contact admin.".tr,
+              style: TextStyle(fontSize: 17),
+            )));
 
+        return '';
+      }
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
       return '';
     }
   }
@@ -684,28 +695,34 @@ class WalletController extends GetxController {
       "notif_url": paymentModel.value.orangePay!.notifUrl!.toString(),
     };
 
-    var response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{'Authorization': 'Bearer $accessToken', 'Content-Type': 'application/json', 'Accept': 'application/json'},
-      body: json.encode(requestBody),
-    );
+    try {
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{'Authorization': 'Bearer $accessToken', 'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: json.encode(requestBody),
+      );
 
-    // Handle the response
-    if (response.statusCode == 201) {
-      Map<String, dynamic> responseData = jsonDecode(response.body);
-      if (responseData['message'] == 'OK') {
-        payToken = responseData['pay_token'];
-        return responseData['payment_url'];
+      // Handle the response
+      if (response.statusCode == 201) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData['message'] == 'OK') {
+          payToken = responseData['pay_token'];
+          return responseData['payment_url'];
+        } else {
+          return '';
+        }
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Color(0xff635bff),
+            content: Text(
+              "Something went wrong, please contact admin.".tr,
+              style: TextStyle(fontSize: 17),
+            )));
         return '';
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Color(0xff635bff),
-          content: Text(
-            "Something went wrong, please contact admin.".tr,
-            style: TextStyle(fontSize: 17),
-          )));
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
       return '';
     }
   }
@@ -741,28 +758,34 @@ class WalletController extends GetxController {
     var ordersId = Constant.getUuid();
     final url = Uri.parse(paymentModel.value.midtrans!.isSandbox == true ? 'https://api.sandbox.midtrans.com/v1/payment-links' : 'https://api.midtrans.com/v1/payment-links');
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': generateBasicAuthHeader(paymentModel.value.midtrans!.serverKey!),
-      },
-      body: jsonEncode({
-        'transaction_details': {
-          'order_id': ordersId,
-          'gross_amount': double.parse(amount.toString()).toInt(),
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': generateBasicAuthHeader(paymentModel.value.midtrans!.serverKey!),
         },
-        'usage_limit': 2,
-        "callbacks": {"finish": "https://www.google.com?merchant_order_id=$ordersId"},
-      }),
-    );
+        body: jsonEncode({
+          'transaction_details': {
+            'order_id': ordersId,
+            'gross_amount': double.parse(amount.toString()).toInt(),
+          },
+          'usage_limit': 2,
+          "callbacks": {"finish": "https://www.google.com?merchant_order_id=$ordersId"},
+        }),
+      );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final responseData = jsonDecode(response.body);
-      return responseData['payment_url'];
-    } else {
-      ShowToastDialog.showToast("something went wrong, please contact admin.".tr);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        return responseData['payment_url'];
+      } else {
+        ShowToastDialog.showToast("something went wrong, please contact admin.".tr);
+        return '';
+      }
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
       return '';
     }
   }

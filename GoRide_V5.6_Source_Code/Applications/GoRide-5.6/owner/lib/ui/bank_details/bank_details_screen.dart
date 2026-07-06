@@ -97,19 +97,23 @@ class BankDetailsScreen extends StatelessWidget {
                                         ShowToastDialog.showToast("Please enter account number".tr);
                                       } else {
                                         ShowToastDialog.showLoader("Please wait".tr);
-                                        BankDetailsModel bankDetailsModel = controller.bankDetailsModel.value;
+                                        try {
+                                          BankDetailsModel bankDetailsModel = controller.bankDetailsModel.value;
 
-                                        bankDetailsModel.userId = FireStoreUtils.getCurrentUid();
-                                        bankDetailsModel.bankName = controller.bankNameController.value.text;
-                                        bankDetailsModel.branchName = controller.branchNameController.value.text;
-                                        bankDetailsModel.holderName = controller.holderNameController.value.text;
-                                        bankDetailsModel.accountNumber = controller.accountNumberController.value.text;
-                                        bankDetailsModel.otherInformation = controller.otherInformationController.value.text;
+                                          bankDetailsModel.userId = FireStoreUtils.getCurrentUid();
+                                          bankDetailsModel.bankName = controller.bankNameController.value.text;
+                                          bankDetailsModel.branchName = controller.branchNameController.value.text;
+                                          bankDetailsModel.holderName = controller.holderNameController.value.text;
+                                          bankDetailsModel.accountNumber = controller.accountNumberController.value.text;
+                                          bankDetailsModel.otherInformation = controller.otherInformationController.value.text;
 
-                                        await FireStoreUtils.updateBankDetails(bankDetailsModel).then((value) {
-                                          ShowToastDialog.closeLoader();
+                                          await FireStoreUtils.updateBankDetails(bankDetailsModel);
                                           ShowToastDialog.showToast("Bank details update successfully".tr);
-                                        });
+                                        } catch (e) {
+                                          ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+                                        } finally {
+                                          ShowToastDialog.closeLoader();
+                                        }
                                       }
                                     },
                                   )

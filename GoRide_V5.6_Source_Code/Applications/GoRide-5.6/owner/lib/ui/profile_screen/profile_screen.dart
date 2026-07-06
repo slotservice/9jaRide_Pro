@@ -183,20 +183,24 @@ class ProfileScreen extends StatelessWidget {
                                               ShowToastDialog.showToast("Please enter full name");
                                             } else {
                                               ShowToastDialog.showLoader("Please wait".tr);
-                                              if (controller.profileImage.value.isNotEmpty && Constant().hasValidUrl(controller.profileImage.value) == false) {
-                                                controller.profileImage.value = await Constant.uploadUserImageToFireStorage(
-                                                    File(controller.profileImage.value), "profileImage/${FireStoreUtils.getCurrentUid()}", File(controller.profileImage.value).path.split('/').last);
-                                              }
+                                              try {
+                                                if (controller.profileImage.value.isNotEmpty && Constant().hasValidUrl(controller.profileImage.value) == false) {
+                                                  controller.profileImage.value = await Constant.uploadUserImageToFireStorage(
+                                                      File(controller.profileImage.value), "profileImage/${FireStoreUtils.getCurrentUid()}", File(controller.profileImage.value).path.split('/').last);
+                                                }
 
-                                              OwnerUserModel driverUserModel = controller.ownerModel.value;
-                                              driverUserModel.fullName = controller.fullNameController.value.text;
-                                              driverUserModel.profilePic = controller.profileImage.value;
+                                                OwnerUserModel driverUserModel = controller.ownerModel.value;
+                                                driverUserModel.fullName = controller.fullNameController.value.text;
+                                                driverUserModel.profilePic = controller.profileImage.value;
 
-                                              await FireStoreUtils.updateOwnerUser(driverUserModel).then((value) {
-                                                ShowToastDialog.closeLoader();
+                                                await FireStoreUtils.updateOwnerUser(driverUserModel);
                                                 controller.getData();
                                                 ShowToastDialog.showToast("Profile update successfully".tr);
-                                              });
+                                              } catch (e) {
+                                                ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+                                              } finally {
+                                                ShowToastDialog.closeLoader();
+                                              }
                                             }
                                           },
                                         ),

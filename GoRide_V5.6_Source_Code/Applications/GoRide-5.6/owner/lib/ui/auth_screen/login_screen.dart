@@ -144,6 +144,7 @@ class LoginScreen extends StatelessWidget {
                           iconAssetImage: 'assets/icons/ic_google.png',
                           onPress: () async {
                             ShowToastDialog.showLoader("Please wait".tr);
+                            try {
                             await controller.signInWithGoogle().then((value) async {
                               ShowToastDialog.closeLoader();
                               if (value != null) {
@@ -221,6 +222,10 @@ class LoginScreen extends StatelessWidget {
                                 }
                               }
                             });
+                            } catch (e) {
+                              ShowToastDialog.closeLoader();
+                              ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+                            }
                           },
                         ),
                         const SizedBox(
@@ -236,6 +241,7 @@ class LoginScreen extends StatelessWidget {
                               iconColor: themeChange.getThem() ? AppColors.darksecondprimary : AppColors.lightsecondprimary,
                               onPress: () async {
                                 ShowToastDialog.showLoader("Please wait".tr);
+                                try {
                                 await controller.signInWithApple().then((value) {
                                   ShowToastDialog.closeLoader();
                                   if (value != null) {
@@ -313,6 +319,10 @@ class LoginScreen extends StatelessWidget {
                                     }
                                   }
                                 });
+                                } catch (e) {
+                                  ShowToastDialog.closeLoader();
+                                  ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+                                }
                               },
                             )),
                       ],

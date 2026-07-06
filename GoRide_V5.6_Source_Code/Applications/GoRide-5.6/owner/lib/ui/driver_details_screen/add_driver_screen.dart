@@ -487,31 +487,37 @@ class AddDriverScreen extends StatelessWidget {
                                       controller.driverModel.value.createdAt = Timestamp.now();
 
                                       if (controller.selectedServiceType.value.id == null || controller.selectedServiceType.value.id!.isEmpty) {
+                                        ShowToastDialog.closeLoader();
                                         ShowToastDialog.showToast("Please select service".tr);
                                         return;
                                       }
 
                                       if (controller.vehicleNumberController.value.text.isEmpty) {
+                                        ShowToastDialog.closeLoader();
                                         ShowToastDialog.showToast(
                                           "Please enter Vehicle number".tr,
                                         );
                                         return;
                                       } else if (controller.registrationDateController.value.text.isEmpty) {
+                                        ShowToastDialog.closeLoader();
                                         ShowToastDialog.showToast(
                                           "Please select registration date".tr,
                                         );
                                         return;
                                       } else if (controller.selectedColor.value.isEmpty) {
+                                        ShowToastDialog.closeLoader();
                                         ShowToastDialog.showToast(
                                           "Please enter Vehicle color".tr,
                                         );
                                         return;
                                       } else if (controller.seatsController.value.text.isEmpty) {
+                                        ShowToastDialog.closeLoader();
                                         ShowToastDialog.showToast(
                                           "Please enter seats".tr,
                                         );
                                         return;
                                       } else if (controller.selectedZone.isEmpty) {
+                                        ShowToastDialog.closeLoader();
                                         ShowToastDialog.showToast(
                                           "Please select Zone".tr,
                                         );
@@ -521,21 +527,25 @@ class AddDriverScreen extends StatelessWidget {
                                           ZoneModel zoneModel = await FireStoreUtils.getZoneById(zoneId: controller.selectedPrices[index].zoneId!);
                                           if (controller.selectedPrices[index].isAcNonAc == true) {
                                             if (controller.acPerKmRate[index].text.isEmpty) {
+                                              ShowToastDialog.closeLoader();
                                               ShowToastDialog.showToast(
                                                   '${"Please Enter A/C Per".tr} ${Constant.distanceType} ${'Rate for'.tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}.');
                                               return;
                                             } else if (double.parse(controller.selectedPrices[index].acCharge.toString()) < double.parse(controller.acPerKmRate[index].text)) {
+                                              ShowToastDialog.closeLoader();
                                               ShowToastDialog.showToast(
                                                 "${"Maximum Allowed value is".tr} ${controller.selectedPrices[index].acCharge.toString()} ${"Please enter a lower A/c value for".tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}."
                                                     .tr,
                                               );
                                               return;
                                             } else if (controller.nonAcPerKmRate[index].text.isEmpty) {
+                                              ShowToastDialog.closeLoader();
                                               ShowToastDialog.showToast(
                                                 "${"Please Enter Non A/C Per".tr} ${Constant.distanceType} ${"Rate for".tr} ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}".tr,
                                               );
                                               return;
                                             } else if (double.parse(controller.selectedPrices[index].nonAcCharge.toString()) < double.parse(controller.nonAcPerKmRate[index].text)) {
+                                              ShowToastDialog.closeLoader();
                                               ShowToastDialog.showToast(
                                                 "${"Maximum Allowed value is".tr} ${controller.selectedPrices[index].nonAcCharge.toString()} ${"Please enter a lower Non A/c value for".tr}  ${Constant.localizationName(zoneModel.name)} ${'Zone'.tr}."
                                                     .tr,
@@ -545,11 +555,13 @@ class AddDriverScreen extends StatelessWidget {
                                           } else if (controller.selectedPrices[index].isAcNonAc == false) {
                                             ZoneModel zoneData = await FireStoreUtils.getZoneById(zoneId: controller.selectedPrices[index].zoneId!);
                                             if (controller.acNonAcWithoutPerKmRate[index].text.isEmpty) {
+                                              ShowToastDialog.closeLoader();
                                               ShowToastDialog.showToast(
                                                 "${'Please Enter Per'.tr} ${Constant.distanceType} ${'Rate for'.tr} ${Constant.localizationName(zoneData.name)} ${'Zone'.tr}.".tr,
                                               );
                                               return;
                                             } else if (double.parse(controller.selectedPrices[index].kmCharge.toString()) < double.parse(controller.acNonAcWithoutPerKmRate[index].text)) {
+                                              ShowToastDialog.closeLoader();
                                               ShowToastDialog.showToast(
                                                 "${"Maximum Allowed value is".tr} ${controller.selectedPrices[index].kmCharge.toString()} ${"Please Enter a Lower Price for".tr}  ${Constant.localizationName(zoneData.name)} ${'Zone'.tr}."
                                                     .tr,

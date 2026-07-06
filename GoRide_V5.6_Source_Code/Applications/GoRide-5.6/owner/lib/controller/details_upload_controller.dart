@@ -81,32 +81,35 @@ class DetailsUploadController extends GetxController {
   }
 
   Future<void> uploadDocument() async {
-    String frontImageFileName = File(frontImage.value).path.split('/').last;
-    String backImageFileName = File(backImage.value).path.split('/').last;
+    try {
+      String frontImageFileName = File(frontImage.value).path.split('/').last;
+      String backImageFileName = File(backImage.value).path.split('/').last;
 
-    if (frontImage.value.isNotEmpty && Constant().hasValidUrl(frontImage.value) == false) {
-      frontImage.value = await Constant.uploadUserImageToFireStorage(File(frontImage.value), "ownerDocument/${FireStoreUtils.getCurrentUid()}", frontImageFileName);
-    }
+      if (frontImage.value.isNotEmpty && Constant().hasValidUrl(frontImage.value) == false) {
+        frontImage.value = await Constant.uploadUserImageToFireStorage(File(frontImage.value), "ownerDocument/${FireStoreUtils.getCurrentUid()}", frontImageFileName);
+      }
 
-    if (backImage.value.isNotEmpty && Constant().hasValidUrl(backImage.value) == false) {
-      backImage.value = await Constant.uploadUserImageToFireStorage(File(backImage.value), "ownerDocument/${FireStoreUtils.getCurrentUid()}", backImageFileName);
-    }
-    documents.value.frontImage = frontImage.value;
-    documents.value.documentId = documentModel.value.id;
-    documents.value.documentNumber = documentNumberController.value.text;
-    documents.value.backImage = backImage.value;
-    documents.value.verified = false;
-    if (documentModel.value.expireAt == true) {
-      documents.value.expireAt = Timestamp.fromDate(selectedDate.value!);
-    }
+      if (backImage.value.isNotEmpty && Constant().hasValidUrl(backImage.value) == false) {
+        backImage.value = await Constant.uploadUserImageToFireStorage(File(backImage.value), "ownerDocument/${FireStoreUtils.getCurrentUid()}", backImageFileName);
+      }
+      documents.value.frontImage = frontImage.value;
+      documents.value.documentId = documentModel.value.id;
+      documents.value.documentNumber = documentNumberController.value.text;
+      documents.value.backImage = backImage.value;
+      documents.value.verified = false;
+      if (documentModel.value.expireAt == true) {
+        documents.value.expireAt = Timestamp.fromDate(selectedDate.value!);
+      }
 
-    await FireStoreUtils.uploadDriverDocument(documents.value).then((value) {
+      final value = await FireStoreUtils.uploadDriverDocument(documents.value);
       if (value) {
-        ShowToastDialog.closeLoader();
         ShowToastDialog.showToast("Document upload successfully".tr);
-
         Get.back();
       }
-    });
+    } catch (e) {
+      ShowToastDialog.showToast("Something went wrong. Please try again.".tr);
+    } finally {
+      ShowToastDialog.closeLoader();
+    }
   }
 }
