@@ -403,7 +403,7 @@
                 const startNightTime = $(`.start_night_time_${zone.id}`).val();
                 const endNightTime = $(`.end_night_time_${zone.id}`).val();
                 const nightFareCharge = $(`.night_time_fare_${zone.id}`).val();
-                const zoneData = zone.name.find(item => item.type === langData.code);
+                const zoneData = (Array.isArray(zone.name) ? (zone.name.find(item => item.type === langData.code) || zone.name.find(item => item.language_code === 'en') || zone.name[0]) : null) || { name: '' };
 
                 if (basicFareKm == '' || basicFareKm < 0) {
                     showError("{{ trans('lang.please_enter_valid') }} {{ trans('lang.basic_fare') }} {{ trans('lang.for_ride_fare') }} (" + zoneData.name + ")");
