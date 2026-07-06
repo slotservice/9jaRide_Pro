@@ -214,16 +214,14 @@
     async function countUnreadMessages(userId) {
         const snapshot = await database.collection('chat').doc(userId).collection("thread")
             .where("seen", "==", false)
-            .where("senderId", "!=", "admin")
             .get();
-        return snapshot.size;
+        return snapshot.docs.filter(d => d.data().senderId !== "admin").length;
     }
 
     function listenToUnreadMessages(userId, callback) {
         return database.collection('chat').doc(userId).collection("thread")
             .where("seen", "==", false)
-            .where("senderId", "!=", "admin")
-            .onSnapshot(snapshot => callback(snapshot.size));
+            .onSnapshot(snapshot => callback(snapshot.docs.filter(d => d.data().senderId !== "admin").length));
     }
 
     function buildInboxHTML(chat) {

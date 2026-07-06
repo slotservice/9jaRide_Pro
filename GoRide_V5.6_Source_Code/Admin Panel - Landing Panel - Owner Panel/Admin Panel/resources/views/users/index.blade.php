@@ -503,11 +503,9 @@
         async function countUnreadMessages(userId) {
             var unreadCount = 0;
             var snapshot = await database.collection('chat_admin').doc(userId).collection("thread")
-                .where("seen", "==", false)
-                .where("senderId", "!=", "admin").get();
+                .where("seen", "==", false).get();
 
-            unreadCount = snapshot.size;
-            console.log(unreadCount)
+            unreadCount = snapshot.docs.filter(d => d.data().senderId !== "admin").length;
             return unreadCount;
         }
     </script>

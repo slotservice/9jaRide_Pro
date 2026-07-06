@@ -332,9 +332,8 @@
             var unreadCount = 0;
             const snapshot = await database.collection('chat').doc(userId).collection("thread")
                 .where("seen", "==", false)
-                .where("senderId", "!=", "admin")
                 .get();
-            unreadCount = snapshot.size;
+            unreadCount = snapshot.docs.filter(d => d.data().senderId !== "admin").length;
             return unreadCount;
         }
 
@@ -343,9 +342,8 @@
                 .doc(userId)
                 .collection("thread")
                 .where("seen", "==", false)
-                .where("senderId", "!=", "admin")
                 .onSnapshot(snapshot => {
-                    const unreadCount = snapshot.size;
+                    const unreadCount = snapshot.docs.filter(d => d.data().senderId !== "admin").length;
                     callback(unreadCount);
                 });
         }
