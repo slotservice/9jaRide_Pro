@@ -342,9 +342,15 @@
                             title=foundItem.title;
                         } else {
                             var foundItem=data.title.find(item => item.type==='en');
-                            title=foundItem.title;
+                            title=foundItem ? foundItem.title : '';
                         }
                     }
+                }
+                // Fallback: service title arrays actually use name/language_code (not
+                // type/title), so the typed lookups above never match. Use the first
+                // entry's name so the Service dropdown isn't blank and never crashes.
+                if(title==='' && Array.isArray(data.title) && data.title.length>0) {
+                    title=data.title[0].name || data.title[0].title || '';
                 }
                 $('#user_service').append($("<option></option>")
                     .attr("value",data.id)
@@ -371,9 +377,13 @@
                             name=foundItem.name;
                         } else {
                             var foundItem=data.name.find(item => item.type==='en');
-                            name=foundItem.name;
+                            name=foundItem ? foundItem.name : '';
                         }
                     }
+                }
+                // Fallback: zone name arrays use name/language_code (not type/name).
+                if(name==='' && Array.isArray(data.name) && data.name.length>0) {
+                    name=data.name[0].name || '';
                 }
                 $('#zone').append($("<option></option>")
                     .attr("value",data.id)
