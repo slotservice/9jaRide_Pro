@@ -13,7 +13,7 @@ class SplashScreen extends StatelessWidget {
         init: SplashController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: AppColors.background,
+            backgroundColor: AppColors.lightprimary,
             body: Center(
                 child: SvgPicture.asset(
               "assets/app_logo.svg",
