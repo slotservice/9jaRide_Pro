@@ -92,13 +92,13 @@ class GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
           },
           child: Icon(
             Icons.arrow_back,
-            color: themeChange.getThem() ? AppColors.lightGray : AppColors.lightGray,
+            color: themeChange.getThem() ? AppColors.lightGray : AppColors.lightprimary,
           ),
         ),
         title: Text(
           'Search places',
           style: TextStyle(
-            color: themeChange.getThem() ? AppColors.lightGray : AppColors.lightGray,
+            color: themeChange.getThem() ? AppColors.lightGray : AppColors.lightprimary,
             fontSize: 16,
           ),
         ),

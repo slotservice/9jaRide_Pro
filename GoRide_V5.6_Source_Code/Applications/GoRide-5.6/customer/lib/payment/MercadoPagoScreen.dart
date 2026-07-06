@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:customer/constant/constant.dart';
+import 'package:customer/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -70,9 +71,9 @@ class _MercadoPagoScreenState extends State<MercadoPagoScreen> {
               onTap: () {
                 _showMyDialog();
               },
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: AppColors.lightprimary,
               ),
             )),
         body: WebViewWidget(controller: controller),

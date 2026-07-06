@@ -78,9 +78,9 @@ class _PayStackScreenState extends State<PayStackScreen> {
               onTap: () {
                 _showMyDialog();
               },
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: AppColors.lightprimary,
               ),
             )),
         body: WebViewWidget(controller: controller),
