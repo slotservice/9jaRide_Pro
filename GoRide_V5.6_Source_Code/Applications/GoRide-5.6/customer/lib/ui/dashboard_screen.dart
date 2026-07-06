@@ -23,12 +23,12 @@ class DashBoardScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: AppColors.lightprimary,
+              backgroundColor: AppColors.background,
               title: controller.selectedDrawerIndex.value != 0 && controller.selectedDrawerIndex.value != 6
                   ? Text(
                       controller.drawerItems[controller.selectedDrawerIndex.value].title,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.lightprimary,
                       ),
                     )
                   : const Text(""),
@@ -39,7 +39,7 @@ class DashBoardScreen extends StatelessWidget {
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10, right: 20, top: 20, bottom: 20),
-                    child: SvgPicture.asset('assets/icons/ic_humber.svg'),
+                    child: SvgPicture.asset('assets/icons/ic_humber.svg', color: AppColors.lightprimary),
                   ),
                 );
               }),

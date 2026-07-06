@@ -36,9 +36,9 @@ class OrderDetailsScreen extends StatelessWidget {
         init: OrderDetailsController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             appBar: AppBar(
-              backgroundColor: AppColors.lightprimary,
+              backgroundColor: AppColors.background,
               title: Text("Ride Details".tr),
               leading: InkWell(
                   onTap: () {

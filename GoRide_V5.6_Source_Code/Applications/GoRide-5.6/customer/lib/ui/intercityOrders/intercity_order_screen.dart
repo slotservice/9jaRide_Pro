@@ -36,7 +36,7 @@ class InterCityOrderScreen extends StatelessWidget {
     final themeChange = Provider.of<DarkThemeProvider>(context);
 
     return Scaffold(
-      backgroundColor: AppColors.lightprimary,
+      backgroundColor: AppColors.background,
       body: Column(
         children: [
           Container(

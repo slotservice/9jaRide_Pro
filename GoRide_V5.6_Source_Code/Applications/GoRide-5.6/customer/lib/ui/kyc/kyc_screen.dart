@@ -23,7 +23,7 @@ class KycScreen extends StatelessWidget {
       init: KycController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: AppColors.lightprimary,
+          backgroundColor: AppColors.background,
           body: Column(
             children: [
               SizedBox(height: Responsive.width(10, context)),

@@ -28,7 +28,7 @@ class ReviewScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: AppColors.lightprimary,
+              backgroundColor: AppColors.background,
               title: Text("Review".tr),
               leading: InkWell(
                   onTap: () {

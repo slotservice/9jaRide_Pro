@@ -71,7 +71,7 @@ class _PayStackScreenState extends State<PayStackScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             title: const Text("Payment"),
             centerTitle: false,
             leading: GestureDetector(

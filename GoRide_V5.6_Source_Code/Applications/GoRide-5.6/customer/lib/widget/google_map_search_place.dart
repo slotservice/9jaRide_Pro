@@ -85,7 +85,7 @@ class GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.lightprimary,
+        backgroundColor: AppColors.background,
         leading: InkWell(
           onTap: () {
             Get.back();

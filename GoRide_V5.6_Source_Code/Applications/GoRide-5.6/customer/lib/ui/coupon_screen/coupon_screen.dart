@@ -30,7 +30,7 @@ class CouponScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
               appBar: AppBar(
-                backgroundColor: AppColors.lightprimary,
+                backgroundColor: AppColors.background,
                 title: Text('Redeem Coupon'.tr),
                 leading: InkWell(
                     onTap: () {

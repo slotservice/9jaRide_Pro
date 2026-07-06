@@ -35,9 +35,9 @@ class InterCityPaymentOrderScreen extends StatelessWidget {
         init: IntercityPaymentOrderController(),
         builder: (controller) {
           return Scaffold(
-              backgroundColor: AppColors.lightprimary,
+              backgroundColor: AppColors.background,
               appBar: AppBar(
-                backgroundColor: AppColors.lightprimary,
+                backgroundColor: AppColors.background,
                 title: Text("OutStation ride details".tr),
                 leading: InkWell(
                     onTap: () {

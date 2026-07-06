@@ -22,7 +22,7 @@ class ContactUsScreen extends StatelessWidget {
         init: ContactUsController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             body: Column(
               children: [
                 SizedBox(

@@ -29,7 +29,7 @@ class SettingScreen extends StatelessWidget {
         init: SettingController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             body: controller.isLoading.value
                 ? Constant.loader(isDarkTheme: themeChange.getThem())
                 : Column(

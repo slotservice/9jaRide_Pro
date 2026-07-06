@@ -23,7 +23,7 @@ class LiveTrackingScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             elevation: 2,
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             title: Text(controller.title.value.tr),
             leading: InkWell(
                 onTap: () {

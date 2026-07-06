@@ -50,7 +50,7 @@ class InterCityScreen extends StatelessWidget {
       init: InterCityController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: AppColors.lightprimary,
+          backgroundColor: AppColors.background,
           body: controller.isLoading.value
               ? Constant.loader(isDarkTheme: themeChange.getThem())
               : Column(

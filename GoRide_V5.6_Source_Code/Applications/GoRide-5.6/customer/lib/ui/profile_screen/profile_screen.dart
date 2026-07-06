@@ -32,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
         init: ProfileController(),
         builder: (controller) {
           return Scaffold(
-              backgroundColor: AppColors.lightprimary,
+              backgroundColor: AppColors.background,
               body: Column(
                 children: [
                   Container(

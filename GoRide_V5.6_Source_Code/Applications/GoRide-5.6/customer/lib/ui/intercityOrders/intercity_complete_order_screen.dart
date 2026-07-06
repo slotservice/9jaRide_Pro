@@ -28,9 +28,9 @@ class IntercityCompleteOrderScreen extends StatelessWidget {
         init: IntercityCompleteOrderController(),
         builder: (controller) {
           return Scaffold(
-              backgroundColor: AppColors.lightprimary,
+              backgroundColor: AppColors.background,
               appBar: AppBar(
-                backgroundColor: AppColors.lightprimary,
+                backgroundColor: AppColors.background,
                 title: Text("OutStation ride details".tr),
                 leading: InkWell(
                     onTap: () {

@@ -29,7 +29,7 @@ class KycDocumentUploadScreen extends StatelessWidget {
         String title = _safeTitle(controller);
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             centerTitle: true,
             title: Text(title, style: GoogleFonts.poppins(color: Colors.white)),
             leading: InkWell(
@@ -37,7 +37,7 @@ class KycDocumentUploadScreen extends StatelessWidget {
               child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
           ),
-          backgroundColor: AppColors.lightprimary,
+          backgroundColor: AppColors.background,
           body: Column(
             children: [
               SizedBox(height: Responsive.width(6, context)),

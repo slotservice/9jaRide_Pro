@@ -36,7 +36,7 @@ class PaymentOrderScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
               appBar: AppBar(
-                backgroundColor: AppColors.lightprimary,
+                backgroundColor: AppColors.background,
                 title: Text("Ride Details".tr),
                 leading: InkWell(
                     onTap: () {

@@ -22,7 +22,12 @@ class Styles {
       primaryColor: isDarkTheme ? AppColors.lightsecondprimary : AppColors.darksecondprimary,
       hintColor: isDarkTheme ? Colors.white38 : Colors.black38,
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
-      appBarTheme: AppBarTheme(centerTitle: true, iconTheme: const IconThemeData(color: Colors.white), titleTextStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 16)),
+      appBarTheme: AppBarTheme(
+          centerTitle: true,
+          backgroundColor: isDarkTheme ? AppColors.darkBackground : AppColors.background,
+          elevation: 0.5,
+          iconTheme: IconThemeData(color: isDarkTheme ? Colors.white : AppColors.lightprimary),
+          titleTextStyle: GoogleFonts.poppins(color: isDarkTheme ? Colors.white : AppColors.lightprimary, fontSize: 16)),
     );
   }
 }

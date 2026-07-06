@@ -12,7 +12,7 @@ class TermsAndConditionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightprimary,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         elevation: 0,
         title: Text(type == "privacy" ? "Privacy Policy".tr : "Terms and Conditions".tr),

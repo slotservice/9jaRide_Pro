@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
         init: HomeController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: AppColors.background,
             body: controller.isLoading.value
                 ? Constant.loader(isDarkTheme: themeChange.getThem())
                 : SafeArea(
@@ -58,21 +58,21 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(controller.userModel.value.fullName.toString(), style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18, letterSpacing: 1)),
+                              Text(controller.userModel.value.fullName.toString(), style: GoogleFonts.poppins(color: AppColors.lightprimary, fontWeight: FontWeight.w600, fontSize: 18, letterSpacing: 1)),
                               const SizedBox(
                                 height: 4,
                               ),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset('assets/icons/ic_location.svg', width: 16),
+                                  SvgPicture.asset('assets/icons/ic_location.svg', width: 16, color: AppColors.lightprimary),
                                   const SizedBox(
                                     width: 10,
                                   ),
                                   Expanded(
                                       child: Padding(
                                     padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(controller.currentLocation.value, style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w400)),
+                                    child: Text(controller.currentLocation.value, style: GoogleFonts.poppins(color: Colors.black87, fontWeight: FontWeight.w400)),
                                   )),
                                 ],
                               ),
