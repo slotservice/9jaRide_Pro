@@ -279,7 +279,7 @@
                                         title = foundItem.title;
                                     } else {
                                         var foundItem = serviceName.find(item => item.type === 'en');
-                                        title = foundItem.title;
+                                        title = foundItem ? foundItem.title : '';
                                     }
                                 }
                             }
@@ -296,7 +296,7 @@
                                             vehicleType = foundItem.name;
                                         } else {
                                             var foundItem = childData.vehicleInformation.vehicleType.find(item => item.type === 'en');
-                                            vehicleType = foundItem.name;
+                                            vehicleType = foundItem ? foundItem.name : '';
                                         }
                                     }
                                 }
