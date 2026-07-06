@@ -38,7 +38,12 @@ class _MercadoPagoScreenState extends State<MercadoPagoScreen> {
           onNavigationRequest: (NavigationRequest navigation) async {
             debugPrint("--->2 ${navigation.url}");
             if (navigation.url.contains("${Constant.globalUrl}payment/success")) {
-              Get.back(result: true);
+              final status = Uri.parse(navigation.url).queryParameters['status']?.toLowerCase();
+              if (status == null || status == 'successful' || status == 'completed' || status == 'success' || status == 'approved') {
+                Get.back(result: true);
+              } else {
+                Get.back(result: false);
+              }
             }
             if (navigation.url.contains("${Constant.globalUrl}payment/failure") || navigation.url.contains("${Constant.globalUrl}payment/pending")) {
               Get.back(result: false);

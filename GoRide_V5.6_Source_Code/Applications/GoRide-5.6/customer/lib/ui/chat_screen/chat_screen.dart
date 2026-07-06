@@ -239,8 +239,12 @@ class _ChatScreensState extends State<ChatScreens> {
                               tooltip: 'Send message',
                               onPressed: () async {
                                 if (_messageController.text.isNotEmpty) {
-                                  _sendMessage(_messageController.text, null, '', 'text');
-                                  _messageController.clear();
+                                  try {
+                                    await _sendMessage(_messageController.text, null, '', 'text');
+                                    _messageController.clear();
+                                  } catch (e) {
+                                    ShowToastDialog.showToast("Failed to send message. Please try again.".tr);
+                                  }
                                 } else {
                                   ShowToastDialog.showToast("Please enter text".tr);
                                 }
@@ -276,8 +280,12 @@ class _ChatScreensState extends State<ChatScreens> {
                                 : null)),
                     onSubmitted: (value) async {
                       if (_messageController.text.isNotEmpty) {
-                        _sendMessage(_messageController.text, null, '', 'text');
-                        _messageController.clear();
+                        try {
+                          await _sendMessage(_messageController.text, null, '', 'text');
+                          _messageController.clear();
+                        } catch (e) {
+                          ShowToastDialog.showToast("Failed to send message. Please try again.".tr);
+                        }
                       }
                     },
                   ),

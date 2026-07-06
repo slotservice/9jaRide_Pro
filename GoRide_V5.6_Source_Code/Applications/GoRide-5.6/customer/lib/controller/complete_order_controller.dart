@@ -140,7 +140,7 @@ class CompleteOrderController extends GetxController {
     }
 
     if (orderModel.value.finalRate != null && orderModel.value.finalRate != '0.0') {
-      amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value - holdingCharge.value;
+      amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value;
     } else {
       amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 0.0);
     }

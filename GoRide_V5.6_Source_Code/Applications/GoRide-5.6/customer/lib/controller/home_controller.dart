@@ -286,6 +286,8 @@ class HomeController extends GetxController {
   }
 
   Future<void> calculateAmount() async {
+    currentTime = DateTime.now();
+    currentDate = DateTime.now();
     acCharge.value = selectedType.value.firstPrice.acCharge ?? '0.0';
     nonAcCharge.value = selectedType.value.firstPrice.nonAcCharge ?? '0.0';
     basicFare.value = selectedType.value.firstPrice.basicFare ?? '0.0';
@@ -311,6 +313,17 @@ class HomeController extends GetxController {
     endNightTimeString = DateTime(currentDate.year, currentDate.month, currentDate.day, int.parse(endParts[0]), int.parse(endParts[1]));
 
     nightCharge.value = selectedType.value.firstPrice.nightCharge ?? '0.0';
+
+    bool isNightTime;
+    if (startNightTimeString.isAtSameMomentAs(endNightTimeString)) {
+      isNightTime = false;
+    } else if (endNightTimeString.isAfter(startNightTimeString)) {
+      isNightTime = currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString);
+    } else {
+      // Night window spans midnight (e.g. 22:00-05:00).
+      isNightTime = currentTime.isAfter(startNightTimeString) || currentTime.isBefore(endNightTimeString);
+    }
+
     if (sourceLocationLAtLng.value.latitude != null && destinationLocationLAtLng.value.latitude != null) {
       double durationValueInMinutes = convertToMinutes(duration.toString());
       if (double.parse(distance.value) <= double.parse(basicFare.value)) {
@@ -319,7 +332,7 @@ class HomeController extends GetxController {
             .toStringAsFixed(Constant.currencyModel!.decimalDigits!);
 
         totalNightFare.value = double.parse(amount.value);
-        if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+        if (isNightTime) {
           amount.value = (totalNightFare.value * double.parse(nightCharge.value.toString())).toStringAsFixed(2);
           amount.value = (double.parse(amount.value) * surgeMultiplier.value).toStringAsFixed(2);
         }
@@ -343,7 +356,7 @@ class HomeController extends GetxController {
         totalNightFare.value = totalAmount.value;
         amount.value = totalNightFare.value.toStringAsFixed(2);
 
-        if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+        if (isNightTime) {
           amount.value = (totalNightFare.value * double.parse(nightCharge.value.toString())).toStringAsFixed(2);
         }
       }

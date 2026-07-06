@@ -57,7 +57,9 @@ class LoginScreen extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
-                        TextFormField(
+                        Form(
+                          key: controller.formKey.value,
+                          child: TextFormField(
                             validator: (value) => value != null && value.isNotEmpty ? null : 'Required',
                             keyboardType: TextInputType.number,
                             textCapitalization: TextCapitalization.sentences,
@@ -106,6 +108,7 @@ class LoginScreen extends StatelessWidget {
                                   borderSide: BorderSide(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
                                 ),
                                 hintText: "Phone number".tr)),
+                        ),
                         const SizedBox(
                           height: 30,
                         ),
@@ -113,7 +116,9 @@ class LoginScreen extends StatelessWidget {
                           context,
                           title: "Next".tr,
                           onPress: () {
-                            controller.sendCode();
+                            if (controller.formKey.value.currentState!.validate()) {
+                              controller.sendCode();
+                            }
                           },
                         ),
                         Padding(
@@ -189,6 +194,8 @@ class LoginScreen extends StatelessWidget {
                                           await FirebaseAuth.instance.signOut();
                                           ShowToastDialog.showToast("This user is disable please contact administrator".tr);
                                         }
+                                      } else {
+                                        ShowToastDialog.showToast("Something went wrong, please try again.".tr);
                                       }
                                     } else {
                                       await FirebaseAuth.instance.signOut();
@@ -196,6 +203,8 @@ class LoginScreen extends StatelessWidget {
                                     }
                                   });
                                 }
+                              } else {
+                                ShowToastDialog.showToast("Login failed. Please try again.".tr);
                               }
                             });
                           },
@@ -257,6 +266,8 @@ class LoginScreen extends StatelessWidget {
                                               await FirebaseAuth.instance.signOut();
                                               ShowToastDialog.showToast("This user is disable please contact administrator".tr);
                                             }
+                                          } else {
+                                            ShowToastDialog.showToast("Something went wrong, please try again.".tr);
                                           }
                                         } else {
                                           await FirebaseAuth.instance.signOut();
@@ -264,6 +275,8 @@ class LoginScreen extends StatelessWidget {
                                         }
                                       });
                                     }
+                                  } else {
+                                    ShowToastDialog.showToast("Login failed. Please try again.".tr);
                                   }
                                 });
                               },

@@ -23,6 +23,12 @@ class SplashController extends GetxController {
         if (Preferences.getBoolean(Preferences.notificationPlayload) == true) {
           await Preferences.setBoolean(Preferences.notificationPlayload, false);
           log("Preferences.getBoolean(Preferences.notificationPlayload) :::::: ${Preferences.getBoolean(Preferences.notificationPlayload)}");
+          bool isLogin = await FireStoreUtils.isLogin();
+          if (isLogin == true) {
+            Get.offAll(const DashBoardScreen());
+          } else {
+            Get.offAll(const LoginScreen());
+          }
         } else {
           if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
             Get.offAll(const OnBoardingScreen());

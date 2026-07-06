@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class KycController extends GetxController {
   RxBool isLoading = true.obs;
+  RxBool hasError = false.obs;
   RxList<DocumentModel> documentList = <DocumentModel>[].obs;
   RxList<Documents> uploadedDocuments = <Documents>[].obs;
 
@@ -16,10 +17,15 @@ class KycController extends GetxController {
 
   Future<void> loadDocuments() async {
     isLoading.value = true;
-    documentList.value = await FireStoreUtils.getCustomerDocumentList();
-    CustomerDocumentModel? uploaded = await FireStoreUtils.getDocumentOfCustomer();
-    if (uploaded != null && uploaded.documents != null) {
-      uploadedDocuments.value = uploaded.documents!;
+    hasError.value = false;
+    try {
+      documentList.value = await FireStoreUtils.getCustomerDocumentList();
+      CustomerDocumentModel? uploaded = await FireStoreUtils.getDocumentOfCustomer();
+      if (uploaded != null && uploaded.documents != null) {
+        uploadedDocuments.value = uploaded.documents!;
+      }
+    } catch (e) {
+      hasError.value = true;
     }
     isLoading.value = false;
     update();

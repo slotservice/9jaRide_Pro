@@ -17,8 +17,8 @@ class ReferralController extends GetxController {
     await FireStoreUtils.getReferral().then((value) {
       if (value != null) {
         referralModel.value = value;
-        isLoading.value = false;
       }
+      isLoading.value = false;
     });
   }
 }

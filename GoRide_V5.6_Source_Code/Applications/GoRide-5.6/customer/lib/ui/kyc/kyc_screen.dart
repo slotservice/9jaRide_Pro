@@ -53,7 +53,9 @@ class KycScreen extends StatelessWidget {
                   ),
                   child: controller.isLoading.value
                       ? Constant.loader(isDarkTheme: themeChange.getThem())
-                      : controller.documentList.isEmpty
+                      : controller.hasError.value
+                          ? _errorState(context, themeChange, controller)
+                          : controller.documentList.isEmpty
                           ? _emptyState(context, themeChange)
                           : Column(
                               children: [
@@ -146,6 +148,25 @@ class KycScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _errorState(BuildContext context, DarkThemeProvider themeChange, KycController controller) {
+    return Column(
+      children: [
+        const SizedBox(height: 40),
+        Icon(Icons.error_outline, size: 64, color: Colors.grey.shade400),
+        const SizedBox(height: 12),
+        Text('Unable to load documents. Please try again.'.tr, style: GoogleFonts.poppins(color: Colors.grey)),
+        const SizedBox(height: 16),
+        ButtonThem.buildBorderButton(
+          context,
+          title: 'Retry'.tr,
+          btnWidthRatio: 0.4,
+          onPress: () => controller.loadDocuments(),
+        ),
+        const Spacer(),
+      ],
     );
   }
 

@@ -321,31 +321,31 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                                         ShowToastDialog.showLoader("Please wait".tr);
                                                                                         try {
                                                                                           List<dynamic> rejectDriverId = [];
-                                                                                          if (controller.orderModel.value.rejectedDriverId != null) {
-                                                                                            rejectDriverId = controller.orderModel.value.rejectedDriverId!;
+                                                                                          if (orderModel.rejectedDriverId != null) {
+                                                                                            rejectDriverId = orderModel.rejectedDriverId!;
                                                                                           } else {
                                                                                             rejectDriverId = [];
                                                                                           }
                                                                                           rejectDriverId.add(driverModel.id);
 
                                                                                           List<dynamic> acceptDriverId = [];
-                                                                                          if (controller.orderModel.value.acceptedDriverId != null) {
-                                                                                            acceptDriverId = controller.orderModel.value.acceptedDriverId!;
+                                                                                          if (orderModel.acceptedDriverId != null) {
+                                                                                            acceptDriverId = orderModel.acceptedDriverId!;
                                                                                           } else {
                                                                                             acceptDriverId = [];
                                                                                           }
 
                                                                                           acceptDriverId.remove(driverModel.id);
 
-                                                                                          controller.orderModel.value.rejectedDriverId = rejectDriverId;
-                                                                                          controller.orderModel.value.acceptedDriverId = acceptDriverId;
+                                                                                          orderModel.rejectedDriverId = rejectDriverId;
+                                                                                          orderModel.acceptedDriverId = acceptDriverId;
 
                                                                                           await SendNotification.sendOneNotification(
                                                                                               token: driverModel.fcmToken.toString(),
                                                                                               title: 'Ride Canceled'.tr,
                                                                                               body: 'The passenger has canceled the ride. No action is required from your end.'.tr,
                                                                                               payload: {});
-                                                                                          await FireStoreUtils.setOrder(controller.orderModel.value);
+                                                                                          await FireStoreUtils.setOrder(orderModel);
                                                                                         } catch (e, stackTrace) {
                                                                                           log("Reject driver error :: $e\n$stackTrace");
                                                                                           ShowToastDialog.showToast("Something went wrong: $e");
@@ -366,6 +366,13 @@ class OrderDetailsScreen extends StatelessWidget {
                                                                                       onPress: () async {
                                                                                         ShowToastDialog.showLoader("Please wait".tr);
                                                                                         try {
+                                                                                          final freshOrderDoc = await FireStoreUtils.fireStore.collection(CollectionName.orders).doc(orderModel.id).get();
+                                                                                          final freshOrder = OrderModel.fromJson(freshOrderDoc.data() ?? {});
+                                                                                          if ((freshOrder.driverId != null && freshOrder.driverId!.isNotEmpty) || freshOrder.status != Constant.ridePlaced) {
+                                                                                            ShowToastDialog.closeLoader();
+                                                                                            ShowToastDialog.showToast("This ride was already taken".tr);
+                                                                                            return;
+                                                                                          }
                                                                                           orderModel.acceptedDriverId = [];
                                                                                           orderModel.driverId = driverIdAcceptReject.driverId.toString();
                                                                                           orderModel.status = Constant.rideActive;

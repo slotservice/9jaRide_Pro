@@ -114,6 +114,8 @@ class OtpScreen extends StatelessWidget {
                   await FirebaseAuth.instance.signOut();
                   ShowToastDialog.showToast("This user is disable please contact administrator".tr);
                 }
+              } else {
+                ShowToastDialog.showToast("Something went wrong, please try again.".tr);
               }
             } else {
               UserModel? customerModel = await FireStoreUtils.getUserProfile(value.user!.uid);

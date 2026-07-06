@@ -99,14 +99,19 @@ class WalletController extends GetxController {
 
     await FireStoreUtils.setWalletTransaction(transactionModel).then((value) async {
       if (value == true) {
-        await FireStoreUtils.updateUserWallet(amount: amountController.value.text).then((value) {
+        await FireStoreUtils.updateUserWallet(amount: amountController.value.text).then((walletValue) {
           getUser();
           getTraction();
+          if (walletValue == true) {
+            ShowToastDialog.showToast("Amount added in your wallet.");
+          } else {
+            ShowToastDialog.showToast("Failed to add amount in your wallet. Please contact support.");
+          }
         });
+      } else {
+        ShowToastDialog.showToast("Failed to add amount in your wallet. Please contact support.");
       }
     });
-
-    ShowToastDialog.showToast("Amount added in your wallet.");
   }
 
   // Strip

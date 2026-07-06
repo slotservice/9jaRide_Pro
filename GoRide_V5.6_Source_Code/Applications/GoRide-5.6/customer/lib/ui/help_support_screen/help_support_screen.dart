@@ -250,9 +250,13 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                                 tooltip: 'Send message',
                                 onPressed: () async {
                                   if (_messageController.text.isNotEmpty) {
-                                    _sendMessage(_messageController.text, null, '', 'text');
-                                    _messageController.clear();
-                                    setState(() {});
+                                    try {
+                                      await _sendMessage(_messageController.text, null, '', 'text');
+                                      _messageController.clear();
+                                      setState(() {});
+                                    } catch (e) {
+                                      ShowToastDialog.showToast("Failed to send message. Please try again.".tr);
+                                    }
                                   } else {
                                     ShowToastDialog.showToast("Please enter text".tr);
                                   }
@@ -287,9 +291,13 @@ class _HelpSupportScreenState extends State<HelpSupportScreen> {
                                 : null)),
                     onSubmitted: (value) async {
                       if (_messageController.text.isNotEmpty) {
-                        _sendMessage(_messageController.text, null, '', 'text');
-                        _messageController.clear();
-                        setState(() {});
+                        try {
+                          await _sendMessage(_messageController.text, null, '', 'text');
+                          _messageController.clear();
+                          setState(() {});
+                        } catch (e) {
+                          ShowToastDialog.showToast("Failed to send message. Please try again.".tr);
+                        }
                       }
                     },
                   ),

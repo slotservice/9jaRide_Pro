@@ -310,30 +310,30 @@ class InterCityAcceptOrderScreen extends StatelessWidget {
                                                                                         ShowToastDialog.showLoader("Please wait".tr);
                                                                                         try {
                                                                                           List<dynamic> rejectDriverId = [];
-                                                                                          if (controller.orderModel.value.rejectedDriverId != null) {
-                                                                                            rejectDriverId = controller.orderModel.value.rejectedDriverId!;
+                                                                                          if (orderModel.rejectedDriverId != null) {
+                                                                                            rejectDriverId = orderModel.rejectedDriverId!;
                                                                                           } else {
                                                                                             rejectDriverId = [];
                                                                                           }
                                                                                           rejectDriverId.add(driverModel.id);
 
                                                                                           List<dynamic> acceptDriverId = [];
-                                                                                          if (controller.orderModel.value.acceptedDriverId != null) {
-                                                                                            acceptDriverId = controller.orderModel.value.acceptedDriverId!;
+                                                                                          if (orderModel.acceptedDriverId != null) {
+                                                                                            acceptDriverId = orderModel.acceptedDriverId!;
                                                                                           } else {
                                                                                             acceptDriverId = [];
                                                                                           }
 
                                                                                           acceptDriverId.remove(driverModel.id);
 
-                                                                                          controller.orderModel.value.rejectedDriverId = rejectDriverId;
-                                                                                          controller.orderModel.value.acceptedDriverId = acceptDriverId;
+                                                                                          orderModel.rejectedDriverId = rejectDriverId;
+                                                                                          orderModel.acceptedDriverId = acceptDriverId;
                                                                                           await SendNotification.sendOneNotification(
                                                                                               token: driverModel.fcmToken.toString(),
                                                                                               title: 'Ride Canceled'.tr,
                                                                                               body: 'The passenger has canceled the ride. No action is required from your end.'.tr,
                                                                                               payload: {});
-                                                                                          await FireStoreUtils.setInterCityOrder(controller.orderModel.value);
+                                                                                          await FireStoreUtils.setInterCityOrder(orderModel);
                                                                                         } catch (e, stackTrace) {
                                                                                           log("Reject intercity driver error :: $e\n$stackTrace");
                                                                                           ShowToastDialog.showToast("Something went wrong: $e");
@@ -354,6 +354,14 @@ class InterCityAcceptOrderScreen extends StatelessWidget {
                                                                                       onPress: () async {
                                                                                         ShowToastDialog.showLoader("Please wait".tr);
                                                                                         try {
+                                                                                          final freshOrderDoc =
+                                                                                              await FireStoreUtils.fireStore.collection(CollectionName.ordersIntercity).doc(orderModel.id).get();
+                                                                                          final freshOrder = InterCityOrderModel.fromJson(freshOrderDoc.data() ?? {});
+                                                                                          if ((freshOrder.driverId != null && freshOrder.driverId!.isNotEmpty) || freshOrder.status != Constant.ridePlaced) {
+                                                                                            ShowToastDialog.closeLoader();
+                                                                                            ShowToastDialog.showToast("This ride was already taken".tr);
+                                                                                            return;
+                                                                                          }
                                                                                           orderModel.acceptedDriverId = [];
                                                                                           if (driverModel.ownerId != null) {
                                                                                             orderModel.ownerId = driverModel.ownerId;

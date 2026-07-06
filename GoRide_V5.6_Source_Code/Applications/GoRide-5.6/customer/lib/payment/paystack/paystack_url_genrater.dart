@@ -45,11 +45,8 @@ class PayStackURLGen {
 
     debugPrint(response.body);
     final data = jsonDecode(response.body);
-    if (data["status"] == true) {
-      if (data["message"] == "Verification successful") {}
-    }
 
-    return data["status"];
+    return data["status"] == true && data["data"] != null && data["data"]["status"] == "success";
 
     //PayPalClientSettleModel.fromJson(data);
   }

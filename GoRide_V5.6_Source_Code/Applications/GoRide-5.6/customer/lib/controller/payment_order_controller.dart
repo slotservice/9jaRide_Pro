@@ -184,6 +184,7 @@ class PaymentOrderController extends GetxController {
   Future<void> completeCashOrder() async {
     ShowToastDialog.showLoader("Please wait..");
     try {
+      orderModel.value.paymentStatus = true;
       orderModel.value.paymentType = selectedPaymentMethod.value;
       orderModel.value.status = Constant.rideComplete;
       orderModel.value.coupon = selectedCouponModel.value;
@@ -224,6 +225,8 @@ class PaymentOrderController extends GetxController {
   DateTime endNightTimeString = DateTime.now();
 
   Future<void> calculateAmount() async {
+    currentTime = DateTime.now();
+    currentDate = DateTime.now();
     taxAmount.value = 0.0;
     String formatTime(String? time) {
       if (time == null || !time.contains(":")) {
@@ -242,6 +245,16 @@ class PaymentOrderController extends GetxController {
 
     startNightTimeString = DateTime(currentDate.year, currentDate.month, currentDate.day, int.parse(startParts[0]), int.parse(startParts[1]));
     endNightTimeString = DateTime(currentDate.year, currentDate.month, currentDate.day, int.parse(endParts[0]), int.parse(endParts[1]));
+
+    bool isNightTime;
+    if (startNightTimeString.isAtSameMomentAs(endNightTimeString)) {
+      isNightTime = false;
+    } else if (endNightTimeString.isAfter(startNightTimeString)) {
+      isNightTime = currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString);
+    } else {
+      // Night window spans midnight (e.g. 22:00-05:00).
+      isNightTime = currentTime.isAfter(startNightTimeString) || currentTime.isBefore(endNightTimeString);
+    }
 
     double durationValueInMinutes = convertToMinutes(orderModel.value.duration.toString());
     double distance = double.tryParse(orderModel.value.distance.toString()) ?? 0.0;
@@ -269,7 +282,7 @@ class PaymentOrderController extends GetxController {
     basicFareCharge.value = (double.tryParse(orderModel.value.service!.firstPrice.basicFareCharge!)) ?? 1.0;
     holdingCharge.value = double.tryParse(orderModel.value.totalHoldingCharges!) ?? 1.0;
     if (distance <= double.parse(orderModel.value.service!.firstPrice.basicFare!)) {
-      if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+      if (isNightTime) {
         amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
       } else {
         amount.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
@@ -290,7 +303,7 @@ class PaymentOrderController extends GetxController {
         amount.value = (perKmCharge * extraDist);
       }
 
-      if (currentTime.isAfter(startNightTimeString) && currentTime.isBefore(endNightTimeString)) {
+      if (isNightTime) {
         totalChargeOfMinute.value = totalChargeOfMinute.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
         basicFareCharge.value = basicFareCharge.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
         holdingCharge.value = holdingCharge.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
@@ -298,9 +311,14 @@ class PaymentOrderController extends GetxController {
     }
 
     if (orderModel.value.finalRate != null && orderModel.value.finalRate != '0.0') {
-      amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value - holdingCharge.value;
+      // Wait-time (holding) charge is billed on top of the agreed finalRate; do not
+      // subtract it here or it cancels out of subTotal below (H1). Keep this in sync
+      // with complete_order_controller.calculateAmount().
+      amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value;
     } else {
-      amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 0.0);
+      if (isNightTime) {
+        amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
+      }
     }
 
     subTotal.value = amount.value + basicFareCharge.value + totalChargeOfMinute.value + holdingCharge.value;

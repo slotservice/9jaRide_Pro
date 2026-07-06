@@ -188,6 +188,7 @@ class IntercityPaymentOrderController extends GetxController {
   Future<void> completeCashOrder() async {
     ShowToastDialog.showLoader("Please wait..");
     try {
+      orderModel.value.paymentStatus = true;
       orderModel.value.paymentType = selectedPaymentMethod.value;
       orderModel.value.status = Constant.rideComplete;
       orderModel.value.coupon = selectedCouponModel.value;

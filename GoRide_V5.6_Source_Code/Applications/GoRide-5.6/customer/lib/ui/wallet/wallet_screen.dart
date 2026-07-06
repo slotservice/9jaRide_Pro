@@ -260,8 +260,9 @@ class WalletScreen extends StatelessWidget {
                                   context,
                                   hintText: 'Enter Amount'.tr,
                                   controller: controller.amountController.value,
+                                  keyBoardType: const TextInputType.numberWithOptions(decimal: true),
                                   inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9*]')),
+                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                                   ],
                                 ),
                                 const SizedBox(

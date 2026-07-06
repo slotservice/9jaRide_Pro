@@ -1100,8 +1100,13 @@ class FireStoreUtils {
       }
       await fireStore.collection(CollectionName.users).doc(userId).delete();
       await FireStoreUtils.deleteReferralCode(userId);
-      await FireStoreUtils.deleteAuthUser(FireStoreUtils.getCurrentUid());
+      final bool authDeleted = await FireStoreUtils.deleteAuthUser(FireStoreUtils.getCurrentUid());
       //await FirebaseAuth.instance.currentUser?.delete();
+      if (authDeleted != true) {
+        log('deleteUser: Cloud Function auth deletion failed.');
+        return false;
+      }
+      await FirebaseAuth.instance.signOut();
       return true;
     } catch (e, s) {
       log('deleteUser: Failed to delete user. Error: $e\nStackTrace: $s');
@@ -1376,6 +1381,7 @@ class FireStoreUtils {
       }
     }).catchError((error) {
       log(error.toString());
+      throw error;
     });
     return documentList;
   }

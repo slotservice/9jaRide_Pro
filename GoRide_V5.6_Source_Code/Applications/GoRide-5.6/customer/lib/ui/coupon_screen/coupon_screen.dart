@@ -84,14 +84,7 @@ class CouponScreen extends StatelessWidget {
                                                     CouponModel couponModel = couponList[index];
                                                     return InkWell(
                                                       onTap: () {
-                                                        // controller.selectedCouponModel.value = couponModel;
-                                                        // if (couponModel.type == "fix") {
-                                                        //   controller.couponAmount.value = couponModel.amount.toString();
-                                                        // } else {
-                                                        //   controller.couponAmount.value =
-                                                        //       ((double.parse(controller.orderModel.value.finalRate.toString()) * double.parse(couponModel.amount.toString())) / 100).toString();
-                                                        // }
-                                                        // Get.back();
+                                                        Get.back(result: couponModel);
                                                       },
                                                       child: Padding(
                                                         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -230,6 +223,7 @@ class CouponScreen extends StatelessWidget {
                                               .collection(CollectionName.coupon)
                                               .where('code', isEqualTo: controller.couponController.value.text)
                                               .where('enable', isEqualTo: true)
+                                              .where('isDeleted', isEqualTo: false)
                                               .where('validity', isGreaterThanOrEqualTo: Timestamp.now())
                                               .get();
                                           if (value.docs.isNotEmpty) {
