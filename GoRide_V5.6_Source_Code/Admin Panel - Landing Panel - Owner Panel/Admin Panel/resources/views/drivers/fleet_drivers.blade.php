@@ -260,9 +260,12 @@
                                         title = foundItem.title;
                                     } else {
                                         var foundItem = serviceName.find(item => item.type === 'en');
-                                        title = foundItem.title;
+                                        title = foundItem ? foundItem.title : '';
                                     }
                                 }
+                            }
+                            if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                                title = serviceName[0].name || serviceName[0].title || '';
                             }
                             childData.serviceName = title;
                             if (childData.hasOwnProperty('vehicleInformation') && childData.vehicleInformation.vehicleType) {
@@ -277,9 +280,12 @@
                                             vehicleType = foundItem.name;
                                         } else {
                                             var foundItem = childData.vehicleInformation.vehicleType.find(item => item.type === 'en');
-                                            vehicleType = foundItem.name;
+                                            vehicleType = foundItem ? foundItem.name : '';
                                         }
                                     }
+                                }
+                                if (vehicleType === '' && Array.isArray(childData.vehicleInformation.vehicleType) && childData.vehicleInformation.vehicleType.length > 0) {
+                                    vehicleType = childData.vehicleInformation.vehicleType[0].name || childData.vehicleInformation.vehicleType[0].title || '';
                                 }
                                 childData.vehicleType = vehicleType;
                             }

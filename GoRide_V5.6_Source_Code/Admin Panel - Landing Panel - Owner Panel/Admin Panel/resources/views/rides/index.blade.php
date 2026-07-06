@@ -638,7 +638,7 @@
 
                         var foundItem=val.name.find(item => item.type==='en');
 
-                        name=foundItem.name;
+                        name=foundItem ? foundItem.name : '';
 
                     }
 
@@ -646,6 +646,9 @@
 
 
 
+            }
+            if (name === '' && Array.isArray(val.name) && val.name.length > 0) {
+                name = val.name[0].name || val.name[0].title || '';
             }
 
             if(name!='') {
@@ -692,7 +695,7 @@
 
                         var foundItem=val.title.find(item => item.type==='en');
 
-                        name=foundItem.title;
+                        name=foundItem ? foundItem.title : '';
 
                     }
 
@@ -700,6 +703,9 @@
 
 
 
+            }
+            if (name === '' && Array.isArray(val.title) && val.title.length > 0) {
+                name = val.title[0].name || val.title[0].title || '';
             }
 
             if(name!='') {
@@ -1115,7 +1121,7 @@
 
                                     var foundItem=childData.service.title.find(item => item.type==='en');
 
-                                    serviceName=foundItem.title;
+                                    serviceName=foundItem ? foundItem.title : '';
 
                                 }
 
@@ -1123,6 +1129,9 @@
 
 
 
+                        }
+                        if (serviceName === '' && Array.isArray(childData.service.title) && childData.service.title.length > 0) {
+                            serviceName = childData.service.title[0].name || childData.service.title[0].title || '';
                         }
 
 

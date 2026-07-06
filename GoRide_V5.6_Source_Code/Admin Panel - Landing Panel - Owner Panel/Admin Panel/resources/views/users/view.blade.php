@@ -417,10 +417,13 @@
                         title = foundItem.title;
                     } else {
                         var foundItem = serviceName.find(item => item.type === 'en');
-                        title = foundItem.title;
+                        title = foundItem ? foundItem.title : '';
                     }
                 }
 
+            }
+            if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                title = serviceName[0].name || serviceName[0].title || '';
             }
 
             html += '<td>' + title + '</td>';
@@ -578,10 +581,13 @@
                         title = foundItem.name;
                     } else {
                         var foundItem = serviceName.find(item => item.type === 'en');
-                        title = foundItem.name;
+                        title = foundItem ? foundItem.name : '';
                     }
                 }
 
+            }
+            if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                title = serviceName[0].name || serviceName[0].title || '';
             }
 
             html += '<td>' + title + '</td>';

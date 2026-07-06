@@ -107,10 +107,13 @@
                                 title=foundItem.title;
                             } else {
                                 var foundItem=service.title.find(item => item.type==='en');
-                                title=foundItem.title;
+                                title=foundItem ? foundItem.title : '';
                             }
                         }
 
+                    }
+                    if (title === '' && Array.isArray(service.title) && service.title.length > 0) {
+                        title = service.title[0].name || service.title[0].title || '';
                     }
 
                 }
@@ -134,10 +137,13 @@
                                 title=foundItem.name;
                             } else {
                                 var foundItem=vehicle.name.find(item => item.type==='en');
-                                title=foundItem.name;
+                                title=foundItem ? foundItem.name : '';
                             }
                         }
 
+                    }
+                    if (title === '' && Array.isArray(vehicle.name) && vehicle.name.length > 0) {
+                        title = vehicle.name[0].name || vehicle.name[0].title || '';
                     }
 
                 }

@@ -243,10 +243,13 @@
                         name=foundItem.name;
                     } else {
                         var foundItem=val.name.find(item => item.type==='en');
-                        name=foundItem.name;
+                        name=foundItem ? foundItem.name : '';
                     }
                 }
 
+            }
+            if (name === '' && Array.isArray(val.name) && val.name.length > 0) {
+                name = val.name[0].name || val.name[0].title || '';
             }
             if(name!='') {
                 $('.zone_selector').append($("<option></option>")
@@ -270,10 +273,13 @@
                         name=foundItem.name;
                     } else {
                         var foundItem=val.name.find(item => item.type==='en');
-                        name=foundItem.name;
+                        name=foundItem ? foundItem.name : '';
                     }
                 }
 
+            }
+            if (name === '' && Array.isArray(val.name) && val.name.length > 0) {
+                name = val.name[0].name || val.name[0].title || '';
             }
             if(name!='') {
                 $('.service_type_selector').append($("<option></option>")
@@ -433,10 +439,13 @@
                                     serviceName=foundItem.name;
                                 } else {
                                     var foundItem=childData.intercityService.name.find(item => item.type==='en');
-                                    serviceName=foundItem.name;
+                                    serviceName=foundItem ? foundItem.name : '';
                                 }
                             }
 
+                        }
+                        if (serviceName === '' && Array.isArray(childData.intercityService.name) && childData.intercityService.name.length > 0) {
+                            serviceName = childData.intercityService.name[0].name || childData.intercityService.name[0].title || '';
                         }
                         childData.serviceName=serviceName;
 

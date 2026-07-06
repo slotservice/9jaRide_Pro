@@ -181,10 +181,13 @@
                                 title=foundItem.name;
                             } else {
                                 var foundItem=serviceName.find(item => item.type==='en');
-                                title=foundItem.name;
+                                title=foundItem ? foundItem.name : '';
                             }
                         }
 
+                    }
+                    if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                        title = serviceName[0].name || serviceName[0].title || '';
                     }
 
                     $('#intercity_service').append($("<option></option>")
@@ -387,11 +390,14 @@
                             name=foundItem.name;
                         } else {
                             var foundItem=obj.intercityService.name.find(item => item.type==='en');
-                            name=foundItem.name;
+                            name=foundItem ? foundItem.name : '';
 
                         }
                     }
 
+                }
+                if (name === '' && Array.isArray(obj.intercityService.name) && obj.intercityService.name.length > 0) {
+                    name = obj.intercityService.name[0].name || obj.intercityService.name[0].title || '';
                 }
 
                 newObj['Service Type'] = name;

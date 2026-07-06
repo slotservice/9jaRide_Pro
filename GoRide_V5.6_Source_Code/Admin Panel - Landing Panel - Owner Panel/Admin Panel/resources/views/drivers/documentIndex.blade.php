@@ -160,10 +160,13 @@
                                     title=foundItem.title;
                                 } else {
                                     var foundItem=doc.title.find(item => item.type==='en');
-                                    title=foundItem.title;
+                                    title=foundItem ? foundItem.title : '';
                                 }
                             }
 
+                        }
+                        if (title === '' && Array.isArray(doc.title) && doc.title.length > 0) {
+                            title = doc.title[0].name || doc.title[0].title || '';
                         }
 
                         if(docRef&&docRef.hasOwnProperty('backImage')&&docRef.hasOwnProperty('frontImage')) {

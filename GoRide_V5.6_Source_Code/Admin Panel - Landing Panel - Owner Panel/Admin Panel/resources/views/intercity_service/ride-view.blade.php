@@ -457,10 +457,13 @@
                                 serviceName=foundItem.name;
                             } else {
                                 var foundItem=orders.intercityService.name.find(item => item.type==='en');
-                                serviceName=foundItem.name;
+                                serviceName=foundItem ? foundItem.name : '';
                             }
                         }
 
+                    }
+                    if (serviceName === '' && Array.isArray(orders.intercityService.name) && orders.intercityService.name.length > 0) {
+                        serviceName = orders.intercityService.name[0].name || orders.intercityService.name[0].title || '';
                     }
 
                     $('#service_name').html(profile + serviceName);
@@ -803,7 +806,7 @@
 
                             var foundItem=data.title.find(item => item.type==='en');
 
-                            title=foundItem.title;
+                            title=foundItem ? foundItem.title : '';
 
 
 
@@ -813,6 +816,9 @@
 
 
 
+                }
+                if (title === '' && Array.isArray(data.title) && data.title.length > 0) {
+                    title = data.title[0].name || data.title[0].title || '';
                 }
 
                 var discount_html = '<tr><td class="label">' + title + '(';

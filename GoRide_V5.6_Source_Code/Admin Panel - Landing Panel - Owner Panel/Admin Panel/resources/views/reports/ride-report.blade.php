@@ -204,10 +204,13 @@
                                 title=foundItem.title;
                             } else {
                                 var foundItem=serviceName.find(item => item.type==='en');
-                                title=foundItem.title;
+                                title=foundItem ? foundItem.title : '';
                             }
                         }
 
+                    }
+                    if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                        title = serviceName[0].name || serviceName[0].title || '';
                     }
 
                     $('.service').append('<option value="' + data.id + '">' + title + '</option>');
@@ -268,10 +271,13 @@
                                     title=foundItem.title;
                                 } else {
                                     var foundItem=serviceName.find(item => item.type==='en');
-                                    title=foundItem.title;
+                                    title=foundItem ? foundItem.title : '';
                                 }
                             }
 
+                        }
+                        if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                            title = serviceName[0].name || serviceName[0].title || '';
                         }
 
                     }
@@ -311,10 +317,13 @@
                                         driverData.vehicleType=foundItem.name;
                                     } else {
                                         var foundItem=driverData.vehicleInformation.vehicleType.find(item => item.type==='en');
-                                        driverData.vehicleType=foundItem.name;
+                                        driverData.vehicleType=foundItem ? foundItem.name : '';
                                     }
                                 }
 
+                            }
+                            if (driverData.vehicleType === '' && Array.isArray(driverData.vehicleInformation.vehicleType) && driverData.vehicleInformation.vehicleType.length > 0) {
+                                driverData.vehicleType = driverData.vehicleInformation.vehicleType[0].name || driverData.vehicleInformation.vehicleType[0].title || '';
                             }
                         }
 

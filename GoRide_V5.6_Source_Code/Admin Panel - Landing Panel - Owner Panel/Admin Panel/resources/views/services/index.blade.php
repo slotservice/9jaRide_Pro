@@ -232,9 +232,12 @@
                     title=foundItem.title;
                 } else {
                     var foundItem=val.title.find(item => item.type==='en');
-                    title=foundItem.title;
+                    title=foundItem ? foundItem.title : '';
                 }
             }
+        }
+        if (title === '' && Array.isArray(val.title) && val.title.length > 0) {
+            title = val.title[0].name || val.title[0].title || '';
         }
         html=html+'<td>'+imageHtml+'<a href="'+route1+'" name="service-edit">'+title+'</a></td>';
         

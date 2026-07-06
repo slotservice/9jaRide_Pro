@@ -159,10 +159,13 @@
                         documentTitle=foundItem.title;
                     } else {
                         var foundItem=val.title.find(item => item.type==='en');
-                        documentTitle=foundItem.title;
+                        documentTitle=foundItem ? foundItem.title : '';
                     }
                 }
 
+            }
+            if (documentTitle === '' && Array.isArray(val.title) && val.title.length > 0) {
+                documentTitle = val.title[0].name || val.title[0].title || '';
             }
             html = html + '<td><a href="' + route1 + '">' + documentTitle + '</a></td>';
             html = html + '<td class="action-btn"><a id="' + val.id + '" class="doc-revert" name="revoke-data" href="javascript:void(0)"><i class="mdi mdi-undo"></i></a></td>';

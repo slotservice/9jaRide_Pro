@@ -779,10 +779,13 @@
                                                 name = foundItem.name;
                                             } else {
                                                 var foundItem = zone.name.find(item => item.type === 'en');
-                                                name = foundItem.name;
+                                                name = foundItem ? foundItem.name : '';
                                             }
                                         }
 
+                                    }
+                                    if (name === '' && Array.isArray(zone.name) && zone.name.length > 0) {
+                                        name = zone.name[0].name || zone.name[0].title || '';
                                     }
 
                                     zone_name += name + ', ';
@@ -815,10 +818,13 @@
                                         title = foundItem.name;
                                     } else {
                                         var foundItem = data.vehicleInformation.driverRules[i].name.find(item => item.type === 'en');
-                                        title = foundItem.name;
+                                        title = foundItem ? foundItem.name : '';
                                     }
                                 }
 
+                            }
+                            if (title === '' && Array.isArray(data.vehicleInformation.driverRules[i].name) && data.vehicleInformation.driverRules[i].name.length > 0) {
+                                title = data.vehicleInformation.driverRules[i].name[0].name || data.vehicleInformation.driverRules[i].name[0].title || '';
                             }
 
                             image = data.vehicleInformation.driverRules[i].image;
@@ -1136,10 +1142,13 @@
                         title = foundItem.title;
                     } else {
                         var foundItem = serviceName.find(item => item.type === 'en');
-                        title = foundItem.title;
+                        title = foundItem ? foundItem.title : '';
                     }
                 }
 
+            }
+            if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                title = serviceName[0].name || serviceName[0].title || '';
             }
 
             html += '<td>' + title + '</td>';
@@ -1289,10 +1298,13 @@
                         title = foundItem.name;
                     } else {
                         var foundItem = serviceName.find(item => item.type === 'en');
-                        title = foundItem.name;
+                        title = foundItem ? foundItem.name : '';
                     }
                 }
 
+            }
+            if (title === '' && Array.isArray(serviceName) && serviceName.length > 0) {
+                title = serviceName[0].name || serviceName[0].title || '';
             }
 
             html += '<td>' + title + '</td>';

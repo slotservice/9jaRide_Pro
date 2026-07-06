@@ -209,9 +209,12 @@
                                         vehicleType=foundItem.name;
                                     } else {
                                         var foundItem=driver.vehicleInformation.vehicleType.find(item => item.type==='en');
-                                        vehicleType=foundItem.name;
+                                        vehicleType=foundItem ? foundItem.name : '';
                                     }
                                 }
+                            }
+                            if (vehicleType === '' && Array.isArray(driver.vehicleInformation.vehicleType) && driver.vehicleInformation.vehicleType.length > 0) {
+                                vehicleType = driver.vehicleInformation.vehicleType[0].name || driver.vehicleInformation.vehicleType[0].title || '';
                             }
                             var content=`
                                 <div class="p-2">

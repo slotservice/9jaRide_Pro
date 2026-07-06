@@ -176,9 +176,12 @@
                     name=foundItem.name;
                 } else {
                     var foundItem=val.name.find(item => item.type==='en');
-                    name=foundItem.name;
+                    name=foundItem ? foundItem.name : '';
                 }
             }
+        }
+        if (name === '' && Array.isArray(val.name) && val.name.length > 0) {
+            name = val.name[0].name || val.name[0].title || '';
         }
         html=html+'<td>'+ImageHtml+'<a href="'+route1+'">'+name+'</a></td>';
         var kmCharge=parseFloat(val.kmCharge);

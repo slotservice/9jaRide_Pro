@@ -178,11 +178,14 @@
                     languageName=foundItem.name;
                 }else{
                     var foundItem=val.name.find(item => item.type==='en');
-                    languageName=foundItem.name;
+                    languageName=foundItem ? foundItem.name : '';
 
                 }
             }
             
+        }
+        if (languageName === '' && Array.isArray(val.name) && val.name.length > 0) {
+            languageName = val.name[0].name || val.name[0].title || '';
         }
         html = html + '<td><a href="' + route1 + '">' + languageName + '</a></td>';
         if (val.publish) {

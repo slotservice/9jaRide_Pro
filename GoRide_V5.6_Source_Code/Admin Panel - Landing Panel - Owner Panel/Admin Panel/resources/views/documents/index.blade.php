@@ -267,10 +267,13 @@
                     documentTitle=foundItem.title;
                 } else {
                     var foundItem=val.title.find(item => item.type==='en');
-                    documentTitle=foundItem.title;
+                    documentTitle=foundItem ? foundItem.title : '';
                 }
             }
 
+        }
+        if (documentTitle === '' && Array.isArray(val.title) && val.title.length > 0) {
+            documentTitle = val.title[0].name || val.title[0].title || '';
         }
 
         html.push('<a href="'+route1+'">'+documentTitle+'</a>');

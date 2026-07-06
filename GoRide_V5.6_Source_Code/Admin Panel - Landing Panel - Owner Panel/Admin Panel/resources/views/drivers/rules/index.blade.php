@@ -198,11 +198,14 @@
                     name=foundItem.name;
                 } else {
                     var foundItem=val.name.find(item => item.type==='en');
-                    name=foundItem.name;
+                    name=foundItem ? foundItem.name : '';
 
                 }
             }
 
+        }
+        if (name === '' && Array.isArray(val.name) && val.name.length > 0) {
+            name = val.name[0].name || val.name[0].title || '';
         }
         if(val.image=='') {
             ImageHtml='<img width="100%" style="width:70px;height:70px;" src="'+defaultImg+'" alt="image">';

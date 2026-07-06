@@ -389,10 +389,13 @@
                                                     vehicleType=foundItem.name;
                                                 } else {
                                                     var foundItem=driver_data.vehicleInformation.vehicleType.find(item => item.type==='en');
-                                                    vehicleType=foundItem.name;
+                                                    vehicleType=foundItem ? foundItem.name : '';
                                                 }
                                             }
 
+                                        }
+                                        if (vehicleType === '' && Array.isArray(driver_data.vehicleInformation.vehicleType) && driver_data.vehicleInformation.vehicleType.length > 0) {
+                                            vehicleType = driver_data.vehicleInformation.vehicleType[0].name || driver_data.vehicleInformation.vehicleType[0].title || '';
                                         }
 
                                         $('#driver_car_make').text(vehicleType);

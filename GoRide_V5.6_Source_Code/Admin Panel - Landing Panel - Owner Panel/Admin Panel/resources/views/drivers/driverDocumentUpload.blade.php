@@ -86,10 +86,13 @@
                                     title=foundItem.title;
                                 } else {
                                     var foundItem=docRef.title.find(item => item.type==='en');
-                                    title=foundItem.title;
+                                    title=foundItem ? foundItem.title : '';
                                 }
                             }
 
+                        }
+                        if (title === '' && Array.isArray(docRef.title) && docRef.title.length > 0) {
+                            title = docRef.title[0].name || docRef.title[0].title || '';
                         }
 
                         html+='<fieldset><legend>'+title+'</legend>';

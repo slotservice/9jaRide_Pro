@@ -494,9 +494,12 @@
                                                 name=foundItem.name;
                                             } else {
                                                 var foundItem=zone.name.find(item => item.type==='en');
-                                                name=foundItem.name;
+                                                name=foundItem ? foundItem.name : '';
                                             }
                                         }
+                                    }
+                                    if (name === '' && Array.isArray(zone.name) && zone.name.length > 0) {
+                                        name = zone.name[0].name || zone.name[0].title || '';
                                     }
                                     zone_name+=name+', ';
                                 });
@@ -695,9 +698,12 @@
                             title=foundItem.title;
                         } else {
                             var foundItem=data.title.find(item => item.type==='en');
-                            title=foundItem.title;
+                            title=foundItem ? foundItem.title : '';
                         }
                     }
+                }
+                if (title === '' && Array.isArray(data.title) && data.title.length > 0) {
+                    title = data.title[0].name || data.title[0].title || '';
                 }
                 var discount_html='<tr><td class="label">'+title+'(';
                 if(data.type=="fix") {
