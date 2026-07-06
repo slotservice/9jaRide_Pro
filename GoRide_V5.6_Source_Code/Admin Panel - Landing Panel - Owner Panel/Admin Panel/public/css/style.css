@@ -28126,3 +28126,11 @@ border-bottom: 2px solid #fff;
 
 }
 
+
+/* --- Readability fix: table column headers were faint (inherited grey #67757c) --- */
+.table thead th,
+table.dataTable thead th,
+.table th {
+    color: #22303c !important;
+    font-weight: 600 !important;
+}
