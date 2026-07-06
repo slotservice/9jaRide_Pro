@@ -22,8 +22,6 @@ import 'package:provider/provider.dart';
 
 import '../../themes/responsive.dart';
 
-const String _termiiApiKey = 'TLQWUgFmliowHdqTGgUDjIRhIkIgVDHIEexBOIfHpIZkZOKQBrXEGuGGtFeFMs';
-const String _termiiBaseUrl = 'https://v3.api.termii.com';
 const String _backendUrl = 'http://148.230.120.40';
 
 class OtpScreen extends StatelessWidget {
@@ -38,38 +36,25 @@ class OtpScreen extends StatelessWidget {
     ShowToastDialog.showLoader("Verify OTP".tr);
 
     try {
-      // Step 1: Verify OTP with Termii
-      final termiiRes = await http.post(
-        Uri.parse('$_termiiBaseUrl/api/sms/otp/verify'),
+      // Verify OTP + mint Firebase custom token on the backend. The OTP is now
+      // verified server-side (the backend calls Termii with pin_id + pin); it is
+      // no longer verified client-side, so this endpoint cannot be used to obtain
+      // a login token without a valid OTP (C1).
+      final fullPhone = controller.countryCode.value + controller.phoneNumber.value;
+      final tokenRes = await http.post(
+        Uri.parse('$_backendUrl/api/auth/custom-token'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'api_key': _termiiApiKey,
+          'phone': fullPhone,
           'pin_id': controller.pinId.value,
           'pin': controller.otpController.value.text,
         }),
       );
 
-      final termiiData = jsonDecode(termiiRes.body);
-      debugPrint('Termii verify response: $termiiData');
-
-      if (termiiData['verified'] != true) {
-        ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Code is Invalid".tr);
-        return;
-      }
-
-      // Step 2: Get Firebase custom token from backend
-      final fullPhone = controller.countryCode.value + controller.phoneNumber.value;
-      final tokenRes = await http.post(
-        Uri.parse('$_backendUrl/api/auth/custom-token'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'phone': fullPhone}),
-      );
-
       final tokenData = jsonDecode(tokenRes.body);
       if (tokenData['token'] == null) {
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Authentication failed. Please try again.");
+        ShowToastDialog.showToast("Code is Invalid".tr);
         return;
       }
 
