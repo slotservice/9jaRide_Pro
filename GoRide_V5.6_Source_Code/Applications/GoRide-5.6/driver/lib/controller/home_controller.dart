@@ -81,45 +81,34 @@ class HomeController extends GetxController {
     if (permissionStatus == PermissionStatus.granted) {
       location.enableBackgroundMode(enable: true);
       location.changeSettings(accuracy: LocationAccuracy.high, distanceFilter: double.parse(Constant.driverLocationUpdate.toString()), interval: 2000);
-      location.onLocationChanged.listen((locationData) {
-        Constant.currentLocation = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
-        FireStoreUtils.getDriverProfile(FireStoreUtils.getCurrentUid()).then((value) {
-          DriverUserModel driverUserModel = value!;
-          if (driverUserModel.isOnline == true) {
-            driverUserModel.location = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
-            GeoFirePoint position = Geoflutterfire().point(latitude: locationData.latitude!, longitude: locationData.longitude!);
-
-            driverUserModel.position = Positions(geoPoint: position.geoPoint, geohash: position.hash);
-            driverUserModel.rotation = locationData.heading;
-            FireStoreUtils.updateDriverUser(driverUserModel);
-          }
-        });
-      });
+      location.onLocationChanged.listen(_pushLocation);
     } else {
       location.requestPermission().then((permissionStatus) {
         if (permissionStatus == PermissionStatus.granted) {
           location.enableBackgroundMode(enable: true);
           location.changeSettings(accuracy: LocationAccuracy.high, distanceFilter: double.parse(Constant.driverLocationUpdate.toString()), interval: 2000);
-          location.onLocationChanged.listen((locationData) async {
-            Constant.currentLocation = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
-
-            FireStoreUtils.getDriverProfile(FireStoreUtils.getCurrentUid()).then((value) {
-              DriverUserModel driverUserModel = value!;
-              if (driverUserModel.isOnline == true) {
-                driverUserModel.location = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
-                driverUserModel.rotation = locationData.heading;
-                GeoFirePoint position = Geoflutterfire().point(latitude: locationData.latitude!, longitude: locationData.longitude!);
-
-                driverUserModel.position = Positions(geoPoint: position.geoPoint, geohash: position.hash);
-
-                FireStoreUtils.updateDriverUser(driverUserModel);
-              }
-            });
-          });
+          location.onLocationChanged.listen(_pushLocation);
         }
       });
     }
     isLoading.value = false;
     update();
+  }
+
+  // Push the driver's live location to Firestore. Uses the cached driverModel
+  // (kept current by the snapshot listener in getDriver) instead of re-reading
+  // the whole profile on every tick, and writes ONLY the location fields — much
+  // less network traffic on poor connections, and no risk of overwriting
+  // walletAmount or other fields that changed elsewhere between a read and write.
+  void _pushLocation(LocationData locationData) {
+    if (locationData.latitude == null || locationData.longitude == null) return;
+    Constant.currentLocation = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
+    if (driverModel.value.isOnline != true) return;
+    GeoFirePoint position = Geoflutterfire().point(latitude: locationData.latitude!, longitude: locationData.longitude!);
+    FireStoreUtils.updateDriverLocation(FireStoreUtils.getCurrentUid(), {
+      'position': Positions(geoPoint: position.geoPoint, geohash: position.hash).toJson(),
+      'location': LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude).toJson(),
+      'rotation': locationData.heading,
+    });
   }
 }

@@ -278,6 +278,16 @@ class FireStoreUtils {
     return isUpdate;
   }
 
+  // Partial update of only the driver's live-location fields. Used by the
+  // location stream instead of rewriting the whole driver document every tick:
+  // far smaller payload on poor networks, and it can't clobber walletAmount or
+  // any other field that changed elsewhere between a read and a write.
+  static Future<void> updateDriverLocation(String uid, Map<String, dynamic> data) async {
+    await fireStore.collection(CollectionName.driverUsers).doc(uid).update(data).catchError((error) {
+      log("Failed to update driver location: $error");
+    });
+  }
+
   static Future<bool> updateCustomer(UserModel userModel) async {
     bool isUpdate = false;
     await fireStore.collection(CollectionName.users).doc(userModel.id).set(userModel.toJson()).whenComplete(() {
