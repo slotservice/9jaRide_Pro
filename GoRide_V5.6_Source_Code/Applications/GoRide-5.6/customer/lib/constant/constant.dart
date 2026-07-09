@@ -69,7 +69,7 @@ class Constant {
   static const String rideHold = "Ride Hold";
   static const String rideHoldAccepted = "Ride Hold Accepted";
 
-  static String globalUrl = "http://148.230.120.40/";
+  static String globalUrl = "https://9jaridepro.duelrps.com/";
   static const userPlaceHolder =
       "https://firebasestorage.googleapis.com/v0/b/jaride-pro.firebasestorage.app/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media";
 

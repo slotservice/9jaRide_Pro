@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 
 import '../../themes/responsive.dart';
 
-const String _backendUrl = 'http://148.230.120.40';
+const String _backendUrl = 'https://9jaridepro.duelrps.com';
 
 class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key});

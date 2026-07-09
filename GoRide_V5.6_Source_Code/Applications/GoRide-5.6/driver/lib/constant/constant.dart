@@ -81,7 +81,7 @@ class Constant {
   static String? customerType = "customer";
   static String ownerType = "owner";
 
-  static String globalUrl = "http://148.230.120.40/";
+  static String globalUrl = "https://9jaridepro.duelrps.com/";
 
   static const userPlaceHolder =
       "https://firebasestorage.googleapis.com/v0/b/jaride-pro.appspot.com/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media&token=34a73d67-ba1d-4fe4-a29f-271d3e3ca115";
