@@ -9,6 +9,7 @@ import 'package:customer/model/contact_model.dart';
 import 'package:customer/model/order/location_lat_lng.dart';
 import 'package:customer/model/payment_model.dart';
 import 'package:customer/model/service_model.dart';
+import 'package:customer/model/assistance_type_model.dart';
 import 'package:customer/model/surage_zone_model.dart';
 import 'package:customer/model/user_model.dart';
 import 'package:customer/model/zone_model.dart';
@@ -39,6 +40,8 @@ class HomeController extends GetxController {
   RxBool hasAssistService = false.obs;
   Rx<ServiceModel> assistService = ServiceModel().obs;
   RxList<ServiceModel> serviceList = <ServiceModel>[].obs;
+  RxList<AssistanceTypeModel> assistanceTypeList = <AssistanceTypeModel>[].obs;
+  RxList<String> selectedAssistanceNeeds = <String>[].obs;
   RxList bannerList = <BannerModel>[].obs;
   RxList<ZoneModel> zoneList = <ZoneModel>[].obs;
   Rx<ZoneModel> selectedZone = ZoneModel().obs;
@@ -177,6 +180,10 @@ class HomeController extends GetxController {
       if (serviceList.isNotEmpty) {
         selectedType.value = serviceList.first;
       }
+    });
+
+    FireStoreUtils.getAssistanceTypes().then((value) {
+      assistanceTypeList.value = value;
     });
 
     isLoading.value = false;

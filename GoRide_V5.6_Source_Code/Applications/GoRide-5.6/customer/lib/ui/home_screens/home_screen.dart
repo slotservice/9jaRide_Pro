@@ -386,6 +386,7 @@ class HomeScreen extends StatelessWidget {
                                                 if (controller.isAssistMode.value) {
                                                   controller.selectedType.value = controller.assistService.value;
                                                 } else {
+                                                  controller.selectedAssistanceNeeds.clear();
                                                   if (controller.serviceList.isNotEmpty) {
                                                     controller.selectedType.value = controller.serviceList.first;
                                                   }
@@ -509,6 +510,59 @@ class HomeScreen extends StatelessWidget {
                                                 ),
                                               );
                                             },
+                                          ),
+                                        ),
+                                      if (controller.isAssistMode.value)
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('What assistance do you need?'.tr,
+                                                  style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500)),
+                                              const SizedBox(height: 8),
+                                              Obx(() {
+                                                if (controller.assistanceTypeList.isEmpty) {
+                                                  return Padding(
+                                                    padding: const EdgeInsets.symmetric(vertical: 6),
+                                                    child: Text('Assistance options will appear here.'.tr,
+                                                        style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey.shade600)),
+                                                  );
+                                                }
+                                                return Column(
+                                                  children: controller.assistanceTypeList.map((type) {
+                                                    final String title = type.title ?? '';
+                                                    final bool selected = controller.selectedAssistanceNeeds.contains(title);
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        if (selected) {
+                                                          controller.selectedAssistanceNeeds.remove(title);
+                                                        } else {
+                                                          controller.selectedAssistanceNeeds.add(title);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets.only(bottom: 8),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                                        decoration: BoxDecoration(
+                                                          color: selected ? AppColors.lightsecondprimary : Colors.grey.shade100,
+                                                          borderRadius: BorderRadius.circular(10),
+                                                          border: Border.all(color: selected ? AppColors.lightprimary : Colors.grey.shade300),
+                                                        ),
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(selected ? Icons.check_box : Icons.check_box_outline_blank,
+                                                                size: 20, color: selected ? AppColors.lightprimary : Colors.grey.shade500),
+                                                            const SizedBox(width: 10),
+                                                            Expanded(child: Text(title, style: GoogleFonts.poppins(fontSize: 13))),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                );
+                                              }),
+                                            ],
                                           ),
                                         ),
                                       Obx(
@@ -725,6 +779,8 @@ class HomeScreen extends StatelessWidget {
                                               orderModel.paymentType = controller.selectedPaymentMethod.value;
                                               orderModel.paymentStatus = false;
                                               orderModel.service = controller.selectedType.value;
+                                              orderModel.assistanceNeeds =
+                                                  (controller.isAssistMode.value && controller.selectedAssistanceNeeds.isNotEmpty) ? controller.selectedAssistanceNeeds.toList() : null;
                                               AdminCommission? adminCommissionGlobal;
                                               if (Constant.adminCommission?.isEnabled != true) {
                                                 adminCommissionGlobal = Constant.adminCommission ?? AdminCommission();

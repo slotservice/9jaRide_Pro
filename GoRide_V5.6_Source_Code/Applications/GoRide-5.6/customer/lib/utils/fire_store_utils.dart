@@ -32,6 +32,7 @@ import 'package:customer/model/payment_model.dart';
 import 'package:customer/model/referral_model.dart';
 import 'package:customer/model/review_model.dart';
 import 'package:customer/model/service_model.dart';
+import 'package:customer/model/assistance_type_model.dart';
 import 'package:customer/model/sos_model.dart';
 import 'package:customer/model/tax_model.dart';
 import 'package:customer/model/user_model.dart';
@@ -682,6 +683,23 @@ class FireStoreUtils {
       log(error.toString());
     });
     return serviceList;
+  }
+
+  static Future<List<AssistanceTypeModel>> getAssistanceTypes() async {
+    List<AssistanceTypeModel> list = [];
+    await fireStore.collection(CollectionName.assistanceType).where('enable', isEqualTo: true).get().then((value) {
+      for (var element in value.docs) {
+        try {
+          list.add(AssistanceTypeModel.fromJson(element.data()));
+        } catch (e) {
+          log('assistance type parse error: $e');
+        }
+      }
+    }).catchError((error) {
+      log('getAssistanceTypes error: $error');
+    });
+    list.sort((a, b) => (a.order ?? 0).compareTo(b.order ?? 0));
+    return list;
   }
 
   static Future<List<BannerModel>> getBanner() async {

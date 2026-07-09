@@ -4,6 +4,7 @@ class CollectionName {
   static const String ownerUsers = "owner_users";
 
   static const String service = "service";
+  static const String assistanceType = "assistance_type";
   static const String banner = "banner";
   static const String intercityService = "intercity_service";
   static const String orders = "orders";
