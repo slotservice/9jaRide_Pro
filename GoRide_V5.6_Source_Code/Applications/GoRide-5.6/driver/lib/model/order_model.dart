@@ -46,6 +46,7 @@ class OrderModel {
   String? zoneId;
   VehicleInformation? vehicleInformation;
   String? ownerId;
+  List<String>? assistanceNeeds;
 
   OrderModel(
       {this.position,
@@ -81,7 +82,8 @@ class OrderModel {
       this.zone,
       this.vehicleInformation,
       this.zoneId,
-      this.ownerId});
+      this.ownerId,
+      this.assistanceNeeds});
 
   OrderModel.fromJson(Map<String, dynamic> json) {
     serviceId = json['serviceId'];
@@ -119,6 +121,7 @@ class OrderModel {
     zone = json['zone'] != null ? ZoneModel.fromJson(json['zone']) : null;
     zoneId = json['zoneId'];
     ownerId = json['ownerId'];
+    assistanceNeeds = json['assistanceNeeds'] != null ? List<String>.from(json['assistanceNeeds']) : null;
     if (json['taxList'] != null) {
       taxList = <TaxModel>[];
       json['taxList'].forEach((v) {
@@ -178,6 +181,7 @@ class OrderModel {
     data['rejectedDriverId'] = rejectedDriverId;
     data['paymentStatus'] = paymentStatus;
     data['isAcSelected'] = isAcSelected;
+    data['assistanceNeeds'] = assistanceNeeds;
     data['ownerId'] = ownerId;
     if (taxList != null) {
       data['taxList'] = taxList!.map((v) => v.toJson()).toList();

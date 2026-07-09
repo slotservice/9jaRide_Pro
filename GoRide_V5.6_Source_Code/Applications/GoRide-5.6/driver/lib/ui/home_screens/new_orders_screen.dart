@@ -211,6 +211,38 @@ class NewOrderScreen extends StatelessWidget {
                                             sourceLocation: orderModel.sourceLocationName.toString(),
                                             destinationLocation: orderModel.destinationLocationName.toString(),
                                           ),
+                                          if (orderModel.assistanceNeeds != null && orderModel.assistanceNeeds!.isNotEmpty)
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.accessible, size: 18, color: AppColors.lightprimary),
+                                                      const SizedBox(width: 6),
+                                                      Text('9ja-Assist needs'.tr, style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600)),
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Wrap(
+                                                    spacing: 6,
+                                                    runSpacing: 6,
+                                                    children: orderModel.assistanceNeeds!
+                                                        .map((need) => Container(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                                              decoration: BoxDecoration(
+                                                                color: AppColors.lightprimary.withOpacity(0.12),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                                border: Border.all(color: AppColors.lightprimary),
+                                                              ),
+                                                              child: Text(need, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.lightprimary)),
+                                                            ))
+                                                        .toList(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           Column(
                                             children: [
                                               const SizedBox(
