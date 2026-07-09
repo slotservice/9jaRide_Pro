@@ -57,8 +57,14 @@ drivergoogleservice.json
 chat.md
 guide.md
 project_status&plan.md
+audit_findings_*.md
 update-landing.js
 img*.jpeg
 vectorlogo.*
 icon-preview.png
-"WhatsApp Image*"
+
+# Client-sent WhatsApp assets + generated deliverables (not for repo)
+WhatsApp Image*
+WhatsApp Video*
+*.mp4
+*.pdf
