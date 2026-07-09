@@ -118,6 +118,8 @@ Route::middleware(['permission:service,service.list'])->group(function () {
 
     Route::get('/services', [App\Http\Controllers\ServiceController::class, 'index'])->name('services');
 });
+// 9ja-Assist assistance types — managed client-side via Firestore, auth-guarded in the controller
+Route::get('/assistance-types', [App\Http\Controllers\AssistanceTypeController::class, 'index'])->name('assistance-types');
 Route::middleware(['permission:service,service.edit'])->group(function () {
 
     Route::get('/services/edit/{id}', [App\Http\Controllers\ServiceController::class, 'edit'])->name('services.edit');

@@ -275,6 +275,7 @@
                 <ul aria-expanded="false" class="collapse ride_sub_menu">
                     @if(in_array('service', $role_has_permission))
                         <li class="services_menu"><a href="{!! url('services') !!}">{{trans('lang.service_plural')}}</a></li>
+                        <li class="assistance_types_menu"><a href="{!! url('assistance-types') !!}">9ja-Assist Types</a></li>
                     @endif
                     @if(in_array('ride_order', $role_has_permission))
                         <li class="rides_menu"><a href="{!! url('rides') !!}">{{trans('lang.ride_order_plural')}}</a></li>
