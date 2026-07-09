@@ -21,6 +21,7 @@ class PayStackScreen extends StatefulWidget {
 
 class _PayStackScreenState extends State<PayStackScreen> {
   WebViewController controller = WebViewController();
+  bool _paymentHandled = false;
 
   @override
   void initState() {
@@ -42,18 +43,26 @@ class _PayStackScreenState extends State<PayStackScreen> {
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest navigation) async {
             debugPrint("--->2${navigation.url}");
-            debugPrint("--->2" "${widget.callBackUrl}?trxref=${widget.reference}&reference=${widget.reference}");
-            if (navigation.url == 'https://foodieweb.siswebapp.com/success?trxref=${widget.reference}&reference=${widget.reference}' ||
-                navigation.url == '${widget.callBackUrl}?trxref=${widget.reference}&reference=${widget.reference}') {
+            final String url = navigation.url;
+            final String cb = widget.callBackUrl;
+            // Detect the Paystack return/callback robustly: any redirect that carries
+            // our transaction reference, or lands on the configured callback URL, or on
+            // Paystack's own close/callback pages. We do NOT rely on an exact string
+            // match (query-param order/extra params vary) — verifyTransaction() below
+            // asks Paystack directly, so it's the source of truth and returns false if
+            // the charge did not actually succeed.
+            final bool isCallbackHit = url.contains('trxref=${widget.reference}') ||
+                url.contains('reference=${widget.reference}') ||
+                (cb.isNotEmpty && url.startsWith(cb)) ||
+                url.startsWith('https://foodieweb.siswebapp.com/success') ||
+                url == 'https://hello.pstk.xyz/callback' ||
+                url == 'https://standard.paystack.co/close' ||
+                url == 'https://talazo.app/login';
+            if (isCallbackHit && !_paymentHandled) {
+              _paymentHandled = true;
               final isDone = await PayStackURLGen.verifyTransaction(secretKey: widget.secretKey, reference: widget.reference, amount: widget.amount);
               Get.back(result: isDone);
-            }
-            if ((navigation.url == '${widget.callBackUrl}?trxref=${widget.reference}&reference=${widget.reference}') ||
-                (navigation.url == "https://hello.pstk.xyz/callback") ||
-                (navigation.url == 'https://standard.paystack.co/close') ||
-                (navigation.url == 'https://talazo.app/login')) {
-              final isDone = await PayStackURLGen.verifyTransaction(secretKey: widget.secretKey, reference: widget.reference, amount: widget.amount);
-              Get.back(result: isDone);
+              return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
