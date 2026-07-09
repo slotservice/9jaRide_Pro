@@ -78,3 +78,50 @@ workflows:
           mv "$APP_DIR/build/app/outputs/flutter-apk/app-release.apk" "$APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-Driver.apk"
     artifacts:
       - $APP_DIR/build/app/outputs/flutter-apk/9jaRidePro-*.apk
+
+  all-android:
+    name: 9jaRide Pro Customer + Driver (both APKs)
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    environment:
+      flutter: 3.41.6
+      java: 17
+      groups:
+        - jaride_secrets
+      vars:
+        CUSTOMER_DIR: GoRide_V5.6_Source_Code/Applications/GoRide-5.6/customer
+        DRIVER_DIR: GoRide_V5.6_Source_Code/Applications/GoRide-5.6/driver
+    scripts:
+      - name: Build Customer APK
+        script: |
+          set -e
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$CUSTOMER_DIR/android/app/keystore.jks"
+          cat > "$CUSTOMER_DIR/android/key.properties" <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=keystore.jks
+          EOF
+          echo "$GOOGLE_SERVICES_CUSTOMER_BASE64" | base64 -d > "$CUSTOMER_DIR/android/app/google-services.json"
+          cd "$CUSTOMER_DIR"
+          flutter pub get
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/9jaRidePro-Customer.apk
+      - name: Build Driver APK
+        script: |
+          set -e
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$DRIVER_DIR/android/app/keystore.jks"
+          cat > "$DRIVER_DIR/android/key.properties" <<EOF
+          storePassword=$KEYSTORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=keystore.jks
+          EOF
+          echo "$GOOGLE_SERVICES_DRIVER_BASE64" | base64 -d > "$DRIVER_DIR/android/app/google-services.json"
+          cd "$DRIVER_DIR"
+          flutter pub get
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/9jaRidePro-Driver.apk
+    artifacts:
+      - GoRide_V5.6_Source_Code/Applications/GoRide-5.6/customer/build/app/outputs/flutter-apk/9jaRidePro-*.apk
+      - GoRide_V5.6_Source_Code/Applications/GoRide-5.6/driver/build/app/outputs/flutter-apk/9jaRidePro-*.apk
