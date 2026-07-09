@@ -62,32 +62,36 @@ class PaymentOrderController extends GetxController {
   RxString selectedPaymentMethod = "".obs;
 
   getPaymentData() async {
-    await FireStoreUtils.getPayment().then((value) {
-      if (value != null) {
-        paymentModel.value = value;
+    try {
+      await FireStoreUtils.getPayment().then((value) {
+        if (value != null) {
+          paymentModel.value = value;
 
-        if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
-        Stripe.merchantIdentifier = '9jaRide Pro';
-        Stripe.instance.applySettings();
-        setRef();
-        selectedPaymentMethod.value = orderModel.value.paymentType.toString();
+          if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
+          Stripe.merchantIdentifier = '9jaRide Pro';
+          Stripe.instance.applySettings();
+          setRef();
+          selectedPaymentMethod.value = orderModel.value.paymentType.toString();
 
-        razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
-        razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
-        razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-      }
-    });
+          razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+          razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
+          razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+        }
+      });
 
-    await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
-      if (value != null) {
-        userModel.value = value;
-      }
-    });
-    await FireStoreUtils.getDriver(orderModel.value.driverId.toString()).then((value) {
-      if (value != null) {
-        driverUserModel.value = value;
-      }
-    });
+      await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
+        if (value != null) {
+          userModel.value = value;
+        }
+      });
+      await FireStoreUtils.getDriver(orderModel.value.driverId.toString()).then((value) {
+        if (value != null) {
+          driverUserModel.value = value;
+        }
+      });
+    } catch (e) {
+      debugPrint('getPaymentData error: $e');
+    }
 
     try {
       await calculateAmount();
