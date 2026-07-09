@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:customer/constant/constant.dart';
@@ -38,20 +39,22 @@ class OtpScreen extends StatelessWidget {
       // no longer verified client-side, so this endpoint cannot be used to obtain
       // a login token without a valid OTP (C1).
       final fullPhone = controller.countryCode.value + controller.phoneNumber.value;
-      final tokenRes = await http.post(
-        Uri.parse('$_backendUrl/api/auth/custom-token'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'phone': fullPhone,
-          'pin_id': controller.pinId.value,
-          'pin': controller.otpController.value.text,
-        }),
-      );
+      final tokenRes = await http
+          .post(
+            Uri.parse('$_backendUrl/api/auth/custom-token'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'phone': fullPhone,
+              'pin_id': controller.pinId.value,
+              'pin': controller.otpController.value.text,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       final tokenData = jsonDecode(tokenRes.body);
       if (tokenData['token'] == null) {
         ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("Code is Invalid".tr);
+        ShowToastDialog.showToast((tokenData['error'] ?? "Code is Invalid").toString().tr);
         return;
       }
 
@@ -130,10 +133,13 @@ class OtpScreen extends StatelessWidget {
           });
         }
       });
+    } on TimeoutException catch (_) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Network timeout. Please check your internet connection and try again.".tr);
     } catch (e) {
       debugPrint('OTP verify error: $e');
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("Code is Invalid".tr);
+      ShowToastDialog.showToast("Login failed. Please check your connection and try again.".tr);
     }
   }
 
