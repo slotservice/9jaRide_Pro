@@ -288,6 +288,15 @@ class FireStoreUtils {
     });
   }
 
+  // Targeted write of just the FCM token. Called on launch and on token refresh
+  // so the stored token never goes stale (a stale token makes booking pushes
+  // fail silently with 404 UNREGISTERED).
+  static Future<void> updateDriverToken(String uid, String token) async {
+    await fireStore.collection(CollectionName.driverUsers).doc(uid).update({'fcmToken': token}).catchError((error) {
+      log("Failed to update fcm token: $error");
+    });
+  }
+
   static Future<bool> updateCustomer(UserModel userModel) async {
     bool isUpdate = false;
     await fireStore.collection(CollectionName.users).doc(userModel.id).set(userModel.toJson()).whenComplete(() {
