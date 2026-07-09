@@ -89,7 +89,11 @@ class PaymentOrderController extends GetxController {
       }
     });
 
-    calculateAmount();
+    try {
+      await calculateAmount();
+    } catch (e) {
+      debugPrint('calculateAmount error: $e');
+    }
     isLoading.value = false;
     update();
   }
@@ -273,23 +277,23 @@ class PaymentOrderController extends GetxController {
       acChargeValue = double.tryParse(acPerKmRateData) ?? 1.0;
       kmCharge = double.tryParse(perKmRateData) ?? 1.0;
     } else {
-      nonAcChargeValue = double.tryParse(orderModel.value.service!.firstPrice.nonAcCharge!) ?? 1.0;
-      acChargeValue = double.tryParse(orderModel.value.service!.firstPrice.acCharge!) ?? 1.0;
-      kmCharge = double.tryParse(orderModel.value.service!.firstPrice.kmCharge!) ?? 1.0;
+      nonAcChargeValue = double.tryParse(orderModel.value.service?.firstPrice.nonAcCharge ?? '') ?? 1.0;
+      acChargeValue = double.tryParse(orderModel.value.service?.firstPrice.acCharge ?? '') ?? 1.0;
+      kmCharge = double.tryParse(orderModel.value.service?.firstPrice.kmCharge ?? '') ?? 1.0;
     }
 
-    totalChargeOfMinute.value = durationValueInMinutes * (double.tryParse(orderModel.value.service!.firstPrice.perMinuteCharge!) ?? 1.0);
-    basicFareCharge.value = (double.tryParse(orderModel.value.service!.firstPrice.basicFareCharge!)) ?? 1.0;
-    holdingCharge.value = double.tryParse(orderModel.value.totalHoldingCharges!) ?? 1.0;
-    if (distance <= double.parse(orderModel.value.service!.firstPrice.basicFare!)) {
+    totalChargeOfMinute.value = durationValueInMinutes * (double.tryParse(orderModel.value.service?.firstPrice.perMinuteCharge ?? '') ?? 1.0);
+    basicFareCharge.value = (double.tryParse(orderModel.value.service?.firstPrice.basicFareCharge ?? '')) ?? 1.0;
+    holdingCharge.value = double.tryParse(orderModel.value.totalHoldingCharges ?? '') ?? 0.0;
+    if (distance <= (double.tryParse(orderModel.value.service?.firstPrice.basicFare ?? '') ?? 0.0)) {
       if (isNightTime) {
-        amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
+        amount.value = amount.value * (double.tryParse(orderModel.value.service?.firstPrice.nightCharge ?? '') ?? 1.0);
       } else {
         amount.value = double.parse(orderModel.value.service?.firstPrice.basicFareCharge ?? '0.0');
       }
     } else {
       double distanceValue = double.tryParse(orderModel.value.distance.toString()) ?? 0.0;
-      double basicFareValue = double.tryParse(orderModel.value.service!.firstPrice.basicFare!) ?? 0.0;
+      double basicFareValue = double.tryParse(orderModel.value.service?.firstPrice.basicFare ?? '') ?? 0.0;
       double extraDist = distanceValue - basicFareValue;
 
       double perKmCharge = orderModel.value.service?.firstPrice.isAcNonAc == true
@@ -304,9 +308,9 @@ class PaymentOrderController extends GetxController {
       }
 
       if (isNightTime) {
-        totalChargeOfMinute.value = totalChargeOfMinute.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
-        basicFareCharge.value = basicFareCharge.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
-        holdingCharge.value = holdingCharge.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
+        totalChargeOfMinute.value = totalChargeOfMinute.value * (double.tryParse(orderModel.value.service?.firstPrice.nightCharge ?? '') ?? 1.0);
+        basicFareCharge.value = basicFareCharge.value * (double.tryParse(orderModel.value.service?.firstPrice.nightCharge ?? '') ?? 1.0);
+        holdingCharge.value = holdingCharge.value * (double.tryParse(orderModel.value.service?.firstPrice.nightCharge ?? '') ?? 1.0);
       }
     }
 
@@ -317,7 +321,7 @@ class PaymentOrderController extends GetxController {
       amount.value = double.parse(orderModel.value.finalRate.toString()) - basicFareCharge.value - totalChargeOfMinute.value;
     } else {
       if (isNightTime) {
-        amount.value = amount.value * (double.tryParse(orderModel.value.service!.firstPrice.nightCharge!) ?? 1.0);
+        amount.value = amount.value * (double.tryParse(orderModel.value.service?.firstPrice.nightCharge ?? '') ?? 1.0);
       }
     }
 
