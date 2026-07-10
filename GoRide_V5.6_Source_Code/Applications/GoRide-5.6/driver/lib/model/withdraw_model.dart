@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class WithdrawModel {
   String? id;
   String? userId;
+  String? driverName;
   String? note;
   String? adminNote;
   String? paymentStatus;
@@ -13,6 +14,7 @@ class WithdrawModel {
   WithdrawModel(
       {this.id,
         this.userId,
+        this.driverName,
         this.note,
         this.adminNote,
         this.paymentStatus,
@@ -22,6 +24,7 @@ class WithdrawModel {
   WithdrawModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['userId'];
+    driverName = json['driverName'];
     note = json['note'];
     adminNote = json['adminNote'];
     paymentStatus = json['paymentStatus'];
@@ -34,6 +37,7 @@ class WithdrawModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['userId'] = userId;
+    data['driverName'] = driverName;
     data['note'] = note;
     data['adminNote'] = adminNote;
     data['paymentStatus'] = paymentStatus;

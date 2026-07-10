@@ -1358,6 +1358,7 @@ class WalletScreen extends StatelessWidget {
                                 WithdrawModel withdrawModel = WithdrawModel();
                                 withdrawModel.id = Constant.getUuid();
                                 withdrawModel.userId = FireStoreUtils.getCurrentUid();
+                                withdrawModel.driverName = controller.driverUserModel.value.fullName;
                                 withdrawModel.paymentStatus = "pending";
                                 withdrawModel.amount = controller.withdrawalAmountController.value.text;
                                 withdrawModel.note = controller.noteController.value.text;
