@@ -64,37 +64,49 @@ class IntercityPaymentOrderController extends GetxController {
   RxString selectedPaymentMethod = "".obs;
 
   getPaymentData() async {
+    // Guard the payment-gateway SDK init separately so it can't abort the wallet
+    // load and leave a false NGN0.00 on the payment sheet.
     try {
-      await FireStoreUtils.getPayment().then((value) {
-        if (value != null) {
-          paymentModel.value = value;
-
-          if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
+      final value = await FireStoreUtils.getPayment();
+      if (value != null) {
+        paymentModel.value = value;
+        try {
+          if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) {
+            Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
+          }
           Stripe.merchantIdentifier = '9jaRide Pro';
           Stripe.instance.applySettings();
-          setRef();
-          selectedPaymentMethod.value = orderModel.value.paymentType.toString();
-
           razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
           razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
           razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+        } catch (e) {
+          debugPrint('payment gateway init error: $e');
         }
-      });
-
-      await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
-        if (value != null) {
-          userModel.value = value;
-        }
-      });
-
-      await FireStoreUtils.getDriver(orderModel.value.driverId.toString()).then((value) {
-        if (value != null) {
-          driverUserModel.value = value;
-        }
-      });
+        setRef();
+        selectedPaymentMethod.value = orderModel.value.paymentType.toString();
+      }
     } catch (e) {
-      debugPrint('intercity getPaymentData error: $e');
+      debugPrint('getPayment error: $e');
     }
+
+    try {
+      final value = await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid());
+      if (value != null) {
+        userModel.value = value;
+      }
+    } catch (e) {
+      debugPrint('getUserProfile error: $e');
+    }
+
+    try {
+      final value = await FireStoreUtils.getDriver(orderModel.value.driverId.toString());
+      if (value != null) {
+        driverUserModel.value = value;
+      }
+    } catch (e) {
+      debugPrint('getDriver error: $e');
+    }
+
     isLoading.value = false;
     update();
   }

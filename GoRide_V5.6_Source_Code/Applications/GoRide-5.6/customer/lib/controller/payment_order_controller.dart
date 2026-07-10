@@ -62,35 +62,51 @@ class PaymentOrderController extends GetxController {
   RxString selectedPaymentMethod = "".obs;
 
   getPaymentData() async {
+    // Load payment settings. Keep the payment-gateway SDK init (Stripe/Razorpay)
+    // in its own guard so that if it throws it does NOT abort the wallet/profile
+    // load below — that skip was leaving userModel unpopulated and the wallet
+    // showing a false NGN0.00 even though the balance is correct.
     try {
-      await FireStoreUtils.getPayment().then((value) {
-        if (value != null) {
-          paymentModel.value = value;
-
-          if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) { Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString(); }
+      final value = await FireStoreUtils.getPayment();
+      if (value != null) {
+        paymentModel.value = value;
+        try {
+          if (paymentModel.value.strip != null && (paymentModel.value.strip!.clientpublishableKey ?? '').isNotEmpty) {
+            Stripe.publishableKey = paymentModel.value.strip!.clientpublishableKey.toString();
+          }
           Stripe.merchantIdentifier = '9jaRide Pro';
           Stripe.instance.applySettings();
-          setRef();
-          selectedPaymentMethod.value = orderModel.value.paymentType.toString();
-
           razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
           razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWaller);
           razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+        } catch (e) {
+          debugPrint('payment gateway init error: $e');
         }
-      });
-
-      await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
-        if (value != null) {
-          userModel.value = value;
-        }
-      });
-      await FireStoreUtils.getDriver(orderModel.value.driverId.toString()).then((value) {
-        if (value != null) {
-          driverUserModel.value = value;
-        }
-      });
+        setRef();
+        selectedPaymentMethod.value = orderModel.value.paymentType.toString();
+      }
     } catch (e) {
-      debugPrint('getPaymentData error: $e');
+      debugPrint('getPayment error: $e');
+    }
+
+    // Wallet balance shown on the payment sheet — load independently so nothing
+    // above can prevent it.
+    try {
+      final value = await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid());
+      if (value != null) {
+        userModel.value = value;
+      }
+    } catch (e) {
+      debugPrint('getUserProfile error: $e');
+    }
+
+    try {
+      final value = await FireStoreUtils.getDriver(orderModel.value.driverId.toString());
+      if (value != null) {
+        driverUserModel.value = value;
+      }
+    } catch (e) {
+      debugPrint('getDriver error: $e');
     }
 
     try {
