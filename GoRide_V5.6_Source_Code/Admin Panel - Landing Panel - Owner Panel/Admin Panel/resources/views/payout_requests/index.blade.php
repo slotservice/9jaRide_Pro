@@ -521,8 +521,10 @@
         } else {
             html.push('');
         }
-        console.log(val.driverName)
-        if(val.driverName!='' && val.driverName!=null && val.driverName!=undefined){
+        // Action buttons must NOT depend on driverName being present. Withdrawal
+        // requests created by the driver app have no driverName field, which
+        // previously hid the approve/reject buttons entirely — leaving valid
+        // payout requests stuck on "pending" with no way to approve them.
         var actionHtml = '';
         if (val.paymentStatus && val.paymentStatus == "pending") {
             actionHtml += '<span class="action-btn"><div class="user_not_found_' + val.userId + '">';
@@ -532,9 +534,6 @@
             actionHtml += '</div></span>';
         }
         html.push(actionHtml);
-    }else{
-        html.push('');
-    }
         return html;
     }
 
