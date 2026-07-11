@@ -251,7 +251,11 @@ Route::middleware(['permission:on-board,onboard.edit'])->group(function () {
 Route::middleware(['permission:payout-request,payout-request'])->group(function () {
 
     Route::get('/payoutRequest', [App\Http\Controllers\PayoutRequestController::class, 'index'])->name('payoutRequest.index');
+    // Automatic payout to the driver's bank via Paystack Transfers.
+    Route::post('/payoutRequest/approve', [App\Http\Controllers\PayoutTransferController::class, 'approve'])->name('payoutRequest.approve');
 });
+// Paystack transfer webhook (public; CSRF-exempt via the payments/* rule).
+Route::post('/payments/paystack/transfer-webhook', [App\Http\Controllers\PayoutTransferController::class, 'webhook'])->name('payout.webhook');
 Route::middleware(['permission:users-wallet-transaction,user.wallet.list'])->group(function () {
 
     Route::get('/walletTransaction/user', [App\Http\Controllers\TransactionController::class, 'userWalletTransaction'])->name('walletTransaction.user');

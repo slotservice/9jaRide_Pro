@@ -704,25 +704,28 @@
     $('.acceptBtn').click(function () {
 
         var id = this.id;
-        var auth = $(this).attr('data-auth');
+        $('#bankdetailsModal').modal('hide');
         jQuery("#overlay").show().html("{{trans('lang.saving')}}");
-        database.collection('withdrawal_history').doc(id).get().then(function (payoutSnap) {
-            var payout = payoutSnap.exists ? payoutSnap.data() : null;
-            if (!payout || payout.paymentStatus != 'pending') {
-                jQuery("#overlay").hide();
-                alert('This payout has already been processed.');
-                window.location.href = '{{ url()->current() }}';
-                return;
-            }
-            database.collection('withdrawal_history').doc(id).update({ 'paymentStatus': 'approved' }).then(function (result) {
-                window.location.href = '{{ url()->current() }}';
-            }).catch(function (error) {
-                jQuery("#overlay").hide();
-                alert(error);
-            });
-        }).catch(function (error) {
+        // Approve + pay the driver via the server (Paystack Transfers). The secret
+        // key stays server-side; the money is sent to the driver's bank and the
+        // request is marked approved. Errors (insufficient balance, OTP still on,
+        // unverified account) come back as a clear message and leave it pending.
+        $.ajax({
+            url: '{{ route("payoutRequest.approve") }}',
+            method: 'POST',
+            data: { id: id, _token: '{{ csrf_token() }}' },
+            dataType: 'json'
+        }).done(function (res) {
             jQuery("#overlay").hide();
-            alert(error);
+            alert((res && res.message) ? res.message : (res && res.success ? 'Payout sent to the driver\'s bank.' : 'Payout could not be completed.'));
+            if (res && res.success) {
+                window.location.href = '{{ url()->current() }}';
+            }
+        }).fail(function (xhr) {
+            jQuery("#overlay").hide();
+            var msg = 'Payout could not be completed.';
+            if (xhr && xhr.responseJSON && xhr.responseJSON.message) { msg = xhr.responseJSON.message; }
+            alert(msg);
         });
     });
 
