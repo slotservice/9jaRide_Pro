@@ -16,6 +16,68 @@ import 'package:provider/provider.dart';
 class BankDetailsScreen extends StatelessWidget {
   const BankDetailsScreen({super.key});
 
+  void _selectBank(BuildContext context, BankDetailsController controller) {
+    String query = '';
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
+      builder: (ctx) {
+        return StatefulBuilder(builder: (ctx, setSheetState) {
+          final all = controller.banks;
+          final filtered = query.isEmpty
+              ? all
+              : all.where((b) => (b['name'] ?? '').toLowerCase().contains(query.toLowerCase())).toList();
+          return Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+            child: SizedBox(
+              height: Responsive.height(70, context),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Text("Select your bank".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16)),
+                  Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: TextField(
+                      autofocus: true,
+                      onChanged: (v) => setSheetState(() => query = v),
+                      decoration: InputDecoration(
+                        hintText: "Search bank".tr,
+                        prefixIcon: const Icon(Icons.search),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+                  if (all.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text("Loading banks...".tr, style: GoogleFonts.poppins(color: Colors.grey)),
+                    ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder: (c, i) {
+                        final bank = filtered[i];
+                        return ListTile(
+                          title: Text(bank['name'] ?? '', style: GoogleFonts.poppins(fontSize: 14)),
+                          onTap: () {
+                            controller.selectBank(bank['name'] ?? '', bank['code'] ?? '');
+                            Navigator.pop(ctx);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
@@ -44,63 +106,82 @@ class BankDetailsScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Bank Name".tr, style: GoogleFonts.poppins()),
-                                  const SizedBox(
-                                    height: 5,
+                                  const SizedBox(height: 5),
+                                  InkWell(
+                                    onTap: () => _selectBank(context, controller),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+                                      decoration: BoxDecoration(
+                                        color: themeChange.getThem() ? AppColors.darkTextField : AppColors.textField,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.bankNameController.value.text.isEmpty ? "Select your bank".tr : controller.bankNameController.value.text,
+                                              style: GoogleFonts.poppins(color: controller.bankNameController.value.text.isEmpty ? Colors.grey : null),
+                                            ),
+                                          ),
+                                          const Icon(Icons.keyboard_arrow_down),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  TextFieldThem.buildTextFiled(context, hintText: 'Bank Name'.tr, controller: controller.bankNameController.value),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text("Branch Name".tr, style: GoogleFonts.poppins()),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextFieldThem.buildTextFiled(context, hintText: 'Branch Name'.tr, controller: controller.branchNameController.value),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text("Holder Name".tr, style: GoogleFonts.poppins()),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextFieldThem.buildTextFiled(context, hintText: 'Holder Name'.tr, controller: controller.holderNameController.value),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
+                                  const SizedBox(height: 10),
                                   Text("Account Number".tr, style: GoogleFonts.poppins()),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
+                                  const SizedBox(height: 5),
                                   TextFieldThem.buildTextFiled(context, hintText: 'Account Number'.tr, controller: controller.accountNumberController.value),
-                                  const SizedBox(
-                                    height: 10,
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      OutlinedButton.icon(
+                                        onPressed: () => controller.verifyAccount(),
+                                        icon: const Icon(Icons.verified_user_outlined, size: 18),
+                                        label: Text("Verify Account".tr, style: GoogleFonts.poppins(fontSize: 13)),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      if (controller.accountVerified.value)
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                                            const SizedBox(width: 4),
+                                            Text("Verified".tr, style: GoogleFonts.poppins(fontSize: 12, color: Colors.green)),
+                                          ],
+                                        ),
+                                    ],
                                   ),
+                                  const SizedBox(height: 10),
+                                  Text("Account Holder Name".tr, style: GoogleFonts.poppins()),
+                                  const SizedBox(height: 5),
+                                  TextFieldThem.buildTextFiled(context, hintText: 'Account Holder Name'.tr, controller: controller.holderNameController.value),
+                                  const SizedBox(height: 10),
+                                  Text("Branch Name".tr, style: GoogleFonts.poppins()),
+                                  const SizedBox(height: 5),
+                                  TextFieldThem.buildTextFiled(context, hintText: 'Branch Name'.tr, controller: controller.branchNameController.value),
+                                  const SizedBox(height: 10),
                                   Text("Other Information".tr, style: GoogleFonts.poppins()),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
+                                  const SizedBox(height: 5),
                                   TextFieldThem.buildTextFiled(context, hintText: 'Other Information'.tr, controller: controller.otherInformationController.value),
-                                  const SizedBox(
-                                    height: 40,
-                                  ),
+                                  const SizedBox(height: 40),
                                   ButtonThem.buildButton(
                                     context,
                                     title: "Save".tr,
                                     onPress: () async {
-                                      if (controller.bankNameController.value.text.isEmpty) {
-                                        ShowToastDialog.showToast("Please enter bank name".tr);
-                                      } else if (controller.branchNameController.value.text.isEmpty) {
-                                        ShowToastDialog.showToast("Please enter branch name".tr);
-                                      } else if (controller.holderNameController.value.text.isEmpty) {
-                                        ShowToastDialog.showToast("Please enter holder name".tr);
+                                      if (controller.bankNameController.value.text.isEmpty || controller.bankCode.value.isEmpty) {
+                                        ShowToastDialog.showToast("Please select your bank".tr);
                                       } else if (controller.accountNumberController.value.text.isEmpty) {
                                         ShowToastDialog.showToast("Please enter account number".tr);
+                                      } else if (controller.holderNameController.value.text.isEmpty) {
+                                        ShowToastDialog.showToast("Please verify your account or enter the holder name".tr);
                                       } else {
                                         ShowToastDialog.showLoader("Please wait".tr);
                                         BankDetailsModel bankDetailsModel = controller.bankDetailsModel.value;
 
                                         bankDetailsModel.userId = FireStoreUtils.getCurrentUid();
                                         bankDetailsModel.bankName = controller.bankNameController.value.text;
+                                        bankDetailsModel.bankCode = controller.bankCode.value;
                                         bankDetailsModel.branchName = controller.branchNameController.value.text;
                                         bankDetailsModel.holderName = controller.holderNameController.value.text;
                                         bankDetailsModel.accountNumber = controller.accountNumberController.value.text;
