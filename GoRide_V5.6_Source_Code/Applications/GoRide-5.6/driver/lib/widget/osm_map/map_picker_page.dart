@@ -91,11 +91,35 @@ class MapPickerPage extends StatelessWidget {
                       border: InputBorder.none,
                       prefixIcon: Icon(Icons.search, color: themeChange.getThem() ? AppColors.darksecondprimary : AppColors.lightsecondprimary),
                     ),
-                    onChanged: controller.searchPlace,
+                    onChanged: controller.onSearchChanged,
                   ),
                 ),
                 Obx(() {
-                  if (controller.searchResults.isEmpty) return const SizedBox.shrink();
+                  if (controller.searchResults.isEmpty) {
+                    if (controller.searchedNoResult.value) {
+                      return Container(
+                        margin: const EdgeInsets.only(top: 4),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: themeChange.getThem() ? AppColors.darkContainerBackground : AppColors.containerBackground,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.info_outline, size: 18),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                "No match found. Tap anywhere on the map to drop your pin.".tr,
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }
                   return Container(
                     margin: const EdgeInsets.only(top: 4),
                     decoration: BoxDecoration(
@@ -136,7 +160,7 @@ class MapPickerPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                controller.pickedPlace.value != null ? "Picked Location:".tr : "No Location Picked".tr,
+                controller.pickedPlace.value != null ? "Picked Location:".tr : "Search or tap on the map to pick a location".tr,
                 style: TextStyle(
                   color: themeChange.getThem() ? AppColors.background : AppColors.darkBackground,
                   fontWeight: FontWeight.w600,
