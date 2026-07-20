@@ -43,6 +43,10 @@ class PayoutTransferController extends Controller
         }
     }
 
+    /**
+     * Admin "approve" button on the Payout Request page. Thin wrapper around
+     * processPayout() so the manual and automatic paths run identical logic.
+     */
     public function approve(Request $request)
     {
         $id = trim((string) $request->input('id', ''));
@@ -50,28 +54,51 @@ class PayoutTransferController extends Controller
             return response()->json(['success' => false, 'message' => 'Missing payout id'], 400);
         }
 
+        $r = $this->processPayout($id);
+
+        if (($r['status'] ?? '') === 'otp') {
+            return response()->json(['success' => false, 'otp' => true, 'message' => $r['message']], 200);
+        }
+        return response()->json(
+            ['success' => (bool) ($r['ok'] ?? false), 'message' => $r['message'] ?? ''],
+            (int) ($r['httpCode'] ?? (($r['ok'] ?? false) ? 200 : 422))
+        );
+    }
+
+    /**
+     * Core payout logic — verify the driver's bank, create a Paystack recipient,
+     * and transfer the money from the business balance. Used by both the admin
+     * approve button and the automatic payout job.
+     *
+     * Returns an array: ok(bool), status('sent'|'otp'|'error'), httpCode(int),
+     * permanent(bool — a permanent failure should NOT be auto-retried), message.
+     * Double-payment is impossible: only a 'pending' request is ever processed,
+     * and it is flipped to 'approved' the moment the transfer is accepted.
+     */
+    public function processPayout(string $id): array
+    {
         $secret = $this->paystackSecret();
         if (!$secret) {
-            return response()->json(['success' => false, 'message' => 'Paystack secret key is not configured in Settings.'], 500);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 500, 'permanent' => true, 'message' => 'Paystack secret key is not configured in Settings.'];
         }
 
         $db = $this->db();
         $ref = $db->collection('withdrawal_history')->document($id);
         $snap = $ref->snapshot();
         if (!$snap->exists()) {
-            return response()->json(['success' => false, 'message' => 'Payout request not found.'], 404);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 404, 'permanent' => true, 'message' => 'Payout request not found.'];
         }
         $w = $snap->data();
 
         // Idempotency — only a pending request can be paid out.
         if (($w['paymentStatus'] ?? '') !== 'pending') {
-            return response()->json(['success' => false, 'message' => 'This payout is already ' . ($w['paymentStatus'] ?? 'processed') . '.'], 409);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 409, 'permanent' => true, 'message' => 'This payout is already ' . ($w['paymentStatus'] ?? 'processed') . '.'];
         }
 
         $userId = (string) ($w['userId'] ?? '');
         $amountNaira = floatval($w['amount'] ?? 0);
         if ($amountNaira <= 0) {
-            return response()->json(['success' => false, 'message' => 'Invalid payout amount.'], 400);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 400, 'permanent' => true, 'message' => 'Invalid payout amount.'];
         }
         $amountKobo = (int) round($amountNaira * 100);
 
@@ -83,14 +110,14 @@ class PayoutTransferController extends Controller
             }
         }
         if (!$bank) {
-            return response()->json(['success' => false, 'message' => 'Driver has not added bank details yet.'], 422);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => true, 'message' => 'Driver has not added bank details yet.'];
         }
 
         $accountNumber = trim((string) ($bank['accountNumber'] ?? ''));
         $bankCode = trim((string) ($bank['bankCode'] ?? ''));
         $bankName = trim((string) ($bank['bankName'] ?? ''));
         if ($accountNumber === '') {
-            return response()->json(['success' => false, 'message' => 'Driver bank account number is missing.'], 422);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => true, 'message' => 'Driver bank account number is missing.'];
         }
 
         // Resolve bank code from the stored bank name if the app has not saved a
@@ -98,7 +125,7 @@ class PayoutTransferController extends Controller
         if ($bankCode === '') {
             $bankCode = $this->resolveBankCode($secret, $bankName);
             if ($bankCode === '') {
-                return response()->json(['success' => false, 'message' => 'Could not match the driver\'s bank. Ask the driver to re-select their bank in the app.'], 422);
+                return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => true, 'message' => 'Could not match the driver\'s bank. Ask the driver to re-select their bank in the app.'];
             }
         }
 
@@ -108,7 +135,7 @@ class PayoutTransferController extends Controller
             'bank_code' => $bankCode,
         ]);
         if (!$resolve->successful() || !$resolve->json('status')) {
-            return response()->json(['success' => false, 'message' => 'Could not verify the driver\'s bank account: ' . ($resolve->json('message') ?? 'invalid account')], 422);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => true, 'message' => 'Could not verify the driver\'s bank account: ' . ($resolve->json('message') ?? 'invalid account')];
         }
         $verifiedName = (string) ($resolve->json('data.account_name') ?? ($bank['holderName'] ?? 'Driver'));
 
@@ -121,7 +148,8 @@ class PayoutTransferController extends Controller
             'currency' => 'NGN',
         ]);
         if (!$recipientRes->successful() || !$recipientRes->json('status')) {
-            return response()->json(['success' => false, 'message' => 'Paystack recipient error: ' . ($recipientRes->json('message') ?? 'unknown')], 422);
+            // Network/transient with Paystack — safe to retry later.
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => false, 'message' => 'Paystack recipient error: ' . ($recipientRes->json('message') ?? 'unknown')];
         }
         $recipientCode = (string) $recipientRes->json('data.recipient_code');
 
@@ -148,7 +176,11 @@ class PayoutTransferController extends Controller
         ]);
 
         if (!$transferRes->successful() || !$transferRes->json('status')) {
-            return response()->json(['success' => false, 'message' => 'Paystack transfer error: ' . ($transferRes->json('message') ?? 'transfer failed')], 422);
+            $msg = (string) ($transferRes->json('message') ?? 'transfer failed');
+            // Insufficient balance is transient — leave the request pending so it
+            // retries automatically once the Paystack balance is funded again.
+            $permanent = (stripos($msg, 'balance') === false);
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => $permanent, 'message' => 'Paystack transfer error: ' . $msg];
         }
 
         $tData = $transferRes->json('data') ?? [];
@@ -163,11 +195,7 @@ class PayoutTransferController extends Controller
                 'transferReference' => $reference,
                 'transferStatus' => 'otp',
             ], ['merge' => true]);
-            return response()->json([
-                'success' => false,
-                'otp' => true,
-                'message' => 'Paystack is asking for a transfer OTP. In your Paystack dashboard, Settings > Preferences, turn OFF "OTP for transfers" so payouts complete automatically, then approve again.',
-            ], 200);
+            return ['ok' => false, 'status' => 'otp', 'httpCode' => 200, 'permanent' => false, 'message' => 'Paystack is asking for a transfer OTP. In your Paystack dashboard, Settings > Preferences, turn OFF "OTP for transfers" so payouts complete automatically, then approve again.'];
         }
 
         // Mark approved now; the final paid/failed state is confirmed by the webhook.
@@ -181,7 +209,7 @@ class PayoutTransferController extends Controller
             'paymentDate' => new \Google\Cloud\Core\Timestamp(new \DateTime()),
         ], ['merge' => true]);
 
-        return response()->json(['success' => true, 'message' => 'Payout sent to ' . $verifiedName . '\'s bank. Status: ' . ($tStatus ?: 'processing') . '.']);
+        return ['ok' => true, 'status' => 'sent', 'httpCode' => 200, 'permanent' => false, 'message' => 'Payout sent to ' . $verifiedName . '\'s bank. Status: ' . ($tStatus ?: 'processing') . '.'];
     }
 
     private function resolveBankCode(string $secret, string $bankName): string
@@ -229,15 +257,33 @@ class PayoutTransferController extends Controller
         if (strpos($reference, 'payout_') !== 0) {
             return response('ignored', 200);
         }
-        $id = substr($reference, strlen('payout_'));
 
         $db = $this->db();
-        $ref = $db->collection('withdrawal_history')->document($id);
-        $snap = $ref->snapshot();
-        if (!$snap->exists()) {
+
+        // Find the withdrawal by its stored transferReference. A retry carries a
+        // suffix (payout_<id>_<hash>), so parsing the id out of the reference is
+        // unsafe — match the stored field instead, with a legacy fallback to the
+        // bare id for older payouts that used exactly payout_<id>.
+        $ref = null;
+        $w = null;
+        foreach ($db->collection('withdrawal_history')->where('transferReference', '=', $reference)->limit(1)->documents() as $d) {
+            if ($d->exists()) {
+                $ref = $d->reference();
+                $w = $d->data();
+            }
+        }
+        if ($ref === null) {
+            $legacyId = substr($reference, strlen('payout_'));
+            $cand = $db->collection('withdrawal_history')->document($legacyId);
+            $csnap = $cand->snapshot();
+            if ($csnap->exists()) {
+                $ref = $cand;
+                $w = $csnap->data();
+            }
+        }
+        if ($ref === null) {
             return response('not found', 200);
         }
-        $w = $snap->data();
 
         if ($type === 'transfer.success') {
             $ref->set(['paymentStatus' => 'approved', 'transferStatus' => 'success'], ['merge' => true]);
