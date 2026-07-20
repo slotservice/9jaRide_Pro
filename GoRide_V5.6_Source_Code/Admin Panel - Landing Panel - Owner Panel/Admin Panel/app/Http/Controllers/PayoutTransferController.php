@@ -125,8 +125,19 @@ class PayoutTransferController extends Controller
         }
         $recipientCode = (string) $recipientRes->json('data.recipient_code');
 
-        // 2) Transfer (idempotent by reference).
+        // 2) Transfer. The base reference is deterministic per payout so an
+        // accidental double-click cannot pay twice. But a prior attempt that
+        // did NOT succeed (e.g. OTP was still on) already consumed that
+        // reference, and Paystack rejects a reused one ("duplicate_transfer_
+        // reference"). So when retrying after a non-success attempt, use a
+        // fresh reference. Double-payment stays impossible because only a
+        // 'pending' request reaches here (the paymentStatus gate above).
         $reference = 'payout_' . $id;
+        $priorRef = trim((string) ($w['transferReference'] ?? ''));
+        $priorStatus = trim((string) ($w['transferStatus'] ?? ''));
+        if ($priorRef !== '' && $priorStatus !== 'success') {
+            $reference = 'payout_' . $id . '_' . substr(md5($priorRef . microtime(true)), 0, 8);
+        }
         $transferRes = Http::withToken($secret)->asJson()->timeout(40)->post(self::PAYSTACK . '/transfer', [
             'source' => 'balance',
             'amount' => $amountKobo,
