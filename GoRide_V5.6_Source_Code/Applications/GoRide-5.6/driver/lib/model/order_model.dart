@@ -37,6 +37,9 @@ class OrderModel {
   Timestamp? acceptHoldTime;
   bool? paymentStatus;
   bool? isAcSelected;
+  // Rider needs special assistance on this trip (wheelchair, elderly care,
+  // visual impairment). Only drivers who opted in are offered these rides.
+  bool? specialAssistance;
   List<TaxModel>? taxList;
   ContactModel? someOneElse;
   CouponModel? coupon;
@@ -115,6 +118,7 @@ class OrderModel {
     rejectedDriverId = json['rejectedDriverId'];
     paymentStatus = json['paymentStatus'];
     isAcSelected = json['isAcSelected'];
+    specialAssistance = json['specialAssistance'] ?? false;
     position = json['position'] != null ? Positions.fromJson(json['position']) : null;
     service = json['service'] != null ? ServiceModel.fromJson(json['service']) : null;
     adminCommission = json['adminCommission'] != null ? AdminCommission.fromJson(json['adminCommission']) : null;
@@ -181,6 +185,7 @@ class OrderModel {
     data['rejectedDriverId'] = rejectedDriverId;
     data['paymentStatus'] = paymentStatus;
     data['isAcSelected'] = isAcSelected;
+    data['specialAssistance'] = specialAssistance;
     data['assistanceNeeds'] = assistanceNeeds;
     data['ownerId'] = ownerId;
     if (taxList != null) {

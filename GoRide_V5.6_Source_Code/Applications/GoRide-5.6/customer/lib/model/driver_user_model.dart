@@ -24,6 +24,8 @@ class DriverUserModel {
   String? reviewsCount;
   String? reviewsSum;
   String? walletAmount;
+  // Driver opted in to carrying riders who need special assistance.
+  bool? canAssist;
   LocationLatLng? location;
   double? rotation;
   Positions? position;
@@ -84,6 +86,7 @@ class DriverUserModel {
     reviewsSum = json['reviewsSum'] ?? '0.0';
     rotation = json['rotation'] != null ? double.parse(json['rotation'].toString()) : 0.0;
     walletAmount = json['walletAmount'] ?? "0.0";
+    canAssist = json['canAssist'] ?? false;
     location = json['location'] != null ? LocationLatLng.fromJson(json['location']) : null;
     position = json['position'] != null ? Positions.fromJson(json['position']) : null;
     createdAt = json['createdAt'];
@@ -127,6 +130,7 @@ class DriverUserModel {
     data['reviewsCount'] = reviewsCount;
     data['reviewsSum'] = reviewsSum;
     data['walletAmount'] = walletAmount;
+    data['canAssist'] = canAssist;
     data['zoneIds'] = zoneIds;
     if (position != null) {
       data['position'] = position!.toJson();

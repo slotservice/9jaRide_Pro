@@ -795,6 +795,9 @@ class HomeScreen extends StatelessWidget {
                                               orderModel.otp = Constant.getReferralCode();
                                               bool hasAcNonAcPrice = controller.selectedType.value.prices?.isNotEmpty == true && controller.selectedType.value.prices![0].isAcNonAc == true;
                                               orderModel.isAcSelected = hasAcNonAcPrice ? controller.isAcSelected.value : false;
+                                              // Carry the rider's assistance need onto the ride, so only drivers
+                                              // who opted in are offered it and the driver is told before accepting.
+                                              orderModel.specialAssistance = controller.userModel.value.specialAssistance ?? false;
                                               orderModel.taxList = Constant.taxList;
                                               if (controller.selectedTakingRide.value.fullName != "Myself") {
                                                 orderModel.someOneElse = controller.selectedTakingRide.value;

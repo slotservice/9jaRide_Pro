@@ -211,7 +211,10 @@ class NewOrderScreen extends StatelessWidget {
                                             sourceLocation: orderModel.sourceLocationName.toString(),
                                             destinationLocation: orderModel.destinationLocationName.toString(),
                                           ),
-                                          if (orderModel.assistanceNeeds != null && orderModel.assistanceNeeds!.isNotEmpty)
+                                          // Shows for a 9ja-Assist booking with specific needs listed, and now
+                                          // also for any service when the rider is flagged as needing special
+                                          // assistance, so the driver knows before accepting.
+                                          if ((orderModel.assistanceNeeds != null && orderModel.assistanceNeeds!.isNotEmpty) || orderModel.specialAssistance == true)
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                               child: Column(
@@ -221,14 +224,20 @@ class NewOrderScreen extends StatelessWidget {
                                                     children: [
                                                       Icon(Icons.accessible, size: 18, color: AppColors.lightprimary),
                                                       const SizedBox(width: 6),
-                                                      Text('9ja-Assist needs'.tr, style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600)),
+                                                      Text(
+                                                          (orderModel.assistanceNeeds != null && orderModel.assistanceNeeds!.isNotEmpty)
+                                                              ? '9ja-Assist needs'.tr
+                                                              : 'Special assistance needed'.tr,
+                                                          style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 6),
                                                   Wrap(
                                                     spacing: 6,
                                                     runSpacing: 6,
-                                                    children: orderModel.assistanceNeeds!
+                                                    children: ((orderModel.assistanceNeeds != null && orderModel.assistanceNeeds!.isNotEmpty)
+                                                            ? orderModel.assistanceNeeds!
+                                                            : <String>['Wheelchair, elderly care or visual impairment'.tr])
                                                         .map((need) => Container(
                                                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                                               decoration: BoxDecoration(

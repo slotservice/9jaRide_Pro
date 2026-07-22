@@ -771,9 +771,17 @@ class FireStoreUtils {
         for (var document in documentList) {
           final data = document.data() as Map<String, dynamic>;
 
-          DriverUserModel orderModel = DriverUserModel.fromJson(data);
+          DriverUserModel driver = DriverUserModel.fromJson(data);
 
-          ordersList.add(orderModel);
+          // When the rider needs special assistance, only offer the ride to
+          // drivers who opted in. Filtered here rather than added to the query
+          // above, because another where-clause would need a new Firestore
+          // composite index and matching would fail until it existed.
+          if (orderModel.specialAssistance == true && driver.canAssist != true) {
+            continue;
+          }
+
+          ordersList.add(driver);
         }
 
         if (!getNearestOrderRequestController!.isClosed) {
@@ -809,8 +817,12 @@ class FireStoreUtils {
 
     for (var document in documentList) {
       final data = document.data() as Map<String, dynamic>;
-      DriverUserModel orderModel = DriverUserModel.fromJson(data);
-      ordersList.add(orderModel);
+      DriverUserModel driver = DriverUserModel.fromJson(data);
+      // Same assistance filter as the stream variant above.
+      if (orderModel.specialAssistance == true && driver.canAssist != true) {
+        continue;
+      }
+      ordersList.add(driver);
     }
 
     return ordersList;
