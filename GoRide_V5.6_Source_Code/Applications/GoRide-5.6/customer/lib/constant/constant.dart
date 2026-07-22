@@ -42,6 +42,11 @@ class Constant {
   static String senderId = '';
   static String jsonNotificationFileURL = '';
   static String radius = "10";
+  // Minimum fare charged for any ride, and the extra charged when the rider
+  // needs special assistance. Both live in settings/globalValue so the amounts
+  // can be changed from the panel without shipping a new app build.
+  static String minimumFare = "0";
+  static String assistanceFee = "0";
   static String distanceType = "";
   static CurrencyModel? currencyModel;
   static AdminCommission? adminCommission;

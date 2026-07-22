@@ -20,6 +20,8 @@ class CompleteOrderController extends GetxController {
 
   RxDouble amount = 0.0.obs;
   RxDouble subTotal = 0.0.obs;
+  // Extra charged on this ride because the rider needs special assistance.
+  RxDouble assistanceCharge = 0.0.obs;
   RxDouble total = 0.0.obs;
   RxDouble taxAmount = 0.0.obs;
   RxString startNightTime = "".obs;
@@ -144,6 +146,20 @@ class CompleteOrderController extends GetxController {
     }
 
     subTotal.value = amount.value + basicFareCharge.value + totalChargeOfMinute.value + holdingCharge.value;
+
+    // Minimum fare: no ride is charged less than this. Must stay identical to
+    // the customer app or the two would disagree on the total.
+    double minimumFareValue = double.tryParse(Constant.minimumFare) ?? 0.0;
+    if (minimumFareValue > 0 && subTotal.value < minimumFareValue) {
+      subTotal.value = minimumFareValue;
+    }
+
+    // Special assistance is charged ON TOP of the minimum, never absorbed by
+    // it, so the driver genuinely earns the extra for taking that rider.
+    bool needsAssistance =
+        orderModel.value.specialAssistance == true || (orderModel.value.assistanceNeeds != null && orderModel.value.assistanceNeeds!.isNotEmpty);
+    assistanceCharge.value = needsAssistance ? (double.tryParse(Constant.assistanceFee) ?? 0.0) : 0.0;
+    subTotal.value = subTotal.value + assistanceCharge.value;
 
     if (orderModel.value.taxList != null) {
       for (var element in orderModel.value.taxList!) {

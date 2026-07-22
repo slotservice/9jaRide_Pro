@@ -93,6 +93,8 @@ class FireStoreUtils {
           }
           Constant.distanceType = data["distanceType"] ?? "km";
           Constant.radius = data["radius"] ?? "10";
+          Constant.minimumFare = (data["minimumFare"] ?? "0").toString();
+          Constant.assistanceFee = (data["assistanceFee"] ?? "0").toString();
           Constant.minimumAmountToWithdrawal = data["minimumAmountToWithdrawal"] ?? "0";
           Constant.minimumDepositToRideAccept = data["minimumDepositToRideAccept"] ?? "0";
           Constant.mapType = data["mapType"] ?? "";
