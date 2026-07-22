@@ -382,6 +382,72 @@ class VehicleInformationScreen extends StatelessWidget {
                                 const SizedBox(
                                   height: 10,
                                 ),
+                                Text("Vehicle Ownership".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16)),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                AbsorbPointer(
+                                  absorbing: controller.driverModel.value.ownerId != null,
+                                  child: DropdownButtonFormField<String>(
+                                      decoration: InputDecoration(
+                                        filled: true,
+                                        fillColor: themeChange.getThem() ? AppColors.darkTextField : AppColors.textField,
+                                        contentPadding: const EdgeInsets.only(left: 10, right: 10),
+                                        disabledBorder: OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                          borderSide: BorderSide(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                          borderSide: BorderSide(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                          borderSide: BorderSide(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                        ),
+                                        errorBorder: OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                          borderSide: BorderSide(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: const BorderRadius.all(Radius.circular(4)),
+                                          borderSide: BorderSide(color: themeChange.getThem() ? AppColors.darkTextFieldBorder : AppColors.textFieldBorder, width: 1),
+                                        ),
+                                      ),
+                                      value: controller.driverType.value.isEmpty ? 'personal' : controller.driverType.value,
+                                      onChanged: (value) {
+                                        controller.driverType.value = value ?? 'personal';
+                                      },
+                                      hint: Text("Select vehicle ownership".tr),
+                                      items: [
+                                        DropdownMenuItem(
+                                          value: 'personal',
+                                          child: Text("Personal Car".tr),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 'hire_purchase',
+                                          child: Text("Hire Purchase".tr),
+                                        ),
+                                      ]),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text("Special Assistance".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16)),
+                                CheckboxListTile(
+                                  checkColor: themeChange.getThem() ? AppColors.darksecondprimary : AppColors.lightsecondprimary,
+                                  value: controller.canAssist.value,
+                                  contentPadding: EdgeInsets.zero,
+                                  enabled: controller.driverModel.value.ownerId == null,
+                                  title: Text("I can assist riders who need special assistance".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w400)),
+                                  subtitle: Text("Wheelchair, elderly care, visual impairment".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 12)),
+                                  onChanged: (value) {
+                                    controller.canAssist.value = value ?? false;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
                                 Text("Select Your Rules".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16)),
                                 ListBody(
                                   children: controller.driverRulesList

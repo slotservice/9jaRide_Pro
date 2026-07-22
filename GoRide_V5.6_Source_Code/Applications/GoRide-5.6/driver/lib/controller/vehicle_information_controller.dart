@@ -25,6 +25,12 @@ class VehicleInformationController extends GetxController {
 
   RxBool isLoading = true.obs;
 
+  // Vehicle ownership the driver declares ('personal' or 'hire_purchase') and
+  // whether they opt in to carrying riders who need special assistance. Both are
+  // set at registration and stay editable here so a mistake can be corrected.
+  RxString driverType = 'personal'.obs;
+  RxBool canAssist = false.obs;
+
   Rx<String> selectedColor = "".obs;
   List<String> carColorList = <String>['Red', 'Black', 'White', 'Blue', 'Green', 'Orange', 'Silver', 'Gray', 'Yellow', 'Brown', 'Gold', 'Beige', 'Purple'].obs;
   List<String> sheetList = <String>['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'].obs;
@@ -68,6 +74,8 @@ class VehicleInformationController extends GetxController {
     await FireStoreUtils.getDriverProfile(FireStoreUtils.getCurrentUid()).then((value) async {
       if (value != null) {
         driverModel.value = value;
+        driverType.value = value.driverType ?? 'personal';
+        canAssist.value = value.canAssist ?? false;
         if (driverModel.value.vehicleInformation != null) {
           vehicleNumberController.value.text = driverModel.value.vehicleInformation!.vehicleNumber.toString();
           selectedDate.value = driverModel.value.vehicleInformation!.registrationDate!.toDate();
@@ -146,6 +154,10 @@ class VehicleInformationController extends GetxController {
       driverModel.value.serviceName = selectedServiceType.value.title;
     }
     driverModel.value.zoneIds = selectedZone;
+    // Driver's own declaration. hpEnabled and the hire purchase deduction
+    // amounts are intentionally NOT touched here — those stay admin-controlled.
+    driverModel.value.driverType = driverType.value;
+    driverModel.value.canAssist = canAssist.value;
     List<RateModel>? rates = <RateModel>[];
     for (int index = 0; index < selectedPrices.length; index++) {
       rates.add(RateModel(

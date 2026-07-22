@@ -46,6 +46,17 @@ class DriverUserModel {
   Timestamp? hpStartDate;
   Timestamp? hpLastPaymentDate;
 
+  // Vehicle ownership the driver declares at registration: 'personal' or
+  // 'hire_purchase'. The driver can correct this themselves, but it deliberately
+  // does NOT drive the hire purchase payment plan — hpEnabled and the deduction
+  // amounts stay admin-controlled, so a driver cannot switch themselves out of
+  // their daily deductions by editing this.
+  String? driverType;
+
+  // Opt-in: this driver is able to carry riders who need special assistance.
+  // Only drivers with this set receive those ride requests.
+  bool? canAssist;
+
   DriverUserModel({
     this.isEnabled,
     this.isActive,
@@ -86,6 +97,8 @@ class DriverUserModel {
     this.hpStatus,
     this.hpStartDate,
     this.hpLastPaymentDate,
+    this.driverType,
+    this.canAssist,
   });
 
   DriverUserModel.fromJson(Map<String, dynamic> json) {
@@ -127,6 +140,8 @@ class DriverUserModel {
     hpStatus = json['hpStatus'];
     hpStartDate = json['hpStartDate'];
     hpLastPaymentDate = json['hpLastPaymentDate'];
+    driverType = json['driverType'] ?? 'personal';
+    canAssist = json['canAssist'] ?? false;
     if (json['serviceName'] != null) {
       serviceName = <LanguageName>[];
       json['serviceName'].forEach((v) {
@@ -180,6 +195,8 @@ class DriverUserModel {
     data['hpStatus'] = hpStatus;
     data['hpStartDate'] = hpStartDate;
     data['hpLastPaymentDate'] = hpLastPaymentDate;
+    data['driverType'] = driverType;
+    data['canAssist'] = canAssist;
     if (serviceName != null) {
       data['serviceName'] = serviceName!.map((v) => v.toJson()).toList();
     }
