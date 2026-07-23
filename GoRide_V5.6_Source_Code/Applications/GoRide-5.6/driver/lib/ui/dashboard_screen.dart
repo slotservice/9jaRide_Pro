@@ -247,7 +247,9 @@ class DashBoardScreen extends StatelessWidget {
     }
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.zero,
+        // Reserve the Android system navigation bar height at the bottom so the
+        // last menu item (Log Out) is never hidden behind it.
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 12),
         children: [
           DrawerHeader(
             child: FutureBuilder<DriverUserModel?>(

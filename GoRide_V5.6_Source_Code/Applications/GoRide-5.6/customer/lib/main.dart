@@ -87,7 +87,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             locale: LocalizationService.locale,
             fallbackLocale: LocalizationService.locale,
             translations: LocalizationService(),
-            builder: EasyLoading.init(),
+            // Reserve the Android system navigation bar space app-wide (top:false
+            // keeps the coloured headers full-bleed) so no bottom button or menu
+            // item is ever hidden behind the nav bar. Loader stays full-screen.
+            builder: EasyLoading.init(builder: (context, child) => SafeArea(top: false, child: child ?? const SizedBox.shrink())),
             home: GetBuilder<GlobalSettingController>(
                 init: GlobalSettingController(),
                 builder: (context) {
