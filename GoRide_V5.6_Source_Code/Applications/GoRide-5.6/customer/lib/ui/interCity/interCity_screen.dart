@@ -66,7 +66,10 @@ class InterCityScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: SingleChildScrollView(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 10),
+                              // Bottom padding clears the Android system navigation
+                              // bar so the "Ride Placed" button is never hidden behind
+                              // it. Uses the real device inset so it adapts per phone.
+                              padding: EdgeInsets.only(top: 10, bottom: 24 + MediaQuery.of(context).padding.bottom),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
