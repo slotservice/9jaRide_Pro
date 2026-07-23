@@ -110,94 +110,32 @@ class IntercityController extends GetxController {
         }
       });
 
-      if (destinationCityController.value.text.isNotEmpty) {
-        if (whenController.value.text.isEmpty) {
-          await FireStoreUtils.fireStore
-              .collection(CollectionName.ordersIntercity)
-              .where('sourceCity', isEqualTo: sourceCityController.value.text)
-              .where('destinationCity', isEqualTo: destinationCityController.value.text)
-              .where('intercityServiceId', isNotEqualTo: "Kn2VEnPI3ikF58uK8YqY")
-              .where('zoneId', whereIn: driverModel.value.zoneIds)
-              .where('status', isEqualTo: Constant.ridePlaced)
-              .get()
-              .then((value) {
-            for (var element in value.docs) {
-              InterCityOrderModel documentModel = InterCityOrderModel.fromJson(element.data());
-              if (documentModel.acceptedDriverId != null && documentModel.acceptedDriverId!.isNotEmpty) {
-                if (!documentModel.acceptedDriverId!.contains(FireStoreUtils.getCurrentUid())) {
-                  intercityServiceOrder.add(documentModel);
-                }
-              } else {
-                intercityServiceOrder.add(documentModel);
-              }
+      // OutStation rides are now shown to ALL drivers, not filtered by the
+      // driver's own source/destination city, zone or date (client request
+      // 2026-07-24). This also removes the multi-field composite queries that
+      // were failing with a missing Firestore index (cloud_firestore/
+      // failed-precondition). Query the single auto-indexed 'status' field and
+      // filter freight + already-accepted rides in memory.
+      await FireStoreUtils.fireStore
+          .collection(CollectionName.ordersIntercity)
+          .where('status', isEqualTo: Constant.ridePlaced)
+          .get()
+          .then((value) {
+        for (var element in value.docs) {
+          InterCityOrderModel documentModel = InterCityOrderModel.fromJson(element.data());
+          // Freight has its own screen — exclude it here.
+          if (documentModel.intercityServiceId == "Kn2VEnPI3ikF58uK8YqY") {
+            continue;
+          }
+          if (documentModel.acceptedDriverId != null && documentModel.acceptedDriverId!.isNotEmpty) {
+            if (!documentModel.acceptedDriverId!.contains(FireStoreUtils.getCurrentUid())) {
+              intercityServiceOrder.add(documentModel);
             }
-          });
-        } else {
-          await FireStoreUtils.fireStore
-              .collection(CollectionName.ordersIntercity)
-              .where('sourceCity', isEqualTo: sourceCityController.value.text)
-              .where('destinationCity', isEqualTo: destinationCityController.value.text)
-              .where('intercityServiceId', isNotEqualTo: "Kn2VEnPI3ikF58uK8YqY")
-              .where('whenDates', isEqualTo: DateFormat("dd-MMM-yyyy").format(dateAndTime!))
-              .where('zoneId', whereIn: driverModel.value.zoneIds)
-              .where('status', isEqualTo: Constant.ridePlaced)
-              .get()
-              .then((value) {
-            for (var element in value.docs) {
-              InterCityOrderModel documentModel = InterCityOrderModel.fromJson(element.data());
-              if (documentModel.acceptedDriverId != null && documentModel.acceptedDriverId!.isNotEmpty) {
-                if (!documentModel.acceptedDriverId!.contains(FireStoreUtils.getCurrentUid())) {
-                  intercityServiceOrder.add(documentModel);
-                }
-              } else {
-                intercityServiceOrder.add(documentModel);
-              }
-            }
-          });
+          } else {
+            intercityServiceOrder.add(documentModel);
+          }
         }
-      } else {
-        if (whenController.value.text.isEmpty) {
-          await FireStoreUtils.fireStore
-              .collection(CollectionName.ordersIntercity)
-              .where('sourceCity', isEqualTo: sourceCityController.value.text)
-              .where('intercityServiceId', isNotEqualTo: "Kn2VEnPI3ikF58uK8YqY")
-              .where('zoneId', whereIn: driverModel.value.zoneIds)
-              .where('status', isEqualTo: Constant.ridePlaced)
-              .get()
-              .then((value) {
-            for (var element in value.docs) {
-              InterCityOrderModel documentModel = InterCityOrderModel.fromJson(element.data());
-              if (documentModel.acceptedDriverId != null && documentModel.acceptedDriverId!.isNotEmpty) {
-                if (!documentModel.acceptedDriverId!.contains(FireStoreUtils.getCurrentUid())) {
-                  intercityServiceOrder.add(documentModel);
-                }
-              } else {
-                intercityServiceOrder.add(documentModel);
-              }
-            }
-          });
-        } else {
-          await FireStoreUtils.fireStore
-              .collection(CollectionName.ordersIntercity)
-              .where('sourceCity', isEqualTo: sourceCityController.value.text)
-              .where('intercityServiceId', isNotEqualTo: "Kn2VEnPI3ikF58uK8YqY")
-              .where('whenDates', isEqualTo: DateFormat("dd-MMM-yyyy").format(dateAndTime!))
-              .where('status', isEqualTo: Constant.ridePlaced)
-              .get()
-              .then((value) {
-            for (var element in value.docs) {
-              InterCityOrderModel documentModel = InterCityOrderModel.fromJson(element.data());
-              if (documentModel.acceptedDriverId != null && documentModel.acceptedDriverId!.isNotEmpty) {
-                if (!documentModel.acceptedDriverId!.contains(FireStoreUtils.getCurrentUid())) {
-                  intercityServiceOrder.add(documentModel);
-                }
-              } else {
-                intercityServiceOrder.add(documentModel);
-              }
-            }
-          });
-        }
-      }
+      });
     } catch (e, stackTrace) {
       log("Intercity getOrder error :: $e\n$stackTrace");
       ShowToastDialog.showToast("Something went wrong: $e");
