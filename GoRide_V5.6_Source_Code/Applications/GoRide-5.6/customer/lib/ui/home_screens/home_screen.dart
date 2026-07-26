@@ -747,7 +747,7 @@ class HomeScreen extends StatelessWidget {
                                             ShowToastDialog.showToast("Please select source location".tr);
                                           } else if (controller.destinationLocationController.value.text.isEmpty) {
                                             ShowToastDialog.showToast("Please select destination location".tr);
-                                          } else if (double.parse(controller.distance.value) <= 2) {
+                                          } else if (double.parse(controller.distance.value) <= (double.tryParse(Constant.minimumDistance) ?? 0)) {
                                             ShowToastDialog.showToast("Please select more than two ${Constant.distanceType} location".tr);
                                           } else if (controller.selectedType.value.offerRate == true && controller.offerYourRateController.value.text.isEmpty) {
                                             ShowToastDialog.showToast("Please Enter offer rate".tr);

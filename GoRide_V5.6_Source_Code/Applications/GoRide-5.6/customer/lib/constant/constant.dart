@@ -47,6 +47,11 @@ class Constant {
   // can be changed from the panel without shipping a new app build.
   static String minimumFare = "0";
   static String assistanceFee = "0";
+  // Shortest trip distance (in distanceType units) that can be booked. Lives in
+  // settings/globalValue so it can be changed without a rebuild. "0" means no
+  // minimum beyond a same-point trip, so short rides (e.g. assistance trips) go
+  // through.
+  static String minimumDistance = "0";
   static String distanceType = "";
   static CurrencyModel? currencyModel;
   static AdminCommission? adminCommission;
