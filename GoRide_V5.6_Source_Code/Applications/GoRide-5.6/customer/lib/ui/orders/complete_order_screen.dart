@@ -350,7 +350,7 @@ class CompleteOrderScreen extends StatelessWidget {
                                                   child: Center(
                                                     child: Row(
                                                       children: [
-                                                        Expanded(child: Text(controller.orderModel.value.status.toString(), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+                                                        Expanded(child: Text(Constant.statusLabel(controller.orderModel.value.status), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
                                                         Text(Constant().formatTimestamp(controller.orderModel.value.createdDate), style: GoogleFonts.poppins()),
                                                       ],
                                                     ),
@@ -448,7 +448,7 @@ class CompleteOrderScreen extends StatelessWidget {
                                                       children: [
                                                         Expanded(
                                                           child: Text(
-                                                            "Holding Charge (${controller.orderModel.value.rideHoldTimeMinutes ?? '0'} Minutes)".tr,
+                                                            "Wait Time Charge (${controller.orderModel.value.rideHoldTimeMinutes ?? '0'} Minutes)".tr,
                                                             style: GoogleFonts.poppins(color: AppColors.subTitleColor),
                                                           ),
                                                         ),

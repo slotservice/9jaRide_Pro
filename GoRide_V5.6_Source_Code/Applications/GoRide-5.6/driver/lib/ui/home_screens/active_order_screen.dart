@@ -223,7 +223,7 @@ class ActiveOrderScreen extends StatelessWidget {
                                     orderModel.status.toString() == Constant.rideHold
                                         ? Align(
                                             alignment: Alignment.topLeft,
-                                            child: Text("Do you want to Accept or Reject the Hold request?".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                                            child: Text("Do you want to accept or reject the pause request?".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
                                           )
                                         : SizedBox.shrink(),
                                     orderModel.status.toString() == Constant.rideHold
@@ -242,7 +242,7 @@ class ActiveOrderScreen extends StatelessWidget {
 
                                                       await FireStoreUtils.setOrder(orderModel).then((value) {
                                                         if (value == true) {
-                                                          ShowToastDialog.showToast("Ride hold request has been rejected.".tr);
+                                                          ShowToastDialog.showToast("Pause request rejected.".tr);
                                                         }
                                                       });
                                                     } catch (e, stackTrace) {
@@ -270,13 +270,13 @@ class ActiveOrderScreen extends StatelessWidget {
 
                                                       await FireStoreUtils.setOrder(orderModel).then((value) {
                                                         if (value == true) {
-                                                          ShowToastDialog.showToast("Ride has been put on hold.".tr);
+                                                          ShowToastDialog.showToast("Ride paused.".tr);
                                                         }
                                                       });
                                                       await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
                                                         if (value != null) {
                                                           await SendNotification.sendOneNotification(
-                                                              token: value.fcmToken.toString(), title: 'Ride Hold Accepted'.tr, body: 'Driver has accepted your ride hold request'.tr, payload: {});
+                                                              token: value.fcmToken.toString(), title: 'Pause Accepted'.tr, body: 'Your driver has paused the ride'.tr, payload: {});
                                                         }
                                                       });
                                                     } catch (e, stackTrace) {
@@ -294,7 +294,7 @@ class ActiveOrderScreen extends StatelessWidget {
                                     orderModel.status.toString() == Constant.rideHoldAccepted
                                         ? ButtonThem.buildButton(
                                             context,
-                                            title: "End Hold".tr,
+                                            title: "Resume Ride".tr,
                                             btnHeight: 45,
                                             onPress: () async {
                                               ShowToastDialog.showLoader("Please wait...".tr);
@@ -321,13 +321,13 @@ class ActiveOrderScreen extends StatelessWidget {
 
                                                 await FireStoreUtils.setOrder(orderModel).then((value) {
                                                   if (value == true) {
-                                                    ShowToastDialog.showToast("Ride hold has ended".tr);
+                                                    ShowToastDialog.showToast("Ride resumed".tr);
                                                   }
                                                 });
                                                 await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
                                                   if (value != null) {
                                                     await SendNotification.sendOneNotification(
-                                                        token: value.fcmToken.toString(), title: 'Ride Hold Ended'.tr, body: 'Driver has ended the ride hold.'.tr, payload: {});
+                                                        token: value.fcmToken.toString(), title: 'Ride Resumed'.tr, body: 'Your driver has resumed the ride.'.tr, payload: {});
                                                   }
                                                 });
                                               } catch (e, stackTrace) {

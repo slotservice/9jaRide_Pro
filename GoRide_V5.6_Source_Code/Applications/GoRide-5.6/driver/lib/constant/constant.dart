@@ -78,6 +78,21 @@ class Constant {
   static const String rideHold = "Ride Hold";
   static const String rideHoldAccepted = "Ride Hold Accepted";
 
+  // These status strings are what we store in Firestore, so they must not
+  // change or existing rides stop matching. Drivers were seeing the raw value
+  // ("Ride Hold"), which reads as confusing jargon, so map it to plain wording
+  // at display time only.
+  static String statusLabel(String? status) {
+    switch (status) {
+      case rideHold:
+        return "Pause Requested";
+      case rideHoldAccepted:
+        return "Ride Paused";
+      default:
+        return status ?? "";
+    }
+  }
+
   static String? referralCustomerAmount = "0";
   static String? referralDriverAmount = "0";
 

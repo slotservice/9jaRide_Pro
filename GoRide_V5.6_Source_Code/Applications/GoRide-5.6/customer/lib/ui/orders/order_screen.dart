@@ -238,7 +238,7 @@ class OrderScreen extends StatelessWidget {
                                                                       child: orderModel.status == Constant.rideInProgress ||
                                                                               orderModel.status == Constant.ridePlaced ||
                                                                               orderModel.status == Constant.rideComplete
-                                                                          ? Text(orderModel.status.toString())
+                                                                          ? Text(Constant.statusLabel(orderModel.status))
                                                                           : Row(
                                                                               children: [
                                                                                 Text("OTP".tr, style: GoogleFonts.poppins()),
@@ -392,14 +392,14 @@ class OrderScreen extends StatelessWidget {
                                                                 orderModel.status == Constant.rideInProgress && (orderModel.totalHoldingCharges == null || orderModel.totalHoldingCharges == "0.0"),
                                                             child: ButtonThem.buildButton(
                                                               context,
-                                                              title: "HOLD".tr,
+                                                              title: "PAUSE RIDE".tr,
                                                               btnHeight: 44,
                                                               onPress: () async {
                                                                 showDialog(
                                                                   context: context,
                                                                   builder: (BuildContext context) {
                                                                     return AlertDialog(
-                                                                      title: Text('Are you sure you want to hold the ride?'.tr),
+                                                                      title: Text('Are you sure you want to pause the ride?'.tr),
                                                                       actions: [
                                                                         SizedBox(
                                                                           height: 5,
@@ -430,7 +430,7 @@ class OrderScreen extends StatelessWidget {
                                                                               orderModel.status = Constant.rideHold;
                                                                               await FireStoreUtils.setOrder(orderModel).then((value) {
                                                                                 if (value == true) {
-                                                                                  ShowToastDialog.showToast("Ride on Hold".tr);
+                                                                                  ShowToastDialog.showToast("Pause requested".tr);
                                                                                 }
                                                                               });
                                                                               Get.back();
@@ -557,7 +557,7 @@ class OrderScreen extends StatelessWidget {
                                                                   child: Center(
                                                                     child: Row(
                                                                       children: [
-                                                                        Expanded(child: Text(orderModel.status.toString(), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+                                                                        Expanded(child: Text(Constant.statusLabel(orderModel.status), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
                                                                         Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins()),
                                                                       ],
                                                                     ),
@@ -668,7 +668,7 @@ class OrderScreen extends StatelessWidget {
                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                                 children: [
-                                                                  Expanded(child: Text(orderModel.status.toString())),
+                                                                  Expanded(child: Text(Constant.statusLabel(orderModel.status))),
                                                                   Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins(fontSize: 12)),
                                                                 ],
                                                               )),
