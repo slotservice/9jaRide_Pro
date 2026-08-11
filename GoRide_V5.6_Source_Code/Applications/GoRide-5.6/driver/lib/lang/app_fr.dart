@@ -317,4 +317,8 @@ const Map<String, String> frFR = {
   'View vehicle payment progress': 'Voir la progression du paiement',
   'Please select at least one document image': 'Veuillez sélectionner au moins une image',
   'Documents saved successfully': 'Documents enregistrés avec succès',
+  'Approved': 'Approuve',
+  'Rejected': 'Rejete',
+  'Pending review': 'En attente de verification',
+  'Not uploaded': 'Non televerse',
 };

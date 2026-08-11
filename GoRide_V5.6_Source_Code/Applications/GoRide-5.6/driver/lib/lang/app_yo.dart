@@ -334,4 +334,8 @@ const Map<String, String> yoYO = {
   'View vehicle payment progress': 'Wo ipa ọna isanwo ọkọ',
   'Please select at least one document image': 'Jọwọ yan o kere ju aworan iwe kan',
   'Documents saved successfully': 'Awọn iwe ti wa ni fipamọ daradara',
+  'Approved': 'Ti fọwọsi',
+  'Rejected': 'Ti kọ',
+  'Pending review': 'Ni idaduro atunyewo',
+  'Not uploaded': 'Ko ti gbe wọle',
 };

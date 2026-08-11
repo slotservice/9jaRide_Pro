@@ -97,6 +97,10 @@ class DetailsUploadController extends GetxController {
     documents.value.documentNumber = documentNumberController.value.text;
     documents.value.backImage = backImage.value;
     documents.value.verified = false;
+    // Clear any previous rejection. Without this a re-uploaded document kept
+    // its old "DisApproved" status and would still read as rejected to the
+    // driver even though it is waiting to be reviewed again.
+    documents.value.status = null;
     if (documentModel.value.expireAt == true) {
       documents.value.expireAt = Timestamp.fromDate(selectedDate.value!);
     }

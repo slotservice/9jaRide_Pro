@@ -334,4 +334,8 @@ const Map<String, String> igIG = {
   'View vehicle payment progress': 'Hụ ọganihu ịkwụ ụgwọ ụgbọ',
   'Please select at least one document image': 'Biko họrọ opekata mpe otu foto akwụkwọ',
   'Documents saved successfully': 'Echekwara akwụkwọ n\'ụzọ ọma',
+  'Approved': 'Akwadoro',
+  'Rejected': 'Ajuru',
+  'Pending review': 'Na echere nyocha',
+  'Not uploaded': 'Ebugoro ya',
 };

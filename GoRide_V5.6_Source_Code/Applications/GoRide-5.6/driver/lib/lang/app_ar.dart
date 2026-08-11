@@ -316,4 +316,8 @@ const Map<String, String> arAR = {
   'View vehicle payment progress': 'عرض تقدم سداد المركبة',
   'Please select at least one document image': 'يرجى تحديد صورة وثيقة واحدة على الأقل',
   'Documents saved successfully': 'تم حفظ المستندات بنجاح',
+  'Approved': 'تمت الموافقة',
+  'Rejected': 'مرفوض',
+  'Pending review': 'قيد المراجعة',
+  'Not uploaded': 'لم يتم الرفع',
 };

@@ -334,4 +334,8 @@ const Map<String, String> haHA = {
   'View vehicle payment progress': 'Duba ci gaban biyan kudin mota',
   'Please select at least one document image': 'Da fatan a zabi hoton takarda daya akalla',
   'Documents saved successfully': 'Takardun an adana cikin nasara',
+  'Approved': 'An amince',
+  'Rejected': 'An ƙi',
+  'Pending review': 'Ana jiran dubawa',
+  'Not uploaded': 'Ba a loda ba',
 };

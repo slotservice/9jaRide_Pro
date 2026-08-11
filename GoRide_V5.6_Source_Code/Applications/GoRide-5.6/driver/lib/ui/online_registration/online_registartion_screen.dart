@@ -89,11 +89,12 @@ class OnlineRegistrationScreen extends StatelessWidget {
                                                     height: 5,
                                                   ),
                                                   Container(
-                                                    decoration: BoxDecoration(color: AppColors.lightprimary, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                    decoration: BoxDecoration(
+                                                        color: _statusColor(documents.reviewStatus), borderRadius: const BorderRadius.all(Radius.circular(10))),
                                                     child: Padding(
                                                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                                       child: Text(
-                                                        documents.verified == true ? "Verified".tr : "Unverified".tr,
+                                                        _statusText(documents.reviewStatus).tr,
                                                         style: const TextStyle(color: Colors.white),
                                                       ),
                                                     ),
@@ -113,5 +114,33 @@ class OnlineRegistrationScreen extends StatelessWidget {
                   ),
           );
         });
+  }
+}
+
+/// Drivers previously only saw "Verified" or "Unverified", so a rejected
+/// document was indistinguishable from one that had not been looked at yet.
+String _statusText(DocumentReviewStatus status) {
+  switch (status) {
+    case DocumentReviewStatus.approved:
+      return "Approved";
+    case DocumentReviewStatus.rejected:
+      return "Rejected";
+    case DocumentReviewStatus.pending:
+      return "Pending review";
+    case DocumentReviewStatus.notUploaded:
+      return "Not uploaded";
+  }
+}
+
+Color _statusColor(DocumentReviewStatus status) {
+  switch (status) {
+    case DocumentReviewStatus.approved:
+      return Colors.green;
+    case DocumentReviewStatus.rejected:
+      return Colors.red;
+    case DocumentReviewStatus.pending:
+      return Colors.orange;
+    case DocumentReviewStatus.notUploaded:
+      return Colors.grey;
   }
 }

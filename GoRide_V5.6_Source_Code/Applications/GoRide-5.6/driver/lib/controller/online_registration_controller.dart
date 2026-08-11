@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:driver/model/document_model.dart';
 import 'package:driver/model/driver_document_model.dart';
 import 'package:driver/utils/fire_store_utils.dart';
@@ -13,8 +15,16 @@ class OnlineRegistrationController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    _driverDocumentSubscription?.cancel();
+    super.onClose();
+  }
+
   RxList documentList = <DocumentModel>[].obs;
   RxList driverDocumentList = <Documents>[].obs;
+
+  StreamSubscription<DriverDocumentModel?>? _driverDocumentSubscription;
 
   getDocument() async {
     await FireStoreUtils.getDocumentList().then((value) {
@@ -22,10 +32,12 @@ class OnlineRegistrationController extends GetxController {
       isLoading.value = false;
     });
 
-    await FireStoreUtils.getDocumentOfDriver().then((value) {
-      if(value != null){
-        driverDocumentList.value = value.documents!;
-      }
+    // Listen instead of reading once, so an approval or rejection from the
+    // admin panel shows up on this screen straight away.
+    _driverDocumentSubscription?.cancel();
+    _driverDocumentSubscription = FireStoreUtils.streamDocumentOfDriver().listen((value) {
+      driverDocumentList.value = value?.documents ?? <Documents>[];
+      update();
     });
     update();
   }

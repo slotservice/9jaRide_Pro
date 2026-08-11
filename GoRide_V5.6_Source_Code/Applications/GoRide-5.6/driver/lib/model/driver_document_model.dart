@@ -26,6 +26,9 @@ class DriverDocumentModel {
   }
 }
 
+/// The review states a document can be in, as shown to the driver.
+enum DocumentReviewStatus { notUploaded, pending, approved, rejected }
+
 class Documents {
   String? frontImage;
   String? documentNumber;
@@ -34,7 +37,12 @@ class Documents {
   String? backImage;
   Timestamp? expireAt;
 
-  Documents({this.frontImage, this.documentNumber, this.verified, this.documentId, this.backImage, this.expireAt});
+  /// Written by the admin panel alongside [verified] as "Approved" or
+  /// "DisApproved". The driver app used to ignore it entirely, so a rejected
+  /// document looked exactly the same as one nobody had reviewed yet.
+  String? status;
+
+  Documents({this.frontImage, this.documentNumber, this.verified, this.documentId, this.backImage, this.expireAt, this.status});
 
   Documents.fromJson(Map<String, dynamic> json) {
     frontImage = json['frontImage'];
@@ -43,6 +51,7 @@ class Documents {
     documentId = json['documentId'];
     backImage = json['backImage'];
     expireAt = json['expireAt'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -53,6 +62,23 @@ class Documents {
     data['documentId'] = documentId;
     data['backImage'] = backImage;
     data['expireAt'] = expireAt;
+    data['status'] = status;
     return data;
+  }
+
+  /// Mirrors the admin panel's own mapping so the driver sees exactly what the
+  /// reviewer sees. Documents approved before the status field existed only
+  /// have verified == true, so that alone still counts as approved.
+  DocumentReviewStatus get reviewStatus {
+    if (documentId == null || documentId!.isEmpty) {
+      return DocumentReviewStatus.notUploaded;
+    }
+    if (verified == true) {
+      return DocumentReviewStatus.approved;
+    }
+    if (status == 'DisApproved') {
+      return DocumentReviewStatus.rejected;
+    }
+    return DocumentReviewStatus.pending;
   }
 }

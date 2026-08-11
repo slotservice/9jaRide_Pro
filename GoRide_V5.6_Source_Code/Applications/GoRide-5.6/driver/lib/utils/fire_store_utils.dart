@@ -414,6 +414,17 @@ class FireStoreUtils {
     return serviceList;
   }
 
+  /// Live version of [getDocumentOfDriver]. The registration screen used a
+  /// one-shot read, so an approval or rejection made by the admin only showed
+  /// up if the driver left the screen and came back.
+  static Stream<DriverDocumentModel?> streamDocumentOfDriver() {
+    return fireStore
+        .collection(CollectionName.driverDocument)
+        .doc(getCurrentUid())
+        .snapshots()
+        .map((value) => value.exists ? DriverDocumentModel.fromJson(value.data()!) : null);
+  }
+
   static Future<DriverDocumentModel?> getDocumentOfDriver() async {
     DriverDocumentModel? driverDocumentModel;
     await fireStore.collection(CollectionName.driverDocument).doc(getCurrentUid()).get().then((value) async {

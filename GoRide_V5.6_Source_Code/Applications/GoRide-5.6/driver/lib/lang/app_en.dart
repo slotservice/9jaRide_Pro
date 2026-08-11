@@ -322,4 +322,8 @@ const Map<String, String> enUS = {
   'View vehicle payment progress': 'View vehicle payment progress',
   'Please select at least one document image': 'Please select at least one document image',
   'Documents saved successfully': 'Documents saved successfully',
+  'Approved': 'Approved',
+  'Rejected': 'Rejected',
+  'Pending review': 'Pending review',
+  'Not uploaded': 'Not uploaded',
 };
