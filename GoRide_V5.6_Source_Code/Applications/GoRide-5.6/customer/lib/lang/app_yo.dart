@@ -273,4 +273,7 @@ const Map<String, String> yoYO = {
   'Amount': 'Iye',
   'Paid with': 'San pelu',
   'Rate your trip': 'Se idiyele irin-ajo re',
+  'Driver On The Way': 'Awako wa loju ona',
+  'Driver Arrived': 'Awako ti de',
+  'Trip Started': 'Irin-ajo ti bere',
 };

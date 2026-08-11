@@ -230,7 +230,8 @@ class PaymentOrderScreen extends StatelessWidget {
                                                       child: Center(
                                                         child: Row(
                                                           children: [
-                                                            Expanded(child: Text(Constant.statusLabel(orderModel.status), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+                                                            Expanded(child: Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
+                                                                style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null)))),
                                                             Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins()),
                                                           ],
                                                         ),

@@ -273,4 +273,7 @@ const Map<String, String> haHA = {
   'Amount': 'Adadi',
   'Paid with': 'An biya da',
   'Rate your trip': 'Kimanta tafiyar ku',
+  'Driver On The Way': 'Direba yana kan hanya',
+  'Driver Arrived': 'Direba ya iso',
+  'Trip Started': 'Tafiya ta fara',
 };

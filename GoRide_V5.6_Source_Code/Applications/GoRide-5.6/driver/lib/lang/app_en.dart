@@ -326,4 +326,6 @@ const Map<String, String> enUS = {
   'Rejected': 'Rejected',
   'Pending review': 'Pending review',
   'Not uploaded': 'Not uploaded',
+  'Your driver has arrived': 'Your driver has arrived',
+  'Your driver is at the pickup point and waiting for you.': 'Your driver is at the pickup point and waiting for you.',
 };

@@ -338,4 +338,6 @@ const Map<String, String> igIG = {
   'Rejected': 'Ajuru',
   'Pending review': 'Na echere nyocha',
   'Not uploaded': 'Ebugoro ya',
+  'Your driver has arrived': 'Onye nkwo gi abiala',
+  'Your driver is at the pickup point and waiting for you.': 'Onye nkwo gi no na ebe mbuli ma na echere gi.',
 };

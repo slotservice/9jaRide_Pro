@@ -83,14 +83,39 @@ class Constant {
   // change or existing rides stop matching. Riders were seeing the raw value
   // ("Ride Hold"), which reads as confusing jargon, so map it to plain wording
   // at display time only.
-  static String statusLabel(String? status) {
+  static String statusLabel(String? status, {bool driverArrived = false}) {
     switch (status) {
+      case rideActive:
+        return driverArrived ? "Driver Arrived" : "Driver On The Way";
+      case rideInProgress:
+        return "Trip Started";
       case rideHold:
         return "Pause Requested";
       case rideHoldAccepted:
         return "Ride Paused";
       default:
         return status ?? "";
+    }
+  }
+
+  /// Colour coding for the trip lifecycle, so the stage of a ride is readable
+  /// at a glance the way it is in other ride apps: blue while the driver is on
+  /// their way, orange once they have arrived, green while the trip is running.
+  static Color rideStatusColor(String? status, {bool driverArrived = false}) {
+    switch (status) {
+      case rideActive:
+        return driverArrived ? Colors.orange : Colors.blue;
+      case rideInProgress:
+        return Colors.green;
+      case rideComplete:
+        return Colors.green;
+      case rideCanceled:
+        return Colors.red;
+      case rideHold:
+      case rideHoldAccepted:
+        return Colors.orange;
+      default:
+        return Colors.blueGrey;
     }
   }
 

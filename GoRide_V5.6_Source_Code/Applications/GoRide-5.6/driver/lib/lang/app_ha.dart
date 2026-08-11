@@ -338,4 +338,6 @@ const Map<String, String> haHA = {
   'Rejected': 'An ƙi',
   'Pending review': 'Ana jiran dubawa',
   'Not uploaded': 'Ba a loda ba',
+  'Your driver has arrived': 'Direban ku ya iso',
+  'Your driver is at the pickup point and waiting for you.': 'Direban ku yana wurin daukar ku kuma yana jiran ku.',
 };

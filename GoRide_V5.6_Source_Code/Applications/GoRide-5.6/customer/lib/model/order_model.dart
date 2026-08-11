@@ -35,6 +35,11 @@ class OrderModel {
   Timestamp? createdDate;
   Timestamp? updateDate;
   Timestamp? acceptHoldTime;
+
+  /// Set once, by the driver app, the first time the driver gets within
+  /// arrival range of the pickup. Deliberately a timestamp rather than a new
+  /// status value, so every existing status query and filter keeps working.
+  Timestamp? driverArrivedAt;
   bool? paymentStatus;
   bool? isAcSelected;
   // Rider needs special assistance on this trip. Set from their profile at
@@ -77,6 +82,7 @@ class OrderModel {
       this.createdDate,
       this.updateDate,
       this.acceptHoldTime,
+      this.driverArrivedAt,
       this.taxList,
       this.coupon,
       this.someOneElse,
@@ -114,6 +120,7 @@ class OrderModel {
     createdDate = json['createdDate'];
     updateDate = json['updateDate'];
     acceptHoldTime = json['acceptHoldTime'];
+    driverArrivedAt = json['driverArrivedAt'];
     acceptedDriverId = json['acceptedDriverId'];
     rejectedDriverId = json['rejectedDriverId'];
     paymentStatus = json['paymentStatus'];
@@ -181,6 +188,7 @@ class OrderModel {
     data['createdDate'] = createdDate;
     data['updateDate'] = updateDate;
     data['acceptHoldTime'] = acceptHoldTime;
+    data['driverArrivedAt'] = driverArrivedAt;
     data['acceptedDriverId'] = acceptedDriverId;
     data['rejectedDriverId'] = rejectedDriverId;
     data['paymentStatus'] = paymentStatus;

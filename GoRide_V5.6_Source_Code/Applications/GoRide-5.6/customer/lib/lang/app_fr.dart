@@ -247,4 +247,7 @@ const Map<String, String> frFR = {
   'Paid with': 'Paye avec',
   'Rate your trip': 'Evaluez votre trajet',
   'Done': 'Termine',
+  'Driver On The Way': 'Chauffeur en route',
+  'Driver Arrived': 'Chauffeur arrive',
+  'Trip Started': 'Trajet commence',
 };

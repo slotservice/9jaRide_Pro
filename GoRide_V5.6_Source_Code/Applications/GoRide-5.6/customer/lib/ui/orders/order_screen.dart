@@ -238,7 +238,8 @@ class OrderScreen extends StatelessWidget {
                                                                       child: orderModel.status == Constant.rideInProgress ||
                                                                               orderModel.status == Constant.ridePlaced ||
                                                                               orderModel.status == Constant.rideComplete
-                                                                          ? Text(Constant.statusLabel(orderModel.status))
+                                                                          ? Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
+                                                                              style: TextStyle(color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null), fontWeight: FontWeight.w600))
                                                                           : Row(
                                                                               children: [
                                                                                 Text("OTP".tr, style: GoogleFonts.poppins()),
@@ -557,7 +558,8 @@ class OrderScreen extends StatelessWidget {
                                                                   child: Center(
                                                                     child: Row(
                                                                       children: [
-                                                                        Expanded(child: Text(Constant.statusLabel(orderModel.status), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+                                                                        Expanded(child: Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
+                                                                            style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null)))),
                                                                         Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins()),
                                                                       ],
                                                                     ),
@@ -668,7 +670,8 @@ class OrderScreen extends StatelessWidget {
                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                                 children: [
-                                                                  Expanded(child: Text(Constant.statusLabel(orderModel.status))),
+                                                                  Expanded(child: Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
+                                                                              style: TextStyle(color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null), fontWeight: FontWeight.w600))),
                                                                   Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins(fontSize: 12)),
                                                                 ],
                                                               )),

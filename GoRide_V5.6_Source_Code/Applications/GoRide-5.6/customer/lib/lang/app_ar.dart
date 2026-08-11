@@ -248,4 +248,7 @@ const Map<String, String> arAR = {
   'Paid with': 'تم الدفع بواسطة',
   'Rate your trip': 'قيم رحلتك',
   'Done': 'تم',
+  'Driver On The Way': 'السائق في الطريق',
+  'Driver Arrived': 'وصل السائق',
+  'Trip Started': 'بدأت الرحلة',
 };

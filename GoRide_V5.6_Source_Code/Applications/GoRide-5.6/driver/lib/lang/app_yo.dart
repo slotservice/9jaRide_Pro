@@ -338,4 +338,6 @@ const Map<String, String> yoYO = {
   'Rejected': 'Ti kọ',
   'Pending review': 'Ni idaduro atunyewo',
   'Not uploaded': 'Ko ti gbe wọle',
+  'Your driver has arrived': 'Awako re ti de',
+  'Your driver is at the pickup point and waiting for you.': 'Awako re wa ni ibi gbigbe o si n duro de o.',
 };

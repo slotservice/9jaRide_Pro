@@ -263,4 +263,7 @@ const Map<String, String> enUS = {
   'Paid with': 'Paid with',
   'Rate your trip': 'Rate your trip',
   'Done': 'Done',
+  'Driver On The Way': 'Driver On The Way',
+  'Driver Arrived': 'Driver Arrived',
+  'Trip Started': 'Trip Started',
 };

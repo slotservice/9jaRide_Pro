@@ -350,7 +350,8 @@ class CompleteOrderScreen extends StatelessWidget {
                                                   child: Center(
                                                     child: Row(
                                                       children: [
-                                                        Expanded(child: Text(Constant.statusLabel(controller.orderModel.value.status), style: GoogleFonts.poppins(fontWeight: FontWeight.w500))),
+                                                        Expanded(child: Text(Constant.statusLabel(controller.orderModel.value.status, driverArrived: controller.orderModel.value.driverArrivedAt != null).tr,
+                                                            style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Constant.rideStatusColor(controller.orderModel.value.status, driverArrived: controller.orderModel.value.driverArrivedAt != null)))),
                                                         Text(Constant().formatTimestamp(controller.orderModel.value.createdDate), style: GoogleFonts.poppins()),
                                                       ],
                                                     ),

@@ -1,7 +1,12 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
+import 'package:driver/constant/send_notification.dart';
 import 'package:driver/constant/show_toast_dialog.dart';
 import 'package:driver/controller/dash_board_controller.dart';
+import 'package:driver/model/order_model.dart';
+import 'package:driver/model/user_model.dart';
 import 'package:driver/model/driver_user_model.dart';
 import 'package:driver/model/order/location_lat_lng.dart';
 import 'package:driver/model/order/positions.dart';
@@ -63,6 +68,11 @@ class HomeController extends GetxController {
 
   RxInt isActiveValue = 0.obs;
 
+  // The ride the driver is currently on their way to collect, if any. Held here
+  // so the location stream can spot the arrival on its own, without needing the
+  // driver to have the tracking screen open.
+  Rx<OrderModel?> pickupRide = Rx<OrderModel?>(null);
+
   void getActiveRide() {
     FireStoreUtils.fireStore
         .collection(CollectionName.orders)
@@ -71,6 +81,18 @@ class HomeController extends GetxController {
         .snapshots()
         .listen((event) {
           isActiveValue.value = event.size;
+
+          OrderModel? headingToPickup;
+          for (final doc in event.docs) {
+            final OrderModel order = OrderModel.fromJson(doc.data());
+            // Only rides on the way to the pickup, and only until we have
+            // already recorded the arrival once.
+            if (order.status == Constant.rideActive && order.driverArrivedAt == null) {
+              headingToPickup = order;
+              break;
+            }
+          }
+          pickupRide.value = headingToPickup;
         });
   }
 
@@ -110,5 +132,56 @@ class HomeController extends GetxController {
       'location': LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude).toJson(),
       'rotation': locationData.heading,
     });
+
+    _checkArrivalAtPickup(position);
+  }
+
+  /// How close the driver has to get before the rider is told they have
+  /// arrived. 0.1 km is the 100 metres the client asked for.
+  static const double _arrivalRadiusKm = 0.1;
+
+  // Stops a second location tick firing the same notification while the first
+  // write is still in flight.
+  bool _arrivalCheckInFlight = false;
+
+  Future<void> _checkArrivalAtPickup(GeoFirePoint position) async {
+    final OrderModel? order = pickupRide.value;
+    if (order == null || _arrivalCheckInFlight) return;
+    // Firestore's doc() generates a brand new id when handed null, so without
+    // this guard a missing id would silently create a stray order document.
+    final String orderId = order.id ?? '';
+    if (orderId.isEmpty) return;
+
+    final LocationLatLng? pickup = order.sourceLocationLAtLng;
+    if (pickup?.latitude == null || pickup?.longitude == null) return;
+
+    if (position.kmDistance(lat: pickup!.latitude!, lng: pickup.longitude!) > _arrivalRadiusKm) return;
+
+    _arrivalCheckInFlight = true;
+    try {
+      // Update just this one field rather than writing the whole order back.
+      // The order here came from a snapshot, so a full write could quietly
+      // revert anything the rider changed in the meantime.
+      await FireStoreUtils.fireStore.collection(CollectionName.orders).doc(orderId).update({'driverArrivedAt': Timestamp.now()});
+      // Clear locally so we do not fire again in the window before the
+      // snapshot listener catches up with the write.
+      pickupRide.value = null;
+
+      final UserModel? customer = await FireStoreUtils.getCustomer(order.userId.toString());
+      if (customer?.fcmToken != null) {
+        await SendNotification.sendOneNotification(
+          token: customer!.fcmToken.toString(),
+          title: 'Your driver has arrived'.tr,
+          body: 'Your driver is at the pickup point and waiting for you.'.tr,
+          payload: <String, dynamic>{"type": "city_order", "orderId": orderId},
+        );
+      }
+    } catch (e) {
+      // Never let this break the location stream. driverArrivedAt stays unset
+      // on a failed write, so the next location tick simply tries again.
+      log("Arrival check error :: $e");
+    } finally {
+      _arrivalCheckInFlight = false;
+    }
   }
 }

@@ -320,4 +320,6 @@ const Map<String, String> arAR = {
   'Rejected': 'مرفوض',
   'Pending review': 'قيد المراجعة',
   'Not uploaded': 'لم يتم الرفع',
+  'Your driver has arrived': 'وصل سائقك',
+  'Your driver is at the pickup point and waiting for you.': 'سائقك في نقطة الانطلاق وفي انتظارك.',
 };

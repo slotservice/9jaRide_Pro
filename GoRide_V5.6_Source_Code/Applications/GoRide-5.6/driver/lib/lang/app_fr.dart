@@ -321,4 +321,6 @@ const Map<String, String> frFR = {
   'Rejected': 'Rejete',
   'Pending review': 'En attente de verification',
   'Not uploaded': 'Non televerse',
+  'Your driver has arrived': 'Votre chauffeur est arrive',
+  'Your driver is at the pickup point and waiting for you.': 'Votre chauffeur est au point de prise en charge et vous attend.',
 };

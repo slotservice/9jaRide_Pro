@@ -273,4 +273,7 @@ const Map<String, String> igIG = {
   'Amount': 'Ego',
   'Paid with': 'Akwuru site na',
   'Rate your trip': 'Nyochaa njem gi',
+  'Driver On The Way': 'Onye nkwo no na uzo',
+  'Driver Arrived': 'Onye nkwo abiala',
+  'Trip Started': 'Njem amalitela',
 };
