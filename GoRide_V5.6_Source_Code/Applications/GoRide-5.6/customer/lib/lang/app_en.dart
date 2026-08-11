@@ -255,4 +255,12 @@ const Map<String, String> enUS = {
       "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!",
   'Special Assistance Needed': 'Special Assistance Needed',
   'Wheelchair, elderly care, visual impairment': 'Wheelchair, elderly care, visual impairment',
+  'Payment Confirmed': 'Payment Confirmed',
+  'Payment Sent': 'Payment Sent',
+  'Your payment has been received. Thank you for riding with us.': 'Your payment has been received. Thank you for riding with us.',
+  'Your driver needs to confirm they received the cash.': 'Your driver needs to confirm they received the cash.',
+  'Amount': 'Amount',
+  'Paid with': 'Paid with',
+  'Rate your trip': 'Rate your trip',
+  'Done': 'Done',
 };

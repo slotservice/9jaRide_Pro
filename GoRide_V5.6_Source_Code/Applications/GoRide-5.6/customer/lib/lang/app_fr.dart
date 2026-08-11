@@ -239,4 +239,12 @@ const Map<String, String> frFR = {
   'Light/dark mode': 'Mode clair / Mode sombre',
   'Special Assistance Needed': 'Assistance spéciale requise',
   'Wheelchair, elderly care, visual impairment': 'Fauteuil roulant, soins aux personnes âgées, déficience visuelle',
+  'Payment Confirmed': 'Paiement confirme',
+  'Payment Sent': 'Paiement envoye',
+  'Your payment has been received. Thank you for riding with us.': 'Votre paiement a bien ete recu. Merci d avoir voyage avec nous.',
+  'Your driver needs to confirm they received the cash.': 'Votre chauffeur doit confirmer qu il a bien recu l argent.',
+  'Amount': 'Montant',
+  'Paid with': 'Paye avec',
+  'Rate your trip': 'Evaluez votre trajet',
+  'Done': 'Termine',
 };

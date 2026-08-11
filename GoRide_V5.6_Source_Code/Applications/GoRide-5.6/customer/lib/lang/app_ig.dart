@@ -266,4 +266,11 @@ const Map<String, String> igIG = {
   'No Image available': 'Enweghị onyonyo dị',
   'Special Assistance Needed': 'Achọrọ Enyemaka Pụrụ Iche',
   'Wheelchair, elderly care, visual impairment': 'Oche igwe, nlekọta ndị okenye, adịghị ike anya',
+  'Payment Confirmed': 'Akwadoro ugwo',
+  'Payment Sent': 'Ezigara ugwo',
+  'Your payment has been received. Thank you for riding with us.': 'Anatala ugwo gi. Daalu maka iso anyi gaa njem.',
+  'Your driver needs to confirm they received the cash.': 'Onye nkwo gi kwesiri ikwado na o natara ego ahu.',
+  'Amount': 'Ego',
+  'Paid with': 'Akwuru site na',
+  'Rate your trip': 'Nyochaa njem gi',
 };

@@ -266,4 +266,11 @@ const Map<String, String> haHA = {
   'No Image available': 'Babu hoto da yake samu',
   'Special Assistance Needed': 'Ana Buƙatar Taimako Na Musamman',
   'Wheelchair, elderly care, visual impairment': 'Kujera guragu, kula da tsofaffi, naƙasasshen gani',
+  'Payment Confirmed': 'An tabbatar da biyan kudi',
+  'Payment Sent': 'An aika biyan kudi',
+  'Your payment has been received. Thank you for riding with us.': 'An karbi biyan kudin ku. Mun gode da tafiya tare da mu.',
+  'Your driver needs to confirm they received the cash.': 'Direban ku yana bukatar tabbatar da cewa ya karbi kudin.',
+  'Amount': 'Adadi',
+  'Paid with': 'An biya da',
+  'Rate your trip': 'Kimanta tafiyar ku',
 };

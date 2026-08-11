@@ -240,4 +240,12 @@ const Map<String, String> arAR = {
   "Sorry for the inconvenience but we're performing some maintenance at the moment. We'll be back online shortly!": "نعتذر عن الإزعاج، لكننا نقوم حاليًا ببعض أعمال الصيانة. سنعود للعمل قريبًا!",
   'Special Assistance Needed': 'مساعدة خاصة مطلوبة',
   'Wheelchair, elderly care, visual impairment': 'كرسي متحرك، رعاية المسنين، ضعف البصر',
+  'Payment Confirmed': 'تم تأكيد الدفع',
+  'Payment Sent': 'تم إرسال الدفع',
+  'Your payment has been received. Thank you for riding with us.': 'تم استلام دفعتك. شكرا لركوبك معنا.',
+  'Your driver needs to confirm they received the cash.': 'يحتاج السائق إلى تأكيد استلامه للنقود.',
+  'Amount': 'المبلغ',
+  'Paid with': 'تم الدفع بواسطة',
+  'Rate your trip': 'قيم رحلتك',
+  'Done': 'تم',
 };

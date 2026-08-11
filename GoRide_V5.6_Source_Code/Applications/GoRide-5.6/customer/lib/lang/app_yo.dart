@@ -266,4 +266,11 @@ const Map<String, String> yoYO = {
   'No Image available': 'Ko si aworan to wa',
   'Special Assistance Needed': 'Iranlọwọ Pataki Nilo',
   'Wheelchair, elderly care, visual impairment': 'Kẹkẹ alaabo, itọju arugbo, ailagbara oju',
+  'Payment Confirmed': 'Isanwo ti fidi mule',
+  'Payment Sent': 'Isanwo ti ranse',
+  'Your payment has been received. Thank you for riding with us.': 'A ti gba isanwo re. E se fun irin-ajo pelu wa.',
+  'Your driver needs to confirm they received the cash.': 'Awako re nilo lati jerisi pe o gba owo naa.',
+  'Amount': 'Iye',
+  'Paid with': 'San pelu',
+  'Rate your trip': 'Se idiyele irin-ajo re',
 };

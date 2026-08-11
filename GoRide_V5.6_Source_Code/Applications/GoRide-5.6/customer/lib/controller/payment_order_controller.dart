@@ -26,6 +26,7 @@ import 'package:customer/payment/xenditModel.dart';
 import 'package:customer/payment/xenditScreen.dart';
 import 'package:customer/themes/app_colors.dart';
 import 'package:customer/utils/fire_store_utils.dart';
+import 'package:customer/widget/payment_confirmed_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -120,6 +121,7 @@ class PaymentOrderController extends GetxController {
 
   Future<void> completeOrder() async {
     ShowToastDialog.showLoader("Please wait..");
+    bool paymentConfirmed = false;
     try {
       orderModel.value.paymentStatus = true;
       orderModel.value.paymentType = selectedPaymentMethod.value;
@@ -194,7 +196,7 @@ class PaymentOrderController extends GetxController {
       }
       await FireStoreUtils.setOrder(orderModel.value).then((value) async {
         if (value == true) {
-          ShowToastDialog.showToast("Ride Complete successfully");
+          paymentConfirmed = true;
         }
       });
     } catch (e, stackTrace) {
@@ -203,10 +205,22 @@ class PaymentOrderController extends GetxController {
     } finally {
       ShowToastDialog.closeLoader();
     }
+
+    // Shown after the loader is dismissed, otherwise closing the loader would
+    // pop this dialog instead. Riders only got a toast before, which is easy
+    // to miss, so there was no clear confirmation the payment had landed.
+    if (paymentConfirmed) {
+      await showPaymentConfirmedDialog(
+        orderModel: orderModel.value,
+        amount: total.value.toString(),
+        paymentMethod: selectedPaymentMethod.value,
+      );
+    }
   }
 
   Future<void> completeCashOrder() async {
     ShowToastDialog.showLoader("Please wait..");
+    bool paymentSent = false;
     try {
       orderModel.value.paymentStatus = true;
       orderModel.value.paymentType = selectedPaymentMethod.value;
@@ -219,7 +233,7 @@ class PaymentOrderController extends GetxController {
       await FireStoreUtils.setOrder(orderModel.value).then((value) {
         if (value == true) {
           Get.back();
-          ShowToastDialog.showToast("Your payment request sent to driver please wait to the conformation".tr);
+          paymentSent = true;
         }
       });
     } catch (e, stackTrace) {
@@ -227,6 +241,17 @@ class PaymentOrderController extends GetxController {
       ShowToastDialog.showToast("Something went wrong: $e");
     } finally {
       ShowToastDialog.closeLoader();
+    }
+
+    // Cash still needs the driver to confirm they took the money, so this is
+    // deliberately worded as sent rather than confirmed.
+    if (paymentSent) {
+      await showPaymentConfirmedDialog(
+        orderModel: orderModel.value,
+        amount: total.value.toString(),
+        paymentMethod: selectedPaymentMethod.value,
+        awaitingDriverConfirmation: true,
+      );
     }
   }
 
