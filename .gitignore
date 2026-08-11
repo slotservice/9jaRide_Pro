@@ -54,6 +54,7 @@ drivergoogleservice.json
 
 # Internal dev / session files (not for client)
 *_prompt.md
+prompt.md
 chat.md
 guide.md
 project_status&plan.md
