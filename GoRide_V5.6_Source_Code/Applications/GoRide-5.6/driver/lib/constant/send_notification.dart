@@ -11,11 +11,22 @@ import 'package:http/http.dart' as http;
 class SendNotification {
   static final _scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
+  // The token is good for an hour. Minting a fresh one per notification meant
+  // downloading the service json and doing a full OAuth exchange every single
+  // send, which is two extra network round trips before the FCM call itself.
+  static AccessCredentials? _cachedCredentials;
+
   static Future getCharacters() {
     return http.get(Uri.parse(Constant.jsonNotificationFileURL.toString()));
   }
 
   static Future<String> getAccessToken() async {
+    final AccessCredentials? cached = _cachedCredentials;
+    // Refresh a couple of minutes early so a send never races the expiry.
+    if (cached != null && cached.accessToken.expiry.isAfter(DateTime.now().toUtc().add(const Duration(minutes: 2)))) {
+      return cached.accessToken.data;
+    }
+
     Map<String, dynamic> jsonData = {};
 
     await getCharacters().then((response) {
@@ -24,7 +35,12 @@ class SendNotification {
     final serviceAccountCredentials = ServiceAccountCredentials.fromJson(jsonData);
 
     final client = await clientViaServiceAccount(serviceAccountCredentials, _scopes);
-    return client.credentials.accessToken.data;
+    final AccessCredentials credentials = client.credentials;
+    _cachedCredentials = credentials;
+    // We drive the FCM call with plain http below, so this client is not needed
+    // once we have the token. Leaving it open leaked a connection per send.
+    client.close();
+    return credentials.accessToken.data;
   }
 
   static sendOneNotification({required String token, required String title, required String body, required Map<String, dynamic> payload}) async {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -816,21 +817,27 @@ class HomeScreen extends StatelessWidget {
                                               if (controller.selectedZone.value.id != null) {
                                                 orderModel.zoneId = controller.selectedZone.value.id;
                                                 orderModel.zone = controller.selectedZone.value;
-                                                await FireStoreUtils.sendOrderDataFuture(orderModel).then((eventData) async {
-                                                  for (var driver in eventData) {
-                                                    if (driver.fcmToken != null) {
-                                                      Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order", "orderId": orderModel.id};
-                                                      await SendNotification.sendOneNotification(
-                                                          token: driver.fcmToken.toString(),
-                                                          title: 'New Ride Available'.tr,
-                                                          body: 'A customer has placed a ride near your location.'.tr,
-                                                          payload: playLoad);
-                                                    }
-                                                  }
-                                                });
+                                                // Save the ride BEFORE alerting anyone. The driver app's live
+                                                // ride list reads from the orders collection, so notifying first
+                                                // meant drivers were told about a ride that did not exist yet.
                                                 await FireStoreUtils.setOrder(orderModel).then((value) {
                                                   ShowToastDialog.showToast("Ride Placed successfully".tr);
                                                   controller.dashboardController.selectedDrawerIndex(2);
+                                                });
+                                                // Alert every matched driver at once. This used to run one driver
+                                                // at a time, so the last driver waited for all the ones before them.
+                                                await FireStoreUtils.sendOrderDataFuture(orderModel).then((eventData) async {
+                                                  Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order", "orderId": orderModel.id};
+                                                  await Future.wait(
+                                                    eventData.where((driver) => driver.fcmToken != null).map(
+                                                          (driver) => SendNotification.sendOneNotification(
+                                                            token: driver.fcmToken.toString(),
+                                                            title: 'New Ride Available'.tr,
+                                                            body: 'A customer has placed a ride near your location.'.tr,
+                                                            payload: playLoad,
+                                                          ),
+                                                        ),
+                                                  );
                                                 });
                                               } else {
                                                 ShowToastDialog.showToast(
