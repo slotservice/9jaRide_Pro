@@ -119,7 +119,7 @@ class Constant {
     }
   }
 
-  static String globalUrl = "https://app.9jaridepro.com/";
+  static String globalUrl = "https://9ja-api.yjin50650.workers.dev/";
   static const userPlaceHolder =
       "https://firebasestorage.googleapis.com/v0/b/jaride-pro.firebasestorage.app/o/placeholderImages%2Fuser-placeholder.jpeg?alt=media";
 

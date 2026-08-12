@@ -20,7 +20,7 @@ import 'package:http/http.dart' as http;
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
-const String _backendUrl = 'https://app.9jaridepro.com';
+const String _backendUrl = 'https://9ja-api.yjin50650.workers.dev';
 
 class OtpScreen extends StatelessWidget {
   const OtpScreen({Key? key}) : super(key: key);
