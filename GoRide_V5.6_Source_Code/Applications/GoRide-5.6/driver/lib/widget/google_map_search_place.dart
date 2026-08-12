@@ -45,6 +45,9 @@ class GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
     try {
       String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
       String request = '$baseURL?input=$input&key=${Constant.mapAPIKey}&sessiontoken=$_sessionToken';
+      if (Constant.regionCode != "all" && Constant.regionCode.isNotEmpty) {
+        request = '$request&components=country:${Constant.regionCode}';
+      }
       var response = await http.get(Uri.parse(request));
       if (response.statusCode == 200) {
         setState(() {

@@ -67,8 +67,10 @@ class Constant {
   static String mapType = "google";
   static String selectedMapType = 'osm';
   static String driverLocationUpdate = "10";
-  static String regionCode = "";
-  static String regionCountry = "";
+  // Defaults to Nigeria so place search stays scoped even if settings have not
+  // loaded yet. Firestore settings/globalValue.regionCode still overrides this.
+  static String regionCode = "NG";
+  static String regionCountry = "Nigeria";
   static int totalHoldingCharges = 0;
 
   static const String ridePlaced = "Ride Placed";

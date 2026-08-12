@@ -55,8 +55,10 @@ class Constant {
   static List<LanguagePrivacyPolicy> privacyPolicy = [];
   static String? supportURL = "";
   static String appVersion = "";
-  static String regionCode = "";
-  static String regionCountry = "";
+  // Defaults to Nigeria so place search stays scoped even if settings have not
+  // loaded yet. Firestore settings/globalValue.regionCode still overrides this.
+  static String regionCode = "NG";
+  static String regionCountry = "Nigeria";
   static bool isVerifyDocument = false;
   static bool isSubscriptionModelApplied = false;
   static AdminCommission? adminCommission;
