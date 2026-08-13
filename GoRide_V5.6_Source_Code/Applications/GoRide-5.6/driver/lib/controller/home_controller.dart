@@ -144,6 +144,34 @@ class HomeController extends GetxController {
   // write is still in flight.
   bool _arrivalCheckInFlight = false;
 
+  /// Only tell the rider the distance again once the driver has actually
+  /// covered this much ground. Without it we would write to the order on every
+  /// single location tick for the whole approach.
+  static const double _distanceWriteStepKm = 0.2;
+  double? _lastPublishedDistanceKm;
+  String? _distanceOrderId;
+
+  /// Publishes roughly how far the driver still is, so the rider app can say
+  /// "driver is 300 metres away" instead of just "driver on the way".
+  Future<void> _publishDistanceToRider(String orderId, double km) async {
+    // A different ride means the previous figure is meaningless.
+    if (_distanceOrderId != orderId) {
+      _distanceOrderId = orderId;
+      _lastPublishedDistanceKm = null;
+    }
+    final double? last = _lastPublishedDistanceKm;
+    if (last != null && (last - km).abs() < _distanceWriteStepKm) return;
+    _lastPublishedDistanceKm = km;
+    try {
+      await FireStoreUtils.fireStore.collection(CollectionName.orders).doc(orderId).update({'driverDistanceKm': km});
+    } catch (e) {
+      // Cosmetic only, so never let it break the location stream. Put the old
+      // figure back so the next tick retries rather than skipping ahead.
+      _lastPublishedDistanceKm = last;
+      log("Distance publish error :: $e");
+    }
+  }
+
   Future<void> _checkArrivalAtPickup(GeoFirePoint position) async {
     final OrderModel? order = pickupRide.value;
     if (order == null || _arrivalCheckInFlight) return;
@@ -155,7 +183,10 @@ class HomeController extends GetxController {
     final LocationLatLng? pickup = order.sourceLocationLAtLng;
     if (pickup?.latitude == null || pickup?.longitude == null) return;
 
-    if (position.kmDistance(lat: pickup!.latitude!, lng: pickup.longitude!) > _arrivalRadiusKm) return;
+    final double km = position.kmDistance(lat: pickup!.latitude!, lng: pickup.longitude!);
+    await _publishDistanceToRider(orderId, km);
+
+    if (km > _arrivalRadiusKm) return;
 
     _arrivalCheckInFlight = true;
     try {

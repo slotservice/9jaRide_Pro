@@ -252,4 +252,8 @@ const Map<String, String> arAR = {
   'Driver Arrived': 'وصل السائق',
   'Trip Started': 'بدأت الرحلة',
   'Give this code to your driver': 'أعط هذا الرمز لسائقك',
+  'Your driver has arrived': 'وصل سائقك',
+  'Driver is arriving now': 'السائق يصل الآن',
+  'Driver is @distance metres away': 'السائق على بعد @distance متر',
+  'Driver is @distance km away': 'السائق على بعد @distance كم',
 };

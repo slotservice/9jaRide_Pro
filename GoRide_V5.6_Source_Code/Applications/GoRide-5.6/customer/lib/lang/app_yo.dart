@@ -277,4 +277,8 @@ const Map<String, String> yoYO = {
   'Driver Arrived': 'Awako ti de',
   'Trip Started': 'Irin-ajo ti bere',
   'Give this code to your driver': 'Fun awako re ni koodu yii',
+  'Your driver has arrived': 'Awako re ti de',
+  'Driver is arriving now': 'Awako n de bayi',
+  'Driver is @distance metres away': 'Awako wa ni mita @distance si',
+  'Driver is @distance km away': 'Awako wa ni kilomita @distance si',
 };

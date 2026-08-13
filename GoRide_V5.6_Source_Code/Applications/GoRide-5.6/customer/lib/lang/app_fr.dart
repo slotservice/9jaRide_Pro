@@ -251,4 +251,8 @@ const Map<String, String> frFR = {
   'Driver Arrived': 'Chauffeur arrive',
   'Trip Started': 'Trajet commence',
   'Give this code to your driver': 'Donnez ce code a votre chauffeur',
+  'Your driver has arrived': 'Votre chauffeur est arrive',
+  'Driver is arriving now': 'Le chauffeur arrive maintenant',
+  'Driver is @distance metres away': 'Le chauffeur est a @distance metres',
+  'Driver is @distance km away': 'Le chauffeur est a @distance km',
 };

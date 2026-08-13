@@ -29,6 +29,23 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+/// Turns the distance the driver app publishes into something a rider can read.
+/// Rounded to the nearest 50 metres so it does not jitter with every update,
+/// and empty whenever there is nothing useful to say, which the caller treats
+/// as "draw nothing".
+String driverProximityText(OrderModel orderModel) {
+  if (orderModel.status != Constant.rideActive) return '';
+  if (orderModel.driverArrivedAt != null) return 'Your driver has arrived'.tr;
+  final double? km = orderModel.driverDistanceKm;
+  if (km == null) return '';
+  if (km <= 0.15) return 'Driver is arriving now'.tr;
+  if (km < 1) {
+    final int metres = ((km * 1000) / 50).round() * 50;
+    return 'Driver is @distance metres away'.trParams({'distance': '$metres'});
+  }
+  return 'Driver is @distance km away'.trParams({'distance': km.toStringAsFixed(1)});
+}
+
 class OrderScreen extends StatelessWidget {
   const OrderScreen({super.key});
 
@@ -184,6 +201,20 @@ class OrderScreen extends StatelessWidget {
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
+                                                        driverProximityText(orderModel).isEmpty
+                                                            ? Container()
+                                                            : Padding(
+                                                                padding: const EdgeInsets.only(bottom: 5),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Icon(Icons.directions_car, size: 16, color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null)),
+                                                                    const SizedBox(width: 6),
+                                                                    Expanded(
+                                                                        child: Text(driverProximityText(orderModel),
+                                                                            style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500))),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                         // The rider reads this out so the driver can start the trip. It was
                                                         // previously only reachable by opening the ride details, or buried in
                                                         // the share message on rides booked for somebody else. Hidden once the

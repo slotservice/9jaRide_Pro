@@ -44,6 +44,11 @@ class OrderModel {
   /// Set when a driver starts the trip without the rider's code, using the
   /// 'rider could not provide code' option. Left null on a normal start.
   Timestamp? otpSkippedAt;
+
+  /// How far the driver still is from the pickup, in km, published by the
+  /// driver app while it is on the way so the rider gets more than just
+  /// 'driver on the way'. Null until the first update lands.
+  double? driverDistanceKm;
   bool? paymentStatus;
   bool? isAcSelected;
   // Rider needs special assistance on this trip (wheelchair, elderly care,
@@ -88,6 +93,7 @@ class OrderModel {
       this.acceptHoldTime,
       this.driverArrivedAt,
       this.otpSkippedAt,
+      this.driverDistanceKm,
       this.taxList,
       this.coupon,
       this.someOneElse,
@@ -127,6 +133,7 @@ class OrderModel {
     acceptHoldTime = json['acceptHoldTime'];
     driverArrivedAt = json['driverArrivedAt'];
     otpSkippedAt = json['otpSkippedAt'];
+    driverDistanceKm = (json['driverDistanceKm'] as num?)?.toDouble();
     acceptedDriverId = json['acceptedDriverId'];
     rejectedDriverId = json['rejectedDriverId'];
     paymentStatus = json['paymentStatus'];
@@ -196,6 +203,7 @@ class OrderModel {
     data['acceptHoldTime'] = acceptHoldTime;
     data['driverArrivedAt'] = driverArrivedAt;
     data['otpSkippedAt'] = otpSkippedAt;
+    data['driverDistanceKm'] = driverDistanceKm;
     data['acceptedDriverId'] = acceptedDriverId;
     data['rejectedDriverId'] = rejectedDriverId;
     data['paymentStatus'] = paymentStatus;
