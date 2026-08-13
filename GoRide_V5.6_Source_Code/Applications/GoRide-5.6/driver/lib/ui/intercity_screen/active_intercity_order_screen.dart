@@ -336,7 +336,9 @@ class ActiveIntercityOrderScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: PinCodeTextField(
-                length: 6,
+                // Adapts to this order's own code, so rides booked before the switch to
+                // four digits can still be started with their old six digit code.
+                length: (orderModel.otp == null || orderModel.otp!.length < 4) ? 4 : orderModel.otp!.length,
                 appContext: context,
                 keyboardType: TextInputType.phone,
                 pinTheme: PinTheme(

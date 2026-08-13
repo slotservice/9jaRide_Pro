@@ -802,7 +802,7 @@ class HomeScreen extends StatelessWidget {
                                                   : Constant.adminCommission?.isEnabled == false
                                                       ? adminCommissionGlobal
                                                       : Constant.adminCommission;
-                                              orderModel.otp = Constant.getReferralCode();
+                                              orderModel.otp = Constant.getRideOtp();
                                               bool hasAcNonAcPrice = controller.selectedType.value.prices?.isNotEmpty == true && controller.selectedType.value.prices![0].isAcNonAc == true;
                                               orderModel.isAcSelected = hasAcNonAcPrice ? controller.isAcSelected.value : false;
                                               // Carry the rider's assistance need onto the ride, so only drivers

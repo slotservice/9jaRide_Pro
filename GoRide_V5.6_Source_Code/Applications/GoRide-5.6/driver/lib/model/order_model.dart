@@ -40,6 +40,10 @@ class OrderModel {
   /// arrival range of the pickup. Deliberately a timestamp rather than a new
   /// status value, so every existing status query and filter keeps working.
   Timestamp? driverArrivedAt;
+
+  /// Set when a driver starts the trip without the rider's code, using the
+  /// 'rider could not provide code' option. Left null on a normal start.
+  Timestamp? otpSkippedAt;
   bool? paymentStatus;
   bool? isAcSelected;
   // Rider needs special assistance on this trip (wheelchair, elderly care,
@@ -83,6 +87,7 @@ class OrderModel {
       this.updateDate,
       this.acceptHoldTime,
       this.driverArrivedAt,
+      this.otpSkippedAt,
       this.taxList,
       this.coupon,
       this.someOneElse,
@@ -121,6 +126,7 @@ class OrderModel {
     updateDate = json['updateDate'];
     acceptHoldTime = json['acceptHoldTime'];
     driverArrivedAt = json['driverArrivedAt'];
+    otpSkippedAt = json['otpSkippedAt'];
     acceptedDriverId = json['acceptedDriverId'];
     rejectedDriverId = json['rejectedDriverId'];
     paymentStatus = json['paymentStatus'];
@@ -189,6 +195,7 @@ class OrderModel {
     data['updateDate'] = updateDate;
     data['acceptHoldTime'] = acceptHoldTime;
     data['driverArrivedAt'] = driverArrivedAt;
+    data['otpSkippedAt'] = otpSkippedAt;
     data['acceptedDriverId'] = acceptedDriverId;
     data['rejectedDriverId'] = rejectedDriverId;
     data['paymentStatus'] = paymentStatus;

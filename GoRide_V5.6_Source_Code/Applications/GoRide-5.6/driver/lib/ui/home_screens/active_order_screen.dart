@@ -370,7 +370,9 @@ class ActiveOrderScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: PinCodeTextField(
-                length: 6,
+                // Adapts to this order's own code, so rides booked before the switch to
+                // four digits can still be started with their old six digit code.
+                length: (orderModel.otp == null || orderModel.otp!.length < 4) ? 4 : orderModel.otp!.length,
                 appContext: context,
                 keyboardType: TextInputType.phone,
                 pinTheme: PinTheme(
@@ -427,6 +429,54 @@ class ActiveOrderScreen extends StatelessWidget {
                 );
               }
             }),
+            const SizedBox(height: 6),
+            // Without this a driver is stranded whenever the rider genuinely
+            // cannot read out the code, for example a flat phone battery, or
+            // the ride was booked for somebody else. The trip is stamped so
+            // the office can see who is leaning on it.
+            TextButton(
+              onPressed: () async {
+                final confirmed = await Get.dialog<bool>(
+                  AlertDialog(
+                    title: Text("Start without the code?".tr, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+                    content: Text("Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.".tr, style: GoogleFonts.poppins()),
+                    actions: [
+                      TextButton(onPressed: () => Get.back(result: false), child: Text("Cancel".tr, style: GoogleFonts.poppins())),
+                      TextButton(onPressed: () => Get.back(result: true), child: Text("Start ride".tr, style: GoogleFonts.poppins())),
+                    ],
+                  ),
+                );
+                if (confirmed != true) {
+                  return;
+                }
+                Get.back();
+                ShowToastDialog.showLoader("Please wait...".tr);
+                try {
+                  orderModel.status = Constant.rideInProgress;
+                  orderModel.otpSkippedAt = Timestamp.now();
+                  await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                    if (value != null) {
+                      await SendNotification.sendOneNotification(
+                          token: value.fcmToken.toString(), title: 'Ride Started'.tr, body: 'The ride has officially started. Please follow the designated route to the destination.'.tr, payload: {});
+                    }
+                  });
+                  if (controller.drivermodel.value?.ownerId != null) {
+                    orderModel.ownerId = controller.drivermodel.value?.ownerId;
+                  }
+                  await FireStoreUtils.setOrder(orderModel).then((value) {
+                    if (value == true) {
+                      ShowToastDialog.showToast("Ride started without the code. It has been flagged for review.".tr);
+                    }
+                  });
+                } catch (e, stackTrace) {
+                  log("Start without OTP error :: $e\n$stackTrace");
+                  ShowToastDialog.showToast("Something went wrong: $e");
+                } finally {
+                  ShowToastDialog.closeLoader();
+                }
+              },
+              child: Text("Rider could not provide the code".tr, style: GoogleFonts.poppins(fontSize: 12, decoration: TextDecoration.underline)),
+            ),
             const SizedBox(
               height: 10,
             ),

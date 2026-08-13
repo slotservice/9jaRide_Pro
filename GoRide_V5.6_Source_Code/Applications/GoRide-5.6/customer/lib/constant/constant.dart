@@ -411,6 +411,14 @@ class Constant {
     return (rng.nextInt(900000) + 100000).toString();
   }
 
+  /// The code the rider reads out so the driver can start the trip. Kept
+  /// separate from getReferralCode, which is also used for real referral codes
+  /// at signup and should stay six digits.
+  static String getRideOtp() {
+    var rng = math.Random();
+    return (rng.nextInt(9000) + 1000).toString();
+  }
+
   bool hasValidUrl(String value) {
     String pattern = r'(http|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?';
     RegExp regExp = RegExp(pattern);

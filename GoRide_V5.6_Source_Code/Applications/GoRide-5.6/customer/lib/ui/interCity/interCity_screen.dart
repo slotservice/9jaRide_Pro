@@ -567,7 +567,7 @@ class InterCityScreen extends StatelessWidget {
                                                   intercityOrderModel.whenTime = DateFormat("HH:mm").format(controller.dateAndTime!);
                                                   intercityOrderModel.whenDates = DateFormat("dd-MMM-yyyy").format(controller.dateAndTime!);
                                                   intercityOrderModel.comments = controller.commentsController.value.text;
-                                                  intercityOrderModel.otp = Constant.getReferralCode();
+                                                  intercityOrderModel.otp = Constant.getRideOtp();
                                                   intercityOrderModel.taxList = Constant.taxList;
                                                   intercityOrderModel.zoneId = controller.selectedZone.value.id;
                                                   intercityOrderModel.zone = controller.selectedZone.value;
@@ -642,7 +642,7 @@ class InterCityScreen extends StatelessWidget {
                                                   intercityOrderModel.whenTime = DateFormat("HH:mm").format(controller.dateAndTime!);
                                                   intercityOrderModel.whenDates = DateFormat("dd-MMM-yyyy").format(controller.dateAndTime!);
                                                   intercityOrderModel.comments = controller.commentsController.value.text;
-                                                  intercityOrderModel.otp = Constant.getReferralCode();
+                                                  intercityOrderModel.otp = Constant.getRideOtp();
                                                   intercityOrderModel.taxList = Constant.taxList;
                                                   AdminCommission? adminCommissionGlobal;
                                                   if (Constant.adminCommission?.isEnabled != true) {
@@ -708,7 +708,7 @@ class InterCityScreen extends StatelessWidget {
                                                   intercityOrderModel.whenDates = DateFormat("dd-MMM-yyyy").format(controller.dateAndTime!);
                                                   intercityOrderModel.numberOfPassenger = controller.noOfPassengers.value.text;
                                                   intercityOrderModel.comments = controller.commentsController.value.text;
-                                                  intercityOrderModel.otp = Constant.getReferralCode();
+                                                  intercityOrderModel.otp = Constant.getRideOtp();
                                                   intercityOrderModel.taxList = Constant.taxList;
                                                   AdminCommission? adminCommissionGlobal;
                                                   if (Constant.adminCommission?.isEnabled != true) {
