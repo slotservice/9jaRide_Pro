@@ -281,4 +281,8 @@ const Map<String, String> yoYO = {
   'Driver is arriving now': 'Awako n de bayi',
   'Driver is @distance metres away': 'Awako wa ni mita @distance si',
   'Driver is @distance km away': 'Awako wa ni kilomita @distance si',
+  'Send code by SMS': 'Fi koodu ranse nipa SMS',
+  'Code sent by text': 'A ti fi koodu ranse',
+  'Could not send the text right now': 'A ko le fi ise ranse bayi',
+  'Please sign in again': 'Jowo wole pada',
 };

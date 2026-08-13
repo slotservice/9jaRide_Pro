@@ -256,4 +256,8 @@ const Map<String, String> arAR = {
   'Driver is arriving now': 'السائق يصل الآن',
   'Driver is @distance metres away': 'السائق على بعد @distance متر',
   'Driver is @distance km away': 'السائق على بعد @distance كم',
+  'Send code by SMS': 'أرسل الرمز برسالة نصية',
+  'Code sent by text': 'تم إرسال الرمز برسالة نصية',
+  'Could not send the text right now': 'تعذر إرسال الرسالة الآن',
+  'Please sign in again': 'يرجى تسجيل الدخول مرة أخرى',
 };

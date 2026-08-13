@@ -271,4 +271,8 @@ const Map<String, String> enUS = {
   'Driver is arriving now': 'Driver is arriving now',
   'Driver is @distance metres away': 'Driver is @distance metres away',
   'Driver is @distance km away': 'Driver is @distance km away',
+  'Send code by SMS': 'Send code by SMS',
+  'Code sent by text': 'Code sent by text',
+  'Could not send the text right now': 'Could not send the text right now',
+  'Please sign in again': 'Please sign in again',
 };

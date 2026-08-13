@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 import 'package:customer/constant/collection_name.dart';
 import 'package:customer/constant/constant.dart';
 import 'package:customer/constant/show_toast_dialog.dart';
@@ -44,6 +47,44 @@ String driverProximityText(OrderModel orderModel) {
     return 'Driver is @distance metres away'.trParams({'distance': '$metres'});
   }
   return 'Driver is @distance km away'.trParams({'distance': km.toStringAsFixed(1)});
+}
+
+/// Texts the rider the code that is already on their screen, for the times they
+/// cannot get to it.
+///
+/// The code is never sent from here. The server checks the caller is signed in
+/// as the rider on this ride, then reads the code off the order itself, which
+/// also keeps the SMS credentials off the handset.
+Future<void> sendRideCodeBySms(String orderId) async {
+  String message = "Could not send the text right now".tr;
+  ShowToastDialog.showLoader("Please wait".tr);
+  try {
+    final String? idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (idToken == null) {
+      message = "Please sign in again".tr;
+    } else {
+      final http.Response response = await http
+          .post(
+            Uri.parse('${Constant.globalUrl}api/ride/send-otp-sms'),
+            headers: <String, String>{'Content-Type': 'application/json', 'Accept': 'application/json'},
+            body: jsonEncode(<String, String>{'orderId': orderId, 'idToken': idToken}),
+          )
+          .timeout(const Duration(seconds: 30));
+      final dynamic body = jsonDecode(response.body);
+      if (response.statusCode == 200 && body is Map && body['sent'] == true) {
+        message = "Code sent by text".tr;
+      } else if (body is Map && body['error'] != null) {
+        message = body['error'].toString().tr;
+      }
+    }
+  } catch (e) {
+    log("Ride code SMS error :: $e");
+  } finally {
+    // Show the result after the loader is torn down, not inside the try. Doing
+    // it the other way round is what swallowed the payment dialog in b5cabed.
+    ShowToastDialog.closeLoader();
+  }
+  ShowToastDialog.showToast(message);
 }
 
 class OrderScreen extends StatelessWidget {
@@ -238,6 +279,11 @@ class OrderScreen extends StatelessWidget {
                                                                         const SizedBox(height: 4),
                                                                         Text(orderModel.otp.toString(),
                                                                             style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, letterSpacing: 6)),
+                                                                        TextButton.icon(
+                                                                          onPressed: () => sendRideCodeBySms(orderModel.id.toString()),
+                                                                          icon: const Icon(Icons.sms_outlined, size: 16),
+                                                                          label: Text("Send code by SMS".tr, style: GoogleFonts.poppins(fontSize: 12)),
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                   ),

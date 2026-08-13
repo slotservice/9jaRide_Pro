@@ -281,4 +281,8 @@ const Map<String, String> haHA = {
   'Driver is arriving now': 'Direba yana isowa yanzu',
   'Driver is @distance metres away': 'Direba yana nisan mita @distance',
   'Driver is @distance km away': 'Direba yana nisan kilomita @distance',
+  'Send code by SMS': 'Aika lambar ta SMS',
+  'Code sent by text': 'An aika lambar ta sako',
+  'Could not send the text right now': 'Ba a iya aika sakon yanzu ba',
+  'Please sign in again': 'Da fatan za a sake shiga',
 };

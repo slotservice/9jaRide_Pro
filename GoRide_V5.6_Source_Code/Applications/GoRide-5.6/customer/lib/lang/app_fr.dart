@@ -255,4 +255,8 @@ const Map<String, String> frFR = {
   'Driver is arriving now': 'Le chauffeur arrive maintenant',
   'Driver is @distance metres away': 'Le chauffeur est a @distance metres',
   'Driver is @distance km away': 'Le chauffeur est a @distance km',
+  'Send code by SMS': 'Envoyer le code par SMS',
+  'Code sent by text': 'Code envoye par SMS',
+  'Could not send the text right now': 'Impossible d envoyer le SMS pour le moment',
+  'Please sign in again': 'Veuillez vous reconnecter',
 };

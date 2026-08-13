@@ -281,4 +281,8 @@ const Map<String, String> igIG = {
   'Driver is arriving now': 'Onye okwo ugbo na-abia ugbu a',
   'Driver is @distance metres away': 'Onye okwo ugbo no na mita @distance',
   'Driver is @distance km away': 'Onye okwo ugbo no na kilomita @distance',
+  'Send code by SMS': 'Zipu koodu site na SMS',
+  'Code sent by text': 'Ezigala koodu site na ozi',
+  'Could not send the text right now': 'Enweghi ike izipu ozi ahu ugbu a',
+  'Please sign in again': 'Biko banye ozo',
 };
