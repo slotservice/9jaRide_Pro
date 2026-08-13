@@ -48,6 +48,12 @@ class GoogleMapSearchPlacesApiState extends State<GoogleMapSearchPlacesApi> {
       if (Constant.regionCode != "all" && Constant.regionCode.isNotEmpty) {
         request = '$request&components=country:${Constant.regionCode}';
       }
+      // Prefer places near the rider rather than anywhere in the country.
+      // Google barely weights a location without a radius, so the two go
+      // together. Falls back to a country wide search if we have no fix yet.
+      if (Constant.currentLocation?.latitude != null && Constant.currentLocation?.longitude != null) {
+        request = '$request&location=${Constant.currentLocation!.latitude},${Constant.currentLocation!.longitude}&radius=50000';
+      }
       var response = await http.get(Uri.parse(request));
       if (response.statusCode == 200) {
         setState(() {
