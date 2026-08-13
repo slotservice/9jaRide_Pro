@@ -323,4 +323,9 @@ const Map<String, String> frFR = {
   'Not uploaded': 'Non televerse',
   'Your driver has arrived': 'Votre chauffeur est arrive',
   'Your driver is at the pickup point and waiting for you.': 'Votre chauffeur est au point de prise en charge et vous attend.',
+  'Rider could not provide the code': 'Le passager ne peut pas donner le code',
+  'Start without the code?': 'Demarrer sans le code ?',
+  'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'A faire uniquement si le passager ne peut vraiment pas vous donner le code. Ce trajet sera signale pour verification.',
+  'Start ride': 'Demarrer la course',
+  'Ride started without the code. It has been flagged for review.': 'Course demarree sans le code. Elle a ete signalee pour verification.',
 };

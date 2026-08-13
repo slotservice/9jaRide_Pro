@@ -251,4 +251,5 @@ const Map<String, String> arAR = {
   'Driver On The Way': 'السائق في الطريق',
   'Driver Arrived': 'وصل السائق',
   'Trip Started': 'بدأت الرحلة',
+  'Give this code to your driver': 'أعط هذا الرمز لسائقك',
 };

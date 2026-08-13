@@ -340,4 +340,9 @@ const Map<String, String> yoYO = {
   'Not uploaded': 'Ko ti gbe wọle',
   'Your driver has arrived': 'Awako re ti de',
   'Your driver is at the pickup point and waiting for you.': 'Awako re wa ni ibi gbigbe o si n duro de o.',
+  'Rider could not provide the code': 'Ero ko le fun ni koodu naa',
+  'Start without the code?': 'Bere laisi koodu?',
+  'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Se eyi nikan ti ero ko ba le fun o ni koodu naa. A o samisi irin ajo yii fun atunyewo.',
+  'Start ride': 'Bere irin ajo',
+  'Ride started without the code. It has been flagged for review.': 'Irin ajo bere laisi koodu. A ti samisi re fun atunyewo.',
 };

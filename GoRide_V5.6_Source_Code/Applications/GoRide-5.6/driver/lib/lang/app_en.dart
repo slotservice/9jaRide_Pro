@@ -328,4 +328,9 @@ const Map<String, String> enUS = {
   'Not uploaded': 'Not uploaded',
   'Your driver has arrived': 'Your driver has arrived',
   'Your driver is at the pickup point and waiting for you.': 'Your driver is at the pickup point and waiting for you.',
+  'Rider could not provide the code': 'Rider could not provide the code',
+  'Start without the code?': 'Start without the code?',
+  'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.',
+  'Start ride': 'Start ride',
+  'Ride started without the code. It has been flagged for review.': 'Ride started without the code. It has been flagged for review.',
 };

@@ -322,4 +322,9 @@ const Map<String, String> arAR = {
   'Not uploaded': 'لم يتم الرفع',
   'Your driver has arrived': 'وصل سائقك',
   'Your driver is at the pickup point and waiting for you.': 'سائقك في نقطة الانطلاق وفي انتظارك.',
+  'Rider could not provide the code': 'الراكب لا يستطيع تقديم الرمز',
+  'Start without the code?': 'البدء بدون الرمز؟',
+  'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'قم بذلك فقط إذا كان الراكب لا يستطيع حقا إعطاءك الرمز. سيتم وضع علامة على هذه الرحلة للمراجعة.',
+  'Start ride': 'ابدأ الرحلة',
+  'Ride started without the code. It has been flagged for review.': 'بدأت الرحلة بدون الرمز. تم وضع علامة عليها للمراجعة.',
 };

@@ -250,4 +250,5 @@ const Map<String, String> frFR = {
   'Driver On The Way': 'Chauffeur en route',
   'Driver Arrived': 'Chauffeur arrive',
   'Trip Started': 'Trajet commence',
+  'Give this code to your driver': 'Donnez ce code a votre chauffeur',
 };

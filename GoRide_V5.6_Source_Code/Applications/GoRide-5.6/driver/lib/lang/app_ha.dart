@@ -340,4 +340,9 @@ const Map<String, String> haHA = {
   'Not uploaded': 'Ba a loda ba',
   'Your driver has arrived': 'Direban ku ya iso',
   'Your driver is at the pickup point and waiting for you.': 'Direban ku yana wurin daukar ku kuma yana jiran ku.',
+  'Rider could not provide the code': 'Fasinja bai iya bayar da lambar ba',
+  'Start without the code?': 'A fara ba tare da lambar ba?',
+  'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Yi wannan ne kawai idan fasinja ba zai iya ba ka lambar ba. Za a yi wa wannan tafiya alama domin dubawa.',
+  'Start ride': 'Fara tafiya',
+  'Ride started without the code. It has been flagged for review.': 'An fara tafiya ba tare da lambar ba. An yi mata alama domin dubawa.',
 };

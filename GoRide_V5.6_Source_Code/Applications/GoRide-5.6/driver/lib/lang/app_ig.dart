@@ -340,4 +340,9 @@ const Map<String, String> igIG = {
   'Not uploaded': 'Ebugoro ya',
   'Your driver has arrived': 'Onye nkwo gi abiala',
   'Your driver is at the pickup point and waiting for you.': 'Onye nkwo gi no na ebe mbuli ma na echere gi.',
+  'Rider could not provide the code': 'Onye njem enweghi ike inye koodu ahu',
+  'Start without the code?': 'Malite na-enweghi koodu?',
+  'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Mee nke a naani ma o buru na onye njem enweghi ike inye gi koodu ahu. A ga-eji njem a mee akara maka nyocha.',
+  'Start ride': 'Malite njem',
+  'Ride started without the code. It has been flagged for review.': 'Amalitela njem na-enweghi koodu. Ejila ya mee akara maka nyocha.',
 };

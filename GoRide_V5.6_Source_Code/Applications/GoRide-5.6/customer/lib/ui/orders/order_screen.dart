@@ -184,6 +184,35 @@ class OrderScreen extends StatelessWidget {
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
+                                                        // The rider reads this out so the driver can start the trip. It was
+                                                        // previously only reachable by opening the ride details, or buried in
+                                                        // the share message on rides booked for somebody else. Hidden once the
+                                                        // trip is running, since it is no use after that.
+                                                        (orderModel.otp != null &&
+                                                                orderModel.otp!.isNotEmpty &&
+                                                                (orderModel.status == Constant.ridePlaced || orderModel.status == Constant.rideActive))
+                                                            ? Padding(
+                                                                padding: const EdgeInsets.only(bottom: 5),
+                                                                child: Container(
+                                                                  width: double.infinity,
+                                                                  decoration: BoxDecoration(
+                                                                      color: themeChange.getThem() ? AppColors.darkGray : AppColors.gray,
+                                                                      borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      children: [
+                                                                        Text("Give this code to your driver".tr, style: GoogleFonts.poppins(fontSize: 12)),
+                                                                        const SizedBox(height: 4),
+                                                                        Text(orderModel.otp.toString(),
+                                                                            style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.bold, letterSpacing: 6)),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : Container(),
                                                         orderModel.someOneElse != null
                                                             ? Container(
                                                                 decoration: BoxDecoration(

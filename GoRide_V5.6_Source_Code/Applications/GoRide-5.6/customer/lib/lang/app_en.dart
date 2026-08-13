@@ -266,4 +266,5 @@ const Map<String, String> enUS = {
   'Driver On The Way': 'Driver On The Way',
   'Driver Arrived': 'Driver Arrived',
   'Trip Started': 'Trip Started',
+  'Give this code to your driver': 'Give this code to your driver',
 };

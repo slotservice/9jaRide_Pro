@@ -276,4 +276,5 @@ const Map<String, String> yoYO = {
   'Driver On The Way': 'Awako wa loju ona',
   'Driver Arrived': 'Awako ti de',
   'Trip Started': 'Irin-ajo ti bere',
+  'Give this code to your driver': 'Fun awako re ni koodu yii',
 };

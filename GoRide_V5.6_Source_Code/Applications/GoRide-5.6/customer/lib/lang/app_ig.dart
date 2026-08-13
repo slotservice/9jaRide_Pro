@@ -276,4 +276,5 @@ const Map<String, String> igIG = {
   'Driver On The Way': 'Onye nkwo no na uzo',
   'Driver Arrived': 'Onye nkwo abiala',
   'Trip Started': 'Njem amalitela',
+  'Give this code to your driver': 'Nye onye okwo ugbo gi koodu a',
 };
