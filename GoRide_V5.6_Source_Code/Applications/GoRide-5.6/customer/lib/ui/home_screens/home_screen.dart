@@ -202,8 +202,11 @@ class HomeScreen extends StatelessWidget {
                                                           controller.calculateAmount();
                                                         },
                                                         region: Constant.regionCode != "all" && Constant.regionCode.isNotEmpty ? Constant.regionCode : null,
-                                                        initialPosition: const LatLng(-33.8567844, 151.213108),
+                                                        initialPosition: const LatLng(6.5244, 3.3792),
                                                         useCurrentLocation: true,
+                                                        // Without a radius Google barely weights the location, so searches
+                                                        // spread nationwide. 50 km keeps results in the rider's own town.
+                                                        autocompleteRadius: 50000,
                                                         autocompleteComponents:
                                                             Constant.regionCode != "all" && Constant.regionCode.isNotEmpty ? [Component(Component.country, Constant.regionCode)] : [],
                                                         // Add this line
@@ -276,8 +279,11 @@ class HomeScreen extends StatelessWidget {
                                                                       controller.calculateAmount();
                                                                     },
                                                                     region: Constant.regionCode != "all" && Constant.regionCode.isNotEmpty ? Constant.regionCode : null,
-                                                                    initialPosition: const LatLng(-33.8567844, 151.213108),
+                                                                    initialPosition: const LatLng(6.5244, 3.3792),
                                                                     useCurrentLocation: true,
+                                                                    // Without a radius Google barely weights the location, so searches
+                                                                    // spread nationwide. 50 km keeps results in the rider's own town.
+                                                                    autocompleteRadius: 50000,
                                                                     autocompleteComponents:
                                                                         Constant.regionCode != "all" && Constant.regionCode.isNotEmpty ? [Component(Component.country, Constant.regionCode)] : [],
                                                                     selectInitialPosition: true,
@@ -338,8 +344,11 @@ class HomeScreen extends StatelessWidget {
                                                                       controller.calculateAmount();
                                                                     },
                                                                     region: Constant.regionCode != "all" && Constant.regionCode.isNotEmpty ? Constant.regionCode : null,
-                                                                    initialPosition: const LatLng(-33.8567844, 151.213108),
+                                                                    initialPosition: const LatLng(6.5244, 3.3792),
                                                                     useCurrentLocation: true,
+                                                                    // Without a radius Google barely weights the location, so searches
+                                                                    // spread nationwide. 50 km keeps results in the rider's own town.
+                                                                    autocompleteRadius: 50000,
                                                                     autocompleteComponents:
                                                                         Constant.regionCode != "all" && Constant.regionCode.isNotEmpty ? [Component(Component.country, Constant.regionCode)] : [],
                                                                     selectInitialPosition: true,

@@ -101,12 +101,19 @@ class Constant {
   }
 
   /// Colour coding for the trip lifecycle, so the stage of a ride is readable
-  /// at a glance the way it is in other ride apps: blue while the driver is on
-  /// their way, orange once they have arrived, green while the trip is running.
+  /// at a glance the way it is in other ride apps: light blue while we are still
+  /// looking for a driver, deep navy once one is on their way, orange when they
+  /// have arrived, green while the trip is running.
+  ///
+  /// These are drawn as text on both the light and dark themes, so the navy is
+  /// an indigo rather than a true near black navy, which would disappear on the
+  /// dark background.
   static Color rideStatusColor(String? status, {bool driverArrived = false}) {
     switch (status) {
+      case ridePlaced:
+        return const Color(0xFF29B6F6);
       case rideActive:
-        return driverArrived ? Colors.orange : Colors.blue;
+        return driverArrived ? Colors.orange : const Color(0xFF3F51B5);
       case rideInProgress:
         return Colors.green;
       case rideComplete:
