@@ -73,6 +73,11 @@ class HomeController extends GetxController {
   // driver to have the tracking screen open.
   Rx<OrderModel?> pickupRide = Rx<OrderModel?>(null);
 
+  // The ride whose stage colours the whole home screen. Null when the driver is
+  // between jobs, which is what keeps the screen on the normal brand green
+  // rather than leaving it stuck on the last trip's colour.
+  Rx<OrderModel?> liveRide = Rx<OrderModel?>(null);
+
   void getActiveRide() {
     FireStoreUtils.fireStore
         .collection(CollectionName.orders)
@@ -83,16 +88,25 @@ class HomeController extends GetxController {
           isActiveValue.value = event.size;
 
           OrderModel? headingToPickup;
+          OrderModel? inProgress;
+          OrderModel? active;
           for (final doc in event.docs) {
             final OrderModel order = OrderModel.fromJson(doc.data());
-            // Only rides on the way to the pickup, and only until we have
-            // already recorded the arrival once.
-            if (order.status == Constant.rideActive && order.driverArrivedAt == null) {
-              headingToPickup = order;
-              break;
+            if (order.status == Constant.rideInProgress) {
+              inProgress ??= order;
+            } else if (order.status == Constant.rideActive) {
+              active ??= order;
+              // Only rides on the way to the pickup, and only until we have
+              // already recorded the arrival once.
+              if (order.driverArrivedAt == null) {
+                headingToPickup ??= order;
+              }
             }
           }
           pickupRide.value = headingToPickup;
+          // A running trip wins, so the screen stays green for the trip the
+          // driver is actually in rather than flipping to a newer request.
+          liveRide.value = inProgress ?? active;
         });
   }
 

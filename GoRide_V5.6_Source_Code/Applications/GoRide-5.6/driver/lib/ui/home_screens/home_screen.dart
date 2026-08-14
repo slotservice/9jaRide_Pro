@@ -1,5 +1,6 @@
 import 'package:driver/constant/constant.dart';
 import 'package:driver/controller/home_controller.dart';
+import 'package:driver/model/order_model.dart';
 import 'package:driver/themes/app_colors.dart';
 import 'package:driver/themes/responsive.dart';
 import 'package:driver/utils/DarkThemeProvider.dart';
@@ -22,8 +23,15 @@ class HomeScreen extends StatelessWidget {
           FireStoreUtils.closeStream();
         },
         builder: (controller) {
+          // The whole page takes the colour of the trip the driver is on, so the
+          // stage is obvious without reading anything. Back to the brand green
+          // between jobs, otherwise it would sit on the last trip's colour.
+          final OrderModel? live = controller.liveRide.value;
+          final Color pageColor = live == null
+              ? AppColors.lightprimary
+              : Constant.rideStatusColor(live.status, driverArrived: live.driverArrivedAt != null);
           return Scaffold(
-            backgroundColor: AppColors.lightprimary,
+            backgroundColor: pageColor,
             body: controller.isLoading.value
                 ? Constant.loader(isDarkTheme: themeChange.getThem())
                 : Column(
@@ -104,7 +112,7 @@ class HomeScreen extends StatelessWidget {
                     label: 'Completed'.tr,
                   ),
                 ],
-                backgroundColor: AppColors.lightprimary,
+                backgroundColor: pageColor,
                 type: BottomNavigationBarType.fixed,
                 currentIndex: controller.selectedIndex.value,
                 selectedItemColor: themeChange.getThem() ? AppColors.darksecondprimary : AppColors.lightsecondprimary,
