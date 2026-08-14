@@ -256,6 +256,9 @@ Route::middleware(['permission:payout-request,payout-request'])->group(function 
 });
 // Paystack transfer webhook (public; CSRF-exempt via the payments/* rule).
 Route::post('/payments/paystack/transfer-webhook', [App\Http\Controllers\PayoutTransferController::class, 'webhook'])->name('payout.webhook');
+// Paystack charge webhook, so bank transfer top ups credit the wallet on their
+// own. Public and signature verified, CSRF-exempt via the same payments/* rule.
+Route::post('/payments/paystack/charge-webhook', [App\Http\Controllers\PaystackChargeWebhookController::class, 'webhook'])->name('charge.webhook');
 Route::middleware(['permission:users-wallet-transaction,user.wallet.list'])->group(function () {
 
     Route::get('/walletTransaction/user', [App\Http\Controllers\TransactionController::class, 'userWalletTransaction'])->name('walletTransaction.user');
