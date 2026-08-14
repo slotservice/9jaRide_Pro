@@ -345,4 +345,7 @@ const Map<String, String> yoYO = {
   'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Se eyi nikan ti ero ko ba le fun o ni koodu naa. A o samisi irin ajo yii fun atunyewo.',
   'Start ride': 'Bere irin ajo',
   'Ride started without the code. It has been flagged for review.': 'Irin ajo bere laisi koodu. A ti samisi re fun atunyewo.',
+  'Heading To Pickup': 'N lo si ibi gbigbe',
+  'Arrived At Pickup': 'Ti de ibi gbigbe',
+  'Trip Started': 'Irin ajo ti bere',
 };

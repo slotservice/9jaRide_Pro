@@ -17,6 +17,7 @@ import 'package:driver/ui/review/review_screen.dart';
 import 'package:driver/utils/DarkThemeProvider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/widget/location_view.dart';
+import 'package:driver/widget/ride_status_chip.dart';
 import 'package:driver/widget/user_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -126,7 +127,7 @@ class OrderIntercityScreen extends StatelessWidget {
                                                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                                                   child: Row(
                                                                     children: [
-                                                                      Expanded(child: Text(orderModel.status.toString(), style: GoogleFonts.poppins(fontWeight: FontWeight.w600))),
+                                                                      Expanded(child: RideStatusChip(status: orderModel.status)),
                                                                       Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins()),
                                                                     ],
                                                                   )),

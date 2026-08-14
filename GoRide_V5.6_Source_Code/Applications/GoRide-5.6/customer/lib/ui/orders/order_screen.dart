@@ -25,6 +25,7 @@ import 'package:customer/utils/DarkThemeProvider.dart';
 import 'package:customer/utils/fire_store_utils.dart';
 import 'package:customer/utils/utils.dart';
 import 'package:customer/widget/driver_view.dart';
+import 'package:customer/widget/ride_status_chip.dart';
 import 'package:customer/widget/location_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -344,8 +345,7 @@ class OrderScreen extends StatelessWidget {
                                                                       child: orderModel.status == Constant.rideInProgress ||
                                                                               orderModel.status == Constant.ridePlaced ||
                                                                               orderModel.status == Constant.rideComplete
-                                                                          ? Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
-                                                                              style: TextStyle(color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null), fontWeight: FontWeight.w600))
+                                                                          ? RideStatusChip(status: orderModel.status, driverArrived: orderModel.driverArrivedAt != null)
                                                                           : Row(
                                                                               children: [
                                                                                 Text("OTP".tr, style: GoogleFonts.poppins()),
@@ -664,8 +664,7 @@ class OrderScreen extends StatelessWidget {
                                                                   child: Center(
                                                                     child: Row(
                                                                       children: [
-                                                                        Expanded(child: Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
-                                                                            style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null)))),
+                                                                        Expanded(child: RideStatusChip(status: orderModel.status, driverArrived: orderModel.driverArrivedAt != null)),
                                                                         Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins()),
                                                                       ],
                                                                     ),
@@ -776,8 +775,7 @@ class OrderScreen extends StatelessWidget {
                                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                                 children: [
-                                                                  Expanded(child: Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
-                                                                              style: TextStyle(color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null), fontWeight: FontWeight.w600))),
+                                                                  Expanded(child: RideStatusChip(status: orderModel.status, driverArrived: orderModel.driverArrivedAt != null)),
                                                                   Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins(fontSize: 12)),
                                                                 ],
                                                               )),

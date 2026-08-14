@@ -9,6 +9,7 @@ import 'package:customer/themes/responsive.dart';
 import 'package:customer/utils/DarkThemeProvider.dart';
 import 'package:customer/utils/fire_store_utils.dart';
 import 'package:customer/widget/driver_view.dart';
+import 'package:customer/widget/ride_status_chip.dart';
 import 'package:customer/widget/location_view.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -350,8 +351,7 @@ class CompleteOrderScreen extends StatelessWidget {
                                                   child: Center(
                                                     child: Row(
                                                       children: [
-                                                        Expanded(child: Text(Constant.statusLabel(controller.orderModel.value.status, driverArrived: controller.orderModel.value.driverArrivedAt != null).tr,
-                                                            style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Constant.rideStatusColor(controller.orderModel.value.status, driverArrived: controller.orderModel.value.driverArrivedAt != null)))),
+                                                        Expanded(child: RideStatusChip(status: controller.orderModel.value.status, driverArrived: controller.orderModel.value.driverArrivedAt != null)),
                                                         Text(Constant().formatTimestamp(controller.orderModel.value.createdDate), style: GoogleFonts.poppins()),
                                                       ],
                                                     ),

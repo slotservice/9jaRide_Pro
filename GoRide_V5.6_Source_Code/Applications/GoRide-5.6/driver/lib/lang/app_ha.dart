@@ -345,4 +345,7 @@ const Map<String, String> haHA = {
   'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Yi wannan ne kawai idan fasinja ba zai iya ba ka lambar ba. Za a yi wa wannan tafiya alama domin dubawa.',
   'Start ride': 'Fara tafiya',
   'Ride started without the code. It has been flagged for review.': 'An fara tafiya ba tare da lambar ba. An yi mata alama domin dubawa.',
+  'Heading To Pickup': 'Kan hanya zuwa wurin daukar fasinja',
+  'Arrived At Pickup': 'An isa wurin daukar fasinja',
+  'Trip Started': 'Tafiya ta fara',
 };

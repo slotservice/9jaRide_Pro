@@ -328,4 +328,7 @@ const Map<String, String> frFR = {
   'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'A faire uniquement si le passager ne peut vraiment pas vous donner le code. Ce trajet sera signale pour verification.',
   'Start ride': 'Demarrer la course',
   'Ride started without the code. It has been flagged for review.': 'Course demarree sans le code. Elle a ete signalee pour verification.',
+  'Heading To Pickup': 'En route vers le point de prise en charge',
+  'Arrived At Pickup': 'Arrive au point de prise en charge',
+  'Trip Started': 'Trajet commence',
 };

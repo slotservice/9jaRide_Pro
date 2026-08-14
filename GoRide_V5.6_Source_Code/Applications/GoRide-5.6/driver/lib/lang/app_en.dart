@@ -333,4 +333,7 @@ const Map<String, String> enUS = {
   'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.',
   'Start ride': 'Start ride',
   'Ride started without the code. It has been flagged for review.': 'Ride started without the code. It has been flagged for review.',
+  'Heading To Pickup': 'Heading To Pickup',
+  'Arrived At Pickup': 'Arrived At Pickup',
+  'Trip Started': 'Trip Started',
 };

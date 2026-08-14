@@ -15,6 +15,7 @@ import 'package:customer/ui/coupon_screen/coupon_screen.dart';
 import 'package:customer/utils/DarkThemeProvider.dart';
 import 'package:customer/utils/fire_store_utils.dart';
 import 'package:customer/widget/driver_view.dart';
+import 'package:customer/widget/ride_status_chip.dart';
 import 'package:customer/widget/location_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -230,8 +231,7 @@ class PaymentOrderScreen extends StatelessWidget {
                                                       child: Center(
                                                         child: Row(
                                                           children: [
-                                                            Expanded(child: Text(Constant.statusLabel(orderModel.status, driverArrived: orderModel.driverArrivedAt != null).tr,
-                                                                style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Constant.rideStatusColor(orderModel.status, driverArrived: orderModel.driverArrivedAt != null)))),
+                                                            Expanded(child: RideStatusChip(status: orderModel.status, driverArrived: orderModel.driverArrivedAt != null)),
                                                             Text(Constant().formatTimestamp(orderModel.createdDate), style: GoogleFonts.poppins()),
                                                           ],
                                                         ),

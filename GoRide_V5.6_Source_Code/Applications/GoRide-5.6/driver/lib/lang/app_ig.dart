@@ -345,4 +345,7 @@ const Map<String, String> igIG = {
   'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'Mee nke a naani ma o buru na onye njem enweghi ike inye gi koodu ahu. A ga-eji njem a mee akara maka nyocha.',
   'Start ride': 'Malite njem',
   'Ride started without the code. It has been flagged for review.': 'Amalitela njem na-enweghi koodu. Ejila ya mee akara maka nyocha.',
+  'Heading To Pickup': 'Na-aga ebe mbuli',
+  'Arrived At Pickup': 'Erutela ebe mbuli',
+  'Trip Started': 'Njem amalitela',
 };

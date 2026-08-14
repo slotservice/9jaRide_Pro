@@ -327,4 +327,7 @@ const Map<String, String> arAR = {
   'Only do this if the rider genuinely cannot give you the code. This trip will be flagged for review.': 'قم بذلك فقط إذا كان الراكب لا يستطيع حقا إعطاءك الرمز. سيتم وضع علامة على هذه الرحلة للمراجعة.',
   'Start ride': 'ابدأ الرحلة',
   'Ride started without the code. It has been flagged for review.': 'بدأت الرحلة بدون الرمز. تم وضع علامة عليها للمراجعة.',
+  'Heading To Pickup': 'في الطريق إلى نقطة الانطلاق',
+  'Arrived At Pickup': 'وصل إلى نقطة الانطلاق',
+  'Trip Started': 'بدأت الرحلة',
 };
