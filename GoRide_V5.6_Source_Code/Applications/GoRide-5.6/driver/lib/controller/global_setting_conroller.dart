@@ -79,18 +79,34 @@ class GlobalSettingController extends GetxController {
     notificationService.initInfo().then((value) async {
       String token = await NotificationService.getToken();
       log(":::::::TOKEN:::::: $token");
-
-      if (FirebaseAuth.instance.currentUser != null) {
-        FireStoreUtils.updateDriverToken(FireStoreUtils.getCurrentUid(), token);
-      }
+      _storeToken(token);
     });
     // Keep the stored FCM token fresh. Tokens rotate (app reinstall, data clear,
     // periodic refresh); without listening for rotation the driver_users doc
     // keeps a stale token and booking pushes silently fail with 404 UNREGISTERED
     // — the driver never gets notified of a new ride.
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-      if (FirebaseAuth.instance.currentUser != null) {
-        FireStoreUtils.updateDriverToken(FireStoreUtils.getCurrentUid(), newToken);
+    FirebaseMessaging.instance.onTokenRefresh.listen(_storeToken);
+  }
+
+  /// Saves the push token against the signed in driver.
+  ///
+  /// This runs from onInit at startup, and Firebase restores the signed in user
+  /// asynchronously, so currentUser is usually still null at that moment on a
+  /// cold start. Reading it directly threw the token away on almost every
+  /// launch, leaving whatever the last successful login happened to write. That
+  /// is how most of the online drivers ended up with tokens FCM rejects as
+  /// NotRegistered, and why booking alerts stopped arriving for them.
+  void _storeToken(String token) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      FireStoreUtils.updateDriverToken(user.uid, token);
+      return;
+    }
+    // Not signed in yet. Wait for the session to come back rather than dropping
+    // the token on the floor.
+    FirebaseAuth.instance.authStateChanges().firstWhere((User? u) => u != null).then((User? u) {
+      if (u != null) {
+        FireStoreUtils.updateDriverToken(u.uid, token);
       }
     });
   }

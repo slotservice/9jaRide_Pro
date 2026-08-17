@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'package:customer/constant/constant.dart';
 import 'package:customer/model/currency_model.dart';
 import 'package:customer/model/language_model.dart';
-import 'package:customer/model/user_model.dart';
 import 'package:customer/services/localization_service.dart';
 import 'package:customer/utils/Preferences.dart';
 import 'package:customer/utils/fire_store_utils.dart';
 import 'package:customer/utils/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 
 class GlobalSettingController extends GetxController {
@@ -75,14 +75,29 @@ class GlobalSettingController extends GetxController {
     notificationService.initInfo().then((value) async {
       String token = await NotificationService.getToken();
       log(":::::::TOKEN:::::: $token");
-      if (FirebaseAuth.instance.currentUser != null) {
-        await FireStoreUtils.getUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
-          if (value != null) {
-            UserModel driverUserModel = value;
-            driverUserModel.fcmToken = token;
-            FireStoreUtils.updateUser(driverUserModel);
-          }
-        });
+      _storeToken(token);
+    });
+    // Tokens rotate on reinstall, data clear and periodically. Without this the
+    // stored token goes stale and the rider silently stops being told when a
+    // driver accepts, arrives or starts the trip.
+    FirebaseMessaging.instance.onTokenRefresh.listen(_storeToken);
+  }
+
+  /// Saves the push token against the signed in rider.
+  ///
+  /// This runs from onInit at startup, and Firebase restores the signed in user
+  /// asynchronously, so currentUser is usually still null at that moment on a
+  /// cold start. Reading it directly threw the token away on almost every
+  /// launch, leaving whatever the last successful login wrote.
+  void _storeToken(String token) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      FireStoreUtils.updateUserToken(user.uid, token);
+      return;
+    }
+    FirebaseAuth.instance.authStateChanges().firstWhere((User? u) => u != null).then((User? u) {
+      if (u != null) {
+        FireStoreUtils.updateUserToken(u.uid, token);
       }
     });
   }

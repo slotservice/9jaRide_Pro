@@ -496,6 +496,15 @@ class FireStoreUtils {
     return driverUserModel;
   }
 
+  /// Writes just the push token. Deliberately a single field update rather than
+  /// re-saving the whole profile, which would overwrite anything that changed
+  /// in the meantime for the sake of one string.
+  static Future<void> updateUserToken(String uid, String token) async {
+    await fireStore.collection(CollectionName.users).doc(uid).update({'fcmToken': token}).catchError((error) {
+      log("Failed to update fcm token: $error");
+    });
+  }
+
   static Future<bool> updateUser(UserModel userModel) async {
     bool isUpdate = false;
     await fireStore.collection(CollectionName.users).doc(userModel.id).set(userModel.toJson()).whenComplete(() {
