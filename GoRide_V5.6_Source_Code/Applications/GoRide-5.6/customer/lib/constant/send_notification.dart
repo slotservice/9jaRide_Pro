@@ -16,8 +16,15 @@ class SendNotification {
   // That was the bulk of the dispatch delay when a ride was booked.
   static AccessCredentials? _cachedCredentials;
 
+  // Every network call in here is bounded. Without a timeout one stalled
+  // request on a weak connection hangs the caller for ever: the accept-ride
+  // flow awaits this inside a "Please wait" loader, and the loader's finally
+  // never runs, so the driver is stuck on a spinner with no way out. A thrown
+  // error was always handled; a hang never was.
+  static const Duration _networkTimeout = Duration(seconds: 15);
+
   static Future getCharacters() {
-    return http.get(Uri.parse(Constant.jsonNotificationFileURL.toString()));
+    return http.get(Uri.parse(Constant.jsonNotificationFileURL.toString())).timeout(_networkTimeout);
   }
 
   static Future<String> getAccessToken() async {
@@ -34,7 +41,7 @@ class SendNotification {
     });
     final serviceAccountCredentials = ServiceAccountCredentials.fromJson(jsonData);
 
-    final client = await clientViaServiceAccount(serviceAccountCredentials, _scopes);
+    final client = await clientViaServiceAccount(serviceAccountCredentials, _scopes).timeout(_networkTimeout);
     final AccessCredentials credentials = client.credentials;
     _cachedCredentials = credentials;
     // We drive the FCM call with plain http below, so this client is not needed
@@ -64,7 +71,7 @@ class SendNotification {
             }
           },
         ),
-      );
+      ).timeout(_networkTimeout);
 
       debugPrint("Notification=======>");
       debugPrint(response.statusCode.toString());
