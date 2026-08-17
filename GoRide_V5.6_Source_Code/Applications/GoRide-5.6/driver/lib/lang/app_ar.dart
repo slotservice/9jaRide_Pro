@@ -330,4 +330,8 @@ const Map<String, String> arAR = {
   'Heading To Pickup': 'في الطريق إلى نقطة الانطلاق',
   'Arrived At Pickup': 'وصل إلى نقطة الانطلاق',
   'Trip Started': 'بدأت الرحلة',
+  'Start Ride': 'ابدأ الرحلة',
+  'Code confirmed. Tap Start Ride to begin.': 'تم تأكيد الرمز. اضغط على ابدأ الرحلة للبدء.',
+  'Ride started': 'بدأت الرحلة',
+  'Skipped the code. This trip has been flagged for review.': 'تم تخطي الرمز. تم وضع علامة على هذه الرحلة للمراجعة.',
 };

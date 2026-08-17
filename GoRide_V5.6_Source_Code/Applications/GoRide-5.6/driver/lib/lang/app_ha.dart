@@ -348,4 +348,8 @@ const Map<String, String> haHA = {
   'Heading To Pickup': 'Kan hanya zuwa wurin daukar fasinja',
   'Arrived At Pickup': 'An isa wurin daukar fasinja',
   'Trip Started': 'Tafiya ta fara',
+  'Start Ride': 'Fara Tafiya',
+  'Code confirmed. Tap Start Ride to begin.': 'An tabbatar da lambar. Danna Fara Tafiya don farawa.',
+  'Ride started': 'An fara tafiya',
+  'Skipped the code. This trip has been flagged for review.': 'An tsallake lambar. An yi wa wannan tafiya alama domin dubawa.',
 };

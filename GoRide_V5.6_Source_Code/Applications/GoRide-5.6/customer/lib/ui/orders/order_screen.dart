@@ -263,6 +263,9 @@ class OrderScreen extends StatelessWidget {
                                                         // trip is running, since it is no use after that.
                                                         (orderModel.otp != null &&
                                                                 orderModel.otp!.isNotEmpty &&
+                                                                // Once the driver has confirmed it there is nothing left to
+                                                                // read out, so it goes away rather than lingering.
+                                                                orderModel.otpVerifiedAt == null &&
                                                                 (orderModel.status == Constant.ridePlaced || orderModel.status == Constant.rideActive))
                                                             ? Padding(
                                                                 padding: const EdgeInsets.only(bottom: 5),

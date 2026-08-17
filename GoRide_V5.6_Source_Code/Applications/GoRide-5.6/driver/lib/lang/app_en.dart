@@ -336,4 +336,8 @@ const Map<String, String> enUS = {
   'Heading To Pickup': 'Heading To Pickup',
   'Arrived At Pickup': 'Arrived At Pickup',
   'Trip Started': 'Trip Started',
+  'Start Ride': 'Start Ride',
+  'Code confirmed. Tap Start Ride to begin.': 'Code confirmed. Tap Start Ride to begin.',
+  'Ride started': 'Ride started',
+  'Skipped the code. This trip has been flagged for review.': 'Skipped the code. This trip has been flagged for review.',
 };

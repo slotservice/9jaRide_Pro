@@ -159,15 +159,50 @@ class ActiveOrderScreen extends StatelessWidget {
                                                 )
                                               : orderModel.status == Constant.rideHold || orderModel.status == Constant.rideHoldAccepted
                                                   ? SizedBox.shrink()
-                                                  : ButtonThem.buildBorderButton(
-                                                      context,
-                                                      title: "Pickup Customer".tr,
-                                                      btnHeight: 44,
-                                                      iconVisibility: false,
-                                                      onPress: () async {
-                                                        showDialog(context: context, builder: (BuildContext context) => otpDialog(context, controller, orderModel));
-                                                      },
-                                                    ),
+                                                  // Once the code is confirmed the rider is in the car but the
+                                                  // journey has not begun. Start Ride is the action that begins
+                                                  // it, which is the step the client asked for.
+                                                  : orderModel.otpVerifiedAt != null
+                                                      ? ButtonThem.buildBorderButton(
+                                                          context,
+                                                          title: "Start Ride".tr,
+                                                          btnHeight: 44,
+                                                          iconVisibility: false,
+                                                          onPress: () async {
+                                                            ShowToastDialog.showLoader("Please wait".tr);
+                                                            try {
+                                                              orderModel.status = Constant.rideInProgress;
+                                                              await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
+                                                                if (value != null) {
+                                                                  await SendNotification.sendOneNotification(
+                                                                      token: value.fcmToken.toString(),
+                                                                      title: 'Ride Started'.tr,
+                                                                      body: 'The ride has officially started. Please follow the designated route to the destination.'.tr,
+                                                                      payload: {});
+                                                                }
+                                                              });
+                                                              await FireStoreUtils.setOrder(orderModel).then((value) {
+                                                                if (value == true) {
+                                                                  ShowToastDialog.showToast("Ride started".tr);
+                                                                }
+                                                              });
+                                                            } catch (e, stackTrace) {
+                                                              log("Start ride error :: $e\n$stackTrace");
+                                                              ShowToastDialog.showToast("Something went wrong: $e");
+                                                            } finally {
+                                                              ShowToastDialog.closeLoader();
+                                                            }
+                                                          },
+                                                        )
+                                                      : ButtonThem.buildBorderButton(
+                                                          context,
+                                                          title: "Pickup Customer".tr,
+                                                          btnHeight: 44,
+                                                          iconVisibility: false,
+                                                          onPress: () async {
+                                                            showDialog(context: context, builder: (BuildContext context) => otpDialog(context, controller, orderModel));
+                                                          },
+                                                        ),
                                         ),
                                         const SizedBox(
                                           width: 10,
@@ -402,19 +437,17 @@ class ActiveOrderScreen extends StatelessWidget {
                 Get.back();
                 ShowToastDialog.showLoader("Please wait...".tr);
                 try {
-                  orderModel.status = Constant.rideInProgress;
-                  await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                    if (value != null) {
-                      await SendNotification.sendOneNotification(
-                          token: value.fcmToken.toString(), title: 'Ride Started'.tr, body: 'The ride has officially started. Please follow the designated route to the destination.'.tr, payload: {});
-                    }
-                  });
+                  // Confirming the code no longer starts the trip. It records
+                  // that the rider is verified and in the car, and the button
+                  // then becomes Start Ride, which is the action that actually
+                  // begins the journey.
+                  orderModel.otpVerifiedAt = Timestamp.now();
                   if (controller.drivermodel.value?.ownerId != null) {
                     orderModel.ownerId = controller.drivermodel.value?.ownerId;
                   }
                   await FireStoreUtils.setOrder(orderModel).then((value) {
                     if (value == true) {
-                      ShowToastDialog.showToast("Customer pickup successfully".tr);
+                      ShowToastDialog.showToast("Code confirmed. Tap Start Ride to begin.".tr);
                     }
                   });
                 } catch (e, stackTrace) {
@@ -452,20 +485,16 @@ class ActiveOrderScreen extends StatelessWidget {
                 Get.back();
                 ShowToastDialog.showLoader("Please wait...".tr);
                 try {
-                  orderModel.status = Constant.rideInProgress;
+                  // Same as confirming a code: this only gets the driver to the
+                  // Start Ride step, it does not begin the trip on its own.
                   orderModel.otpSkippedAt = Timestamp.now();
-                  await FireStoreUtils.getCustomer(orderModel.userId.toString()).then((value) async {
-                    if (value != null) {
-                      await SendNotification.sendOneNotification(
-                          token: value.fcmToken.toString(), title: 'Ride Started'.tr, body: 'The ride has officially started. Please follow the designated route to the destination.'.tr, payload: {});
-                    }
-                  });
+                  orderModel.otpVerifiedAt = Timestamp.now();
                   if (controller.drivermodel.value?.ownerId != null) {
                     orderModel.ownerId = controller.drivermodel.value?.ownerId;
                   }
                   await FireStoreUtils.setOrder(orderModel).then((value) {
                     if (value == true) {
-                      ShowToastDialog.showToast("Ride started without the code. It has been flagged for review.".tr);
+                      ShowToastDialog.showToast("Skipped the code. This trip has been flagged for review.".tr);
                     }
                   });
                 } catch (e, stackTrace) {

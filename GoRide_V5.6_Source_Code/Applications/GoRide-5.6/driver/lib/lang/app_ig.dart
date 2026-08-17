@@ -348,4 +348,8 @@ const Map<String, String> igIG = {
   'Heading To Pickup': 'Na-aga ebe mbuli',
   'Arrived At Pickup': 'Erutela ebe mbuli',
   'Trip Started': 'Njem amalitela',
+  'Start Ride': 'Malite Njem',
+  'Code confirmed. Tap Start Ride to begin.': 'Akwadoro koodu ahu. Pia Malite Njem ka i bido.',
+  'Ride started': 'Amalitela njem',
+  'Skipped the code. This trip has been flagged for review.': 'Agafere koodu ahu. A ga-eji njem a mee akara maka nyocha.',
 };

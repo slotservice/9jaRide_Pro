@@ -331,4 +331,8 @@ const Map<String, String> frFR = {
   'Heading To Pickup': 'En route vers le point de prise en charge',
   'Arrived At Pickup': 'Arrive au point de prise en charge',
   'Trip Started': 'Trajet commence',
+  'Start Ride': 'Demarrer la course',
+  'Code confirmed. Tap Start Ride to begin.': 'Code confirme. Appuyez sur Demarrer la course pour commencer.',
+  'Ride started': 'Course demarree',
+  'Skipped the code. This trip has been flagged for review.': 'Code ignore. Ce trajet a ete signale pour verification.',
 };

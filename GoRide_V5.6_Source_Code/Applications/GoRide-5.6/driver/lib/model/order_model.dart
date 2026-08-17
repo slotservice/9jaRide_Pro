@@ -43,6 +43,13 @@ class OrderModel {
 
   /// Set when a driver starts the trip without the rider's code, using the
   /// 'rider could not provide code' option. Left null on a normal start.
+  /// Set when the driver has confirmed the rider's code but has not yet
+  /// tapped Start Ride. The trip only begins on that second action, so this
+  /// is what tells the button which of the two states it is in. Kept as a
+  /// timestamp rather than a new status string, because a new status would
+  /// have to be added to every status query and filter in both apps.
+  Timestamp? otpVerifiedAt;
+
   Timestamp? otpSkippedAt;
 
   /// How far the driver still is from the pickup, in km, published by the
@@ -92,6 +99,7 @@ class OrderModel {
       this.updateDate,
       this.acceptHoldTime,
       this.driverArrivedAt,
+      this.otpVerifiedAt,
       this.otpSkippedAt,
       this.driverDistanceKm,
       this.taxList,
@@ -132,6 +140,7 @@ class OrderModel {
     updateDate = json['updateDate'];
     acceptHoldTime = json['acceptHoldTime'];
     driverArrivedAt = json['driverArrivedAt'];
+    otpVerifiedAt = json['otpVerifiedAt'];
     otpSkippedAt = json['otpSkippedAt'];
     driverDistanceKm = (json['driverDistanceKm'] as num?)?.toDouble();
     acceptedDriverId = json['acceptedDriverId'];
@@ -202,6 +211,7 @@ class OrderModel {
     data['updateDate'] = updateDate;
     data['acceptHoldTime'] = acceptHoldTime;
     data['driverArrivedAt'] = driverArrivedAt;
+    data['otpVerifiedAt'] = otpVerifiedAt;
     data['otpSkippedAt'] = otpSkippedAt;
     data['driverDistanceKm'] = driverDistanceKm;
     data['acceptedDriverId'] = acceptedDriverId;

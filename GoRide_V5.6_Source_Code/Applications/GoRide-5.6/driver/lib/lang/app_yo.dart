@@ -348,4 +348,8 @@ const Map<String, String> yoYO = {
   'Heading To Pickup': 'N lo si ibi gbigbe',
   'Arrived At Pickup': 'Ti de ibi gbigbe',
   'Trip Started': 'Irin ajo ti bere',
+  'Start Ride': 'Bere Irin Ajo',
+  'Code confirmed. Tap Start Ride to begin.': 'A ti jerisi koodu naa. Te Bere Irin Ajo lati bere.',
+  'Ride started': 'Irin ajo ti bere',
+  'Skipped the code. This trip has been flagged for review.': 'A fo koodu naa. A ti samisi irin ajo yii fun atunyewo.',
 };
