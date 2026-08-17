@@ -293,6 +293,17 @@ class PayoutTransferController extends Controller
 
         $event = json_decode($body, true) ?: [];
         $type = $event['event'] ?? '';
+
+        // Paystack posts EVERY event to the one webhook URL configured on the
+        // dashboard, and this is that URL. A charge.success therefore arrives
+        // here rather than at the charge endpoint, where it used to fail the
+        // payout_ prefix check below and be silently discarded. That made the
+        // charge webhook dead code in production no matter how well it worked
+        // when called directly. Hand it on instead.
+        if ($type === 'charge.success') {
+            return app(PaystackChargeWebhookController::class)->webhook($request);
+        }
+
         $data = $event['data'] ?? [];
         $reference = (string) ($data['reference'] ?? '');
         if (strpos($reference, 'payout_') !== 0) {
