@@ -68,6 +68,23 @@ class SendNotification {
               'token': token,
               'notification': {'body': body, 'title': title},
               'data': payload,
+              // Without these a push is delivered at normal priority and posted
+              // quietly into the shade. The client asked for it to pop up, which
+              // on Android needs both a high priority message and a channel with
+              // max importance, created in NotificationService.
+              'android': {
+                'priority': 'high',
+                'notification': {
+                  'notification_priority': 'PRIORITY_MAX',
+                  'default_sound': true,
+                },
+              },
+              'apns': {
+                'headers': {'apns-priority': '10'},
+                'payload': {
+                  'aps': {'sound': 'default'}
+                },
+              },
             }
           },
         ),
@@ -103,6 +120,19 @@ class SendNotification {
               'token': tokens,
               'notification': {'body': body, 'title': title},
               'data': payload,
+              'android': {
+                'priority': 'high',
+                'notification': {
+                  'notification_priority': 'PRIORITY_MAX',
+                  'default_sound': true,
+                },
+              },
+              'apns': {
+                'headers': {'apns-priority': '10'},
+                'payload': {
+                  'aps': {'sound': 'default'}
+                },
+              },
             }
           },
         ),

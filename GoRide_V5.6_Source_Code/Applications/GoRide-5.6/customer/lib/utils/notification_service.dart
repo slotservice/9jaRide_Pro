@@ -25,6 +25,18 @@ Future<void> firebaseMessageBackgroundHandle(RemoteMessage message) async {
 class NotificationService {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  // Must match com.google.firebase.messaging.default_notification_channel_id in
+  // AndroidManifest.xml. Android 8 and up takes the importance from the channel
+  // and ignores whatever the notification asks for, so a channel that is never
+  // created gets made for us at default importance. That is why pushes were
+  // landing silently in the shade instead of popping up.
+  static const AndroidNotificationChannel _androidChannel = AndroidNotificationChannel(
+    'njaridepro-customer',
+    'njaridepro-customer',
+    description: 'Ride requests and trip updates',
+    importance: Importance.max,
+  );
+
   Future<void> initInfo() async {
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
@@ -47,6 +59,11 @@ class NotificationService {
       final InitializationSettings initializationSettings =
           InitializationSettings(android: initializationSettingsAndroid, iOS: iosInitializationSettings);
       await flutterLocalNotificationsPlugin.initialize(settings: initializationSettings, onDidReceiveNotificationResponse: (payload) {});
+      // Created up front so it exists before the first push arrives, including
+      // when the app is in the background and the system posts it for us.
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(_androidChannel);
       // if (response.payload != null) {
       //   var data = jsonDecode(response.payload!);
       //   handleMessageClick(payload: data);
@@ -136,12 +153,7 @@ class NotificationService {
     try {
       // final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-      AndroidNotificationChannel channel = const AndroidNotificationChannel(
-        '0',
-        'njaridepro-customer',
-        description: 'Show QuickLAI Notification',
-        importance: Importance.max,
-      );
+      AndroidNotificationChannel channel = _androidChannel;
       AndroidNotificationDetails notificationDetails = AndroidNotificationDetails(channel.id, channel.name,
           channelDescription: 'your channel Description', importance: Importance.high, priority: Priority.high, ticker: 'ticker');
       const DarwinNotificationDetails darwinNotificationDetails =
