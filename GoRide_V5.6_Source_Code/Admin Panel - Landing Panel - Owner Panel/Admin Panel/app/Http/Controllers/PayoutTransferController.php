@@ -25,6 +25,15 @@ class PayoutTransferController extends Controller
 {
     private const PAYSTACK = 'https://api.paystack.co';
 
+    /**
+     * How many times an unexplained transfer failure is retried before the
+     * payout is parked for a human. At one cron run a minute this is about
+     * twenty minutes of trying, which comfortably outlasts a Paystack blip
+     * without leaving a broken payout hammering the API for ever. Insufficient
+     * balance is exempt and retries indefinitely.
+     */
+    private const MAX_TRANSFER_ATTEMPTS = 20;
+
     private function db()
     {
         return app(Firestore::class)->database();
@@ -177,9 +186,41 @@ class PayoutTransferController extends Controller
 
         if (!$transferRes->successful() || !$transferRes->json('status')) {
             $msg = (string) ($transferRes->json('message') ?? 'transfer failed');
+
             // Insufficient balance is transient — leave the request pending so it
             // retries automatically once the Paystack balance is funded again.
-            $permanent = (stripos($msg, 'balance') === false);
+            // It does not count against the attempt cap below, because waiting
+            // for the business to fund the balance can legitimately take days.
+            if (stripos($msg, 'balance') !== false) {
+                return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => false, 'message' => 'Paystack transfer error: ' . $msg];
+            }
+
+            // Everything else used to be treated as permanent, which meant one
+            // transient wobble from Paystack parked a driver's money in
+            // manual_review for ever, and the cron skips those by design so
+            // nobody finds out until the driver complains. A bare "transfer
+            // failed" carries no detail and is usually temporary, so default to
+            // retrying and only park failures that plainly will not fix
+            // themselves.
+            $permanent = false;
+            foreach (['invalid account', 'account number', 'recipient', 'not permitted', 'suspended', 'blacklist', 'currency'] as $signal) {
+                if (stripos($msg, $signal) !== false) {
+                    $permanent = true;
+                    break;
+                }
+            }
+
+            // Bounded, so a genuinely dead payout does not retry once a minute
+            // for ever. Counted on the request itself so it survives restarts.
+            if (!$permanent) {
+                $attempts = (int) ($w['autoPayoutAttempts'] ?? 0) + 1;
+                $ref->set(['autoPayoutAttempts' => $attempts, 'autoPayoutLastError' => $msg], ['merge' => true]);
+                if ($attempts >= self::MAX_TRANSFER_ATTEMPTS) {
+                    $permanent = true;
+                    $msg .= ' (gave up after ' . $attempts . ' attempts)';
+                }
+            }
+
             return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => $permanent, 'message' => 'Paystack transfer error: ' . $msg];
         }
 
