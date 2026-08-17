@@ -28,6 +28,13 @@ class CompleteOrderScreen extends StatelessWidget {
     return GetX<CompleteOrderController>(
         init: CompleteOrderController(),
         builder: (controller) {
+          // The rider's version of the driver's coloured home screen. This is a
+          // single ride, so the page can safely take that ride's colour, unlike
+          // the orders list where several stages are on screen at once.
+          final Color stageColor = Constant.rideStatusColor(
+            controller.orderModel.value.status,
+            driverArrived: controller.orderModel.value.driverArrivedAt != null,
+          );
           return Scaffold(
               backgroundColor: AppColors.background,
               appBar: AppBar(
@@ -46,7 +53,7 @@ class CompleteOrderScreen extends StatelessWidget {
                   Container(
                     height: Responsive.width(10, context),
                     width: Responsive.width(100, context),
-                    color: AppColors.lightprimary,
+                    color: stageColor,
                   ),
                   Expanded(
                     child: Transform.translate(
