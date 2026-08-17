@@ -306,7 +306,12 @@ class OrderMapScreen extends StatelessWidget {
                                                         title: "Accept fare on ${Constant.amountShow(amount: controller.finalAmount.value.toString())}".tr,
                                                         onPress: () async {
                                                           if (controller.driverModel.value.ownerId == null) {
-                                                            if (double.parse(controller.amount.value.toString()) > 0) {
+                                                            // Gate on the fare the button actually shows, not on the
+                                                            // distance part alone. The distance part is zero whenever a
+                                                            // trip falls inside the included km, so a driver could not
+                                                            // accept a perfectly valid time based fare without first
+                                                            // typing a number into the offer box.
+                                                            if (controller.finalAmount.value > 0) {
                                                               if (controller.driverModel.value.subscriptionTotalOrders == "-1") {
                                                                 controller.acceptOrder();
                                                               } else {
@@ -331,7 +336,12 @@ class OrderMapScreen extends StatelessWidget {
                                                             }
                                                           } else {
                                                             OwnerUserModel? ownerUserModel = await FireStoreUtils.getOwnerProfile(controller.driverModel.value.ownerId!);
-                                                            if (double.parse(controller.amount.value.toString()) > 0) {
+                                                            // Gate on the fare the button actually shows, not on the
+                                                            // distance part alone. The distance part is zero whenever a
+                                                            // trip falls inside the included km, so a driver could not
+                                                            // accept a perfectly valid time based fare without first
+                                                            // typing a number into the offer box.
+                                                            if (controller.finalAmount.value > 0) {
                                                               if (ownerUserModel?.subscriptionTotalOrders == "-1") {
                                                                 controller.acceptOrder();
                                                               } else {
