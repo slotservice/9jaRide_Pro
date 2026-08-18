@@ -132,19 +132,35 @@ class PayoutTransferController extends Controller
         // Resolve bank code from the stored bank name if the app has not saved a
         // proper code yet (older bank_details). Best-effort.
         if ($bankCode === '') {
-            $bankCode = $this->resolveBankCode($secret, $bankName);
-            if ($bankCode === '') {
+            $resolved = $this->resolveBankCode($secret, $bankName);
+            // null means we could not ask Paystack at all, which is temporary.
+            // Empty means Paystack answered and the name genuinely is not in the
+            // list, which is not going to fix itself. Treating both as final is
+            // what parked a live payout on one bad moment.
+            if ($resolved === null) {
+                return ['ok' => false, 'status' => 'error', 'httpCode' => 503, 'permanent' => false, 'message' => 'Could not reach Paystack to look up the bank list. Will retry.'];
+            }
+            if ($resolved === '') {
                 return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => true, 'message' => 'Could not match the driver\'s bank. Ask the driver to re-select their bank in the app.'];
             }
+            $bankCode = $resolved;
         }
 
         // Verify the account exists and get the real account name before sending.
-        $resolve = Http::withToken($secret)->timeout(30)->get(self::PAYSTACK . '/bank/resolve', [
-            'account_number' => $accountNumber,
-            'bank_code' => $bankCode,
-        ]);
+        try {
+            $resolve = Http::withToken($secret)->timeout(30)->get(self::PAYSTACK . '/bank/resolve', [
+                'account_number' => $accountNumber,
+                'bank_code' => $bankCode,
+            ]);
+        } catch (\Throwable $e) {
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 503, 'permanent' => false, 'message' => 'Could not reach Paystack to verify the bank account. Will retry.'];
+        }
         if (!$resolve->successful() || !$resolve->json('status')) {
-            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => true, 'message' => 'Could not verify the driver\'s bank account: ' . ($resolve->json('message') ?? 'invalid account')];
+            // Only a real answer from Paystack is final. A 5xx or a timeout says
+            // nothing about whether the account is valid, so retry those rather
+            // than parking the driver's money until somebody notices.
+            $permanent = $resolve->status() >= 400 && $resolve->status() < 500;
+            return ['ok' => false, 'status' => 'error', 'httpCode' => 422, 'permanent' => $permanent, 'message' => 'Could not verify the driver\'s bank account: ' . ($resolve->json('message') ?? 'invalid account')];
         }
         $verifiedName = (string) ($resolve->json('data.account_name') ?? ($bank['holderName'] ?? 'Driver'));
 
@@ -253,7 +269,15 @@ class PayoutTransferController extends Controller
         return ['ok' => true, 'status' => 'sent', 'httpCode' => 200, 'permanent' => false, 'message' => 'Payout sent to ' . $verifiedName . '\'s bank. Status: ' . ($tStatus ?: 'processing') . '.'];
     }
 
-    private function resolveBankCode(string $secret, string $bankName): string
+    /**
+     * Bank code for a stored bank name.
+     *
+     * Returns the code on success, '' when Paystack answered but the name is
+     * genuinely not in its list, and null when we could not ask at all. The
+     * caller needs that difference: the first two are final, the third is a
+     * temporary problem and must not park the payout.
+     */
+    private function resolveBankCode(string $secret, string $bankName): ?string
     {
         if ($bankName === '') {
             return '';
@@ -261,7 +285,7 @@ class PayoutTransferController extends Controller
         try {
             $res = Http::withToken($secret)->timeout(30)->get(self::PAYSTACK . '/bank', ['country' => 'nigeria', 'perPage' => 200]);
             if (!$res->successful()) {
-                return '';
+                return null;
             }
             $needle = strtolower(preg_replace('/[^a-z0-9]/i', '', $bankName));
             $banks = $res->json('data') ?? [];
@@ -278,7 +302,10 @@ class PayoutTransferController extends Controller
                 }
             }
         } catch (\Throwable $e) {
+            // Could not ask, as opposed to asked and got no match.
+            return null;
         }
+        // Paystack answered and the name is not in the list.
         return '';
     }
 
