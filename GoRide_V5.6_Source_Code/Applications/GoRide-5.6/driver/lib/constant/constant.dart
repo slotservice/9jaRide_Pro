@@ -65,7 +65,10 @@ class Constant {
   static const commissionSubscriptionID = "free_plan";
 
   static String mapType = "google";
-  static String selectedMapType = 'osm';
+  // Defaults to Google to match settings/globalValue.selectedMapType. The old
+  // 'osm' default meant any screen built before settings finished loading fell
+  // back to OpenStreetMap tiles, which render as a blank white map here.
+  static String selectedMapType = 'google';
   static String driverLocationUpdate = "10";
 
   static CurrencyModel? currencyModel;

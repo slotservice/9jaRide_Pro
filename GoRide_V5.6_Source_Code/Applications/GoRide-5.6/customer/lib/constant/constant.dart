@@ -65,7 +65,10 @@ class Constant {
   static String appVersion = "";
 
   static String mapType = "google";
-  static String selectedMapType = 'osm';
+  // Defaults to Google to match settings/globalValue.selectedMapType. The old
+  // 'osm' default meant any screen built before settings finished loading fell
+  // back to OpenStreetMap tiles, which render as a blank white map here.
+  static String selectedMapType = 'google';
   static String driverLocationUpdate = "10";
   // Defaults to Nigeria so place search stays scoped even if settings have not
   // loaded yet. Firestore settings/globalValue.regionCode still overrides this.
