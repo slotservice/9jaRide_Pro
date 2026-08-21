@@ -53,7 +53,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCWXkyRu5fIX-wxCy1E9_Nx0FqnVvKvKL0" />
+            android:value="AIzaSyBxDQTe9W6gIqaV69-CGGK8pMxwp-WSK8w" />
 
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
             android:launchMode="singleTask"
