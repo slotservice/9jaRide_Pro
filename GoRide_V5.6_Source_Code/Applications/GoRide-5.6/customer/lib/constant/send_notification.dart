@@ -50,11 +50,54 @@ class SendNotification {
     return credentials.accessToken.data;
   }
 
-  static Future<bool> sendOneNotification({required String token, required String title, required String body, required Map<String, dynamic> payload}) async {
+  /// Sends one push.
+  ///
+  /// [dataOnly] leaves the notification block off entirely, which is the only
+  /// way to get a call style alert on Android. When a message carries a
+  /// notification block and the app is in the background, FCM hands it to the
+  /// system tray and the app's own code never runs, so the app cannot ask for a
+  /// full screen alert, a looping tone or anything else. A data only message at
+  /// high priority wakes the app instead and lets it decide how to alert. The
+  /// title and body then have to travel inside [payload], because there is no
+  /// notification block left to carry them.
+  static Future<bool> sendOneNotification({
+    required String token,
+    required String title,
+    required String body,
+    required Map<String, dynamic> payload,
+    bool dataOnly = false,
+  }) async {
     try {
       final String accessToken = await getAccessToken();
       debugPrint("accessToken=======${Constant.senderId}>");
       debugPrint(accessToken);
+
+      final Map<String, dynamic> message = <String, dynamic>{
+        'token': token,
+        'data': payload,
+        // Without these a push is delivered at normal priority and posted
+        // quietly into the shade. The client asked for it to pop up, which
+        // on Android needs both a high priority message and a channel with
+        // max importance, created in NotificationService.
+        'android': dataOnly
+            ? <String, dynamic>{'priority': 'high'}
+            : <String, dynamic>{
+                'priority': 'high',
+                'notification': {
+                  'notification_priority': 'PRIORITY_MAX',
+                  'default_sound': true,
+                },
+              },
+        'apns': {
+          'headers': {'apns-priority': '10'},
+          'payload': {
+            'aps': dataOnly ? {'content-available': 1} : {'sound': 'default'}
+          },
+        },
+      };
+      if (!dataOnly) {
+        message['notification'] = {'body': body, 'title': title};
+      }
 
       final response = await http.post(
         Uri.parse('https://fcm.googleapis.com/v1/projects/${Constant.senderId}/messages:send'),
@@ -62,32 +105,7 @@ class SendNotification {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken',
         },
-        body: jsonEncode(
-          <String, dynamic>{
-            'message': {
-              'token': token,
-              'notification': {'body': body, 'title': title},
-              'data': payload,
-              // Without these a push is delivered at normal priority and posted
-              // quietly into the shade. The client asked for it to pop up, which
-              // on Android needs both a high priority message and a channel with
-              // max importance, created in NotificationService.
-              'android': {
-                'priority': 'high',
-                'notification': {
-                  'notification_priority': 'PRIORITY_MAX',
-                  'default_sound': true,
-                },
-              },
-              'apns': {
-                'headers': {'apns-priority': '10'},
-                'payload': {
-                  'aps': {'sound': 'default'}
-                },
-              },
-            }
-          },
-        ),
+        body: jsonEncode(<String, dynamic>{'message': message}),
       ).timeout(_networkTimeout);
 
       debugPrint("Notification=======>");

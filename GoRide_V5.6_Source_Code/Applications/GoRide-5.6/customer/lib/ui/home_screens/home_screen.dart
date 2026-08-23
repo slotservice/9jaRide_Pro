@@ -836,7 +836,17 @@ class HomeScreen extends StatelessWidget {
                                                 // Alert every matched driver at once. This used to run one driver
                                                 // at a time, so the last driver waited for all the ones before them.
                                                 await FireStoreUtils.sendOrderDataFuture(orderModel).then((eventData) async {
-                                                  Map<String, dynamic> playLoad = <String, dynamic>{"type": "city_order", "orderId": orderModel.id};
+                                                  // Sent data only so the driver app is woken and can ring like an
+                                                  // incoming call rather than posting a banner. That means the words
+                                                  // have to ride along in the payload, since there is no notification
+                                                  // block left to carry them. Every value must be a string: FCM
+                                                  // rejects a data map with anything else in it.
+                                                  Map<String, dynamic> playLoad = <String, dynamic>{
+                                                    "type": "city_order",
+                                                    "orderId": orderModel.id,
+                                                    "title": 'New Ride Available'.tr,
+                                                    "body": 'A customer has placed a ride near your location.'.tr,
+                                                  };
                                                   await Future.wait(
                                                     eventData.where((driver) => driver.fcmToken != null).map(
                                                           (driver) => SendNotification.sendOneNotification(
@@ -844,6 +854,7 @@ class HomeScreen extends StatelessWidget {
                                                             title: 'New Ride Available'.tr,
                                                             body: 'A customer has placed a ride near your location.'.tr,
                                                             payload: playLoad,
+                                                            dataOnly: true,
                                                           ),
                                                         ),
                                                   );
