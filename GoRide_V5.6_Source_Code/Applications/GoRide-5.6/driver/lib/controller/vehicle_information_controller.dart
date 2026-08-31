@@ -111,6 +111,10 @@ class VehicleInformationController extends GetxController {
                 acNonAcWithoutPerKmRate[index].text = driverModel.value.vehicleInformation!.rates?[index].perKmRate ?? '';
               }
             }
+            // Overrides whatever the driver had saved. The rate belongs to the
+            // service, not to the driver, so an older stored figure must not
+            // survive a price change.
+            fillRatesFromService();
           }
           tabBarheight.value = selectedPrices.isNotEmpty && selectedPrices.first.isAcNonAc == true ? 200 : 100;
         }
@@ -175,6 +179,27 @@ class VehicleInformationController extends GetxController {
         seats: seatsController.value.text,
         driverRules: selectedDriverRulesList,
         rates: rates);
+  }
+
+  /// Fills the per km rate fields from the service's own price for each zone.
+  ///
+  /// The rate belongs to the company, not to the driver. The client's rule is
+  /// that every driver on a service charges the same rate wherever they work.
+  /// The vendor design let each driver type their own figure at registration,
+  /// validated only as greater than zero and no higher than the service rate,
+  /// so a driver could put themselves on 10 naira a kilometre and every ride
+  /// they completed would settle at that. The fields are shown read only, so
+  /// this is the only thing that ever writes them.
+  ///
+  /// Guarded on length because the three controller lists are rebuilt from
+  /// selectedPrices and must never be indexed past it.
+  void fillRatesFromService() {
+    for (int index = 0; index < selectedPrices.length; index++) {
+      final Price price = selectedPrices[index];
+      if (index < acPerKmRate.length) acPerKmRate[index].text = price.acCharge ?? '';
+      if (index < nonAcPerKmRate.length) nonAcPerKmRate[index].text = price.nonAcCharge ?? '';
+      if (index < acNonAcWithoutPerKmRate.length) acNonAcWithoutPerKmRate[index].text = price.kmCharge ?? '';
+    }
   }
 
   Future<void> saveDetails() async {

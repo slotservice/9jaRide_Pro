@@ -320,7 +320,9 @@ class VehicleInformationScreen extends StatelessWidget {
                                                             TextFieldThem.buildTextFiledWithPrefixIcon(
                                                               context,
                                                               hintText: 'A/C Per ${Constant.distanceType} Rate'.tr,
-                                                              enable: controller.driverModel.value.ownerId == null,
+                                                              // Set by the company, same for every driver on this
+                                                              // service in every zone, so it is shown not typed.
+                                                              enable: false,
                                                               keyBoardType: const TextInputType.numberWithOptions(decimal: true),
                                                               controller: controller.acPerKmRate[index],
                                                               prefix: Padding(
@@ -334,7 +336,7 @@ class VehicleInformationScreen extends StatelessWidget {
                                                             TextFieldThem.buildTextFiledWithPrefixIcon(
                                                               context,
                                                               hintText: 'Non A/C Per ${Constant.distanceType} Rate'.tr,
-                                                              enable: controller.driverModel.value.ownerId == null,
+                                                              enable: false,
                                                               keyBoardType: const TextInputType.numberWithOptions(decimal: true),
                                                               controller: controller.nonAcPerKmRate[index],
                                                               prefix: Padding(
@@ -357,7 +359,7 @@ class VehicleInformationScreen extends StatelessWidget {
                                                             const SizedBox(height: 5),
                                                             TextFieldThem.buildTextFiledWithPrefixIcon(
                                                               context,
-                                                              enable: controller.driverModel.value.ownerId == null,
+                                                              enable: false,
                                                               hintText: 'Per ${Constant.distanceType} Rate'.tr,
                                                               keyBoardType: const TextInputType.numberWithOptions(decimal: true),
                                                               controller: controller.acNonAcWithoutPerKmRate[index],
@@ -675,6 +677,9 @@ class VehicleInformationScreen extends StatelessWidget {
                     controller.acPerKmRate.value = List.generate(controller.selectedPrices.length, (index) => TextEditingController());
                     controller.nonAcPerKmRate.value = List.generate(controller.selectedPrices.length, (index) => TextEditingController());
                     controller.acNonAcWithoutPerKmRate.value = List.generate(controller.selectedPrices.length, (index) => TextEditingController());
+                    // Newly picked zones start with the service's own rate
+                    // rather than an empty box for the driver to fill in.
+                    controller.fillRatesFromService();
                     final hasAcNonAc = controller.selectedPrices.any((e) => e.isAcNonAc == true);
                     controller.tabBarheight.value = hasAcNonAc ? 200 : 100;
                     String nameValue = "";
