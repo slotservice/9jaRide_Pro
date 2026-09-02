@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:customer/constant/constant.dart';
 import 'package:customer/controller/live_tracking_controller.dart';
+import 'package:customer/model/order_model.dart';
 import 'package:customer/themes/app_colors.dart';
 import 'package:customer/utils/DarkThemeProvider.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,26 @@ import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+
+/// One line of live progress for the tracking map: how far the driver still is
+/// and roughly how long they will take.
+///
+/// Both numbers are published by the driver app onto the order, the distance on
+/// every 200 metres of movement and the arrival time every 45 seconds. Returns
+/// an empty string when there is nothing worth saying, which the caller treats
+/// as draw nothing rather than showing a blank row.
+String liveEtaText(OrderModel order) {
+  final List<String> parts = [];
+  final double? km = order.driverDistanceKm;
+  if (km != null && km > 0) {
+    parts.add(km < 1 ? '${((km * 1000) / 50).round() * 50} m' : '${km.toStringAsFixed(1)} km');
+  }
+  final int? eta = order.driverEtaMinutes;
+  if (eta != null && eta > 0) {
+    parts.add('about @minutes min'.trParams({'minutes': '$eta'}));
+  }
+  return parts.join(' , ');
+}
 
 class LiveTrackingScreen extends StatelessWidget {
   const LiveTrackingScreen({super.key});
@@ -24,7 +45,21 @@ class LiveTrackingScreen extends StatelessWidget {
           appBar: AppBar(
             elevation: 2,
             backgroundColor: AppColors.background,
-            title: Text(controller.title.value.tr),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(controller.title.value.tr),
+                // Distance and arrival time both come off the order, published
+                // by the driver app, so rider and driver read the same figures
+                // instead of each estimating their own.
+                if (liveEtaText(controller.orderModel.value).isNotEmpty)
+                  Text(
+                    liveEtaText(controller.orderModel.value),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  ),
+              ],
+            ),
             leading: InkWell(
                 onTap: () {
                   Get.back();

@@ -56,6 +56,7 @@ class OrderModel {
   /// driver app while it is on the way so the rider gets more than just
   /// 'driver on the way'. Null until the first update lands.
   double? driverDistanceKm;
+  int? driverEtaMinutes;
   bool? paymentStatus;
   bool? isAcSelected;
   // Rider needs special assistance on this trip (wheelchair, elderly care,
@@ -102,6 +103,7 @@ class OrderModel {
       this.otpVerifiedAt,
       this.otpSkippedAt,
       this.driverDistanceKm,
+      this.driverEtaMinutes,
       this.taxList,
       this.coupon,
       this.someOneElse,
@@ -143,6 +145,7 @@ class OrderModel {
     otpVerifiedAt = json['otpVerifiedAt'];
     otpSkippedAt = json['otpSkippedAt'];
     driverDistanceKm = (json['driverDistanceKm'] as num?)?.toDouble();
+    driverEtaMinutes = (json['driverEtaMinutes'] as num?)?.toInt();
     acceptedDriverId = json['acceptedDriverId'];
     rejectedDriverId = json['rejectedDriverId'];
     paymentStatus = json['paymentStatus'];
@@ -214,6 +217,7 @@ class OrderModel {
     data['otpVerifiedAt'] = otpVerifiedAt;
     data['otpSkippedAt'] = otpSkippedAt;
     data['driverDistanceKm'] = driverDistanceKm;
+    data['driverEtaMinutes'] = driverEtaMinutes;
     data['acceptedDriverId'] = acceptedDriverId;
     data['rejectedDriverId'] = rejectedDriverId;
     data['paymentStatus'] = paymentStatus;

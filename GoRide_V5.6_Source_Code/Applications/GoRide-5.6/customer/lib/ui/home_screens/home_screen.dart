@@ -813,14 +813,24 @@ class HomeScreen extends StatelessWidget {
                                                 orderModel.someOneElse = controller.selectedTakingRide.value;
                                               }
 
-                                              for (int i = 0; i < controller.zoneList.length; i++) {
-                                                if (Constant.isPointInPolygon(
-                                                        LatLng(double.parse(controller.sourceLocationLAtLng.value.latitude.toString()),
-                                                            double.parse(controller.sourceLocationLAtLng.value.longitude.toString())),
-                                                        controller.zoneList[i].area!) ==
-                                                    true) {
-                                                  controller.selectedZone.value = controller.zoneList[i];
-                                                  break;
+                                              // Pick the SMALLEST zone that contains the pickup, not the
+                                              // first one found. Lagos sits inside the Nigeria Nationwide
+                                              // box, so taking the first match handed Lagos rides to the
+                                              // Nationwide zone, and every driver who had ticked only
+                                              // Lagos was then skipped even when parked beside the rider.
+                                              // That is exactly what happened on 2 September.
+                                              {
+                                                final LatLng pickup = LatLng(double.parse(controller.sourceLocationLAtLng.value.latitude.toString()),
+                                                    double.parse(controller.sourceLocationLAtLng.value.longitude.toString()));
+                                                double? bestArea;
+                                                for (int i = 0; i < controller.zoneList.length; i++) {
+                                                  final area = controller.zoneList[i].area;
+                                                  if (area == null || Constant.isPointInPolygon(pickup, area) != true) continue;
+                                                  final double size = Constant.polygonSpan(area);
+                                                  if (bestArea == null || size < bestArea) {
+                                                    bestArea = size;
+                                                    controller.selectedZone.value = controller.zoneList[i];
+                                                  }
                                                 }
                                               }
                                               if (controller.selectedZone.value.id != null) {

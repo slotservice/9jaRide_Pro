@@ -268,6 +268,27 @@ class Constant {
     return isInside;
   }
 
+  /// Rough size of a zone, as the area of its bounding box in degrees.
+  ///
+  /// Only ever used to compare one zone against another, so it does not need to
+  /// be a real area in square kilometres. It exists because zones overlap: the
+  /// Nigeria Nationwide box contains Lagos, Abuja, Ibadan and Port Harcourt, so
+  /// a pickup matches two zones and the ride has to be given the specific one.
+  /// Picking the first match instead sent Lagos rides to Nationwide and left
+  /// drivers who had only ticked Lagos out of the search entirely.
+  static double polygonSpan(List<GeoPoint> polygon) {
+    if (polygon.isEmpty) return double.maxFinite;
+    double minLat = polygon.first.latitude, maxLat = polygon.first.latitude;
+    double minLng = polygon.first.longitude, maxLng = polygon.first.longitude;
+    for (final GeoPoint p in polygon) {
+      if (p.latitude < minLat) minLat = p.latitude;
+      if (p.latitude > maxLat) maxLat = p.latitude;
+      if (p.longitude < minLng) minLng = p.longitude;
+      if (p.longitude > maxLng) maxLng = p.longitude;
+    }
+    return (maxLat - minLat).abs() * (maxLng - minLng).abs();
+  }
+
   static bool isPointInPolygon(LatLng point, List<GeoPoint> polygon) {
     int crossings = 0;
     for (int i = 0; i < polygon.length; i++) {

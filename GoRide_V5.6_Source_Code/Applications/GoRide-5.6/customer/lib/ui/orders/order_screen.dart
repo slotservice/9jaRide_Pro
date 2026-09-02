@@ -43,11 +43,17 @@ String driverProximityText(OrderModel orderModel) {
   final double? km = orderModel.driverDistanceKm;
   if (km == null) return '';
   if (km <= 0.15) return 'Driver is arriving now'.tr;
+
+  // The driver app publishes this every 45 seconds. It is appended rather than
+  // replacing the distance, because a rider who knows the road wants both.
+  final int? eta = orderModel.driverEtaMinutes;
+  final String suffix = (eta == null || eta <= 0) ? '' : ', ${'about @minutes min away'.trParams({'minutes': '$eta'})}';
+
   if (km < 1) {
     final int metres = ((km * 1000) / 50).round() * 50;
-    return 'Driver is @distance metres away'.trParams({'distance': '$metres'});
+    return '${'Driver is @distance metres away'.trParams({'distance': '$metres'})}$suffix';
   }
-  return 'Driver is @distance km away'.trParams({'distance': km.toStringAsFixed(1)});
+  return '${'Driver is @distance km away'.trParams({'distance': km.toStringAsFixed(1)})}$suffix';
 }
 
 /// Texts the rider the code that is already on their screen, for the times they
@@ -428,13 +434,17 @@ class OrderScreen extends StatelessWidget {
                                                                 Expanded(
                                                                   child: InkWell(
                                                                     onTap: () async {
-                                                                      if (Constant.mapType == "inappmap") {
-                                                                        if (orderModel.status == Constant.rideActive || orderModel.status == Constant.rideInProgress) {
-                                                                          Get.to(const LiveTrackingScreen(), arguments: {
-                                                                            "orderModel": orderModel,
-                                                                            "type": "orderModel",
-                                                                          });
-                                                                        }
+                                                                      // The rider always gets the live map inside the app: the
+                                                                      // driver's position moving, the route, the distance and the
+                                                                      // arrival time. This used to be gated on a mapType setting
+                                                                      // that also controls the DRIVER's turn by turn navigation,
+                                                                      // so switching it on for the rider took real navigation away
+                                                                      // from the driver. The two are now decided separately.
+                                                                      if (orderModel.status == Constant.rideActive || orderModel.status == Constant.rideInProgress) {
+                                                                        Get.to(const LiveTrackingScreen(), arguments: {
+                                                                          "orderModel": orderModel,
+                                                                          "type": "orderModel",
+                                                                        });
                                                                       } else {
                                                                         Utils.redirectMap(
                                                                             latitude: orderModel.destinationLocationLAtLng!.latitude!,

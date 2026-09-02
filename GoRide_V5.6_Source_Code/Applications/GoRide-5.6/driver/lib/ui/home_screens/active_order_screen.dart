@@ -59,25 +59,26 @@ class ActiveOrderScreen extends StatelessWidget {
                         OrderModel orderModel = OrderModel.fromJson(snapshot.data!.docs[index].data() as Map<String, dynamic>);
                         return InkWell(
                           onTap: () {
-                            if (Constant.mapType == "inappmap") {
-                              if (orderModel.status == Constant.rideActive || orderModel.status == Constant.rideInProgress) {
-                                Get.to(const LiveTrackingScreen(), arguments: {
-                                  "orderModel": orderModel,
-                                  "type": "orderModel",
-                                });
-                              }
+                            // Tapping the ride opens the live map in the app.
+                            // Turn by turn navigation is not lost: the map
+                            // screen carries a Navigate button that hands off
+                            // to Google Maps proper, which is what a driver
+                            // actually needs once they are moving.
+                            if (orderModel.status == Constant.rideActive || orderModel.status == Constant.rideInProgress) {
+                              Get.to(const LiveTrackingScreen(), arguments: {
+                                "orderModel": orderModel,
+                                "type": "orderModel",
+                              });
+                            } else if (orderModel.status == Constant.rideInProgress) {
+                              Utils.redirectMap(
+                                  latitude: orderModel.destinationLocationLAtLng!.latitude!,
+                                  longLatitude: orderModel.destinationLocationLAtLng!.longitude!,
+                                  name: orderModel.destinationLocationName.toString());
                             } else {
-                              if (orderModel.status == Constant.rideInProgress) {
-                                Utils.redirectMap(
-                                    latitude: orderModel.destinationLocationLAtLng!.latitude!,
-                                    longLatitude: orderModel.destinationLocationLAtLng!.longitude!,
-                                    name: orderModel.destinationLocationName.toString());
-                              } else {
-                                Utils.redirectMap(
-                                    latitude: orderModel.sourceLocationLAtLng!.latitude!,
-                                    longLatitude: orderModel.sourceLocationLAtLng!.longitude!,
-                                    name: orderModel.destinationLocationName.toString());
-                              }
+                              Utils.redirectMap(
+                                  latitude: orderModel.sourceLocationLAtLng!.latitude!,
+                                  longLatitude: orderModel.sourceLocationLAtLng!.longitude!,
+                                  name: orderModel.destinationLocationName.toString());
                             }
                           },
                           child: Padding(

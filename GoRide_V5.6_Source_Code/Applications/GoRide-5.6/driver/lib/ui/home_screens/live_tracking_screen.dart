@@ -4,14 +4,33 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/controller/live_tracking_controller.dart';
+import 'package:driver/model/order/location_lat_lng.dart';
+import 'package:driver/model/order_model.dart';
 import 'package:driver/themes/app_colors.dart';
 import 'package:driver/utils/DarkThemeProvider.dart';
+import 'package:driver/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:latlong2/latlong.dart' as location;
 import 'package:provider/provider.dart';
+
+/// How far the driver still is from the pickup and roughly how long it will
+/// take, read off the same fields the driver app publishes, so the driver sees
+/// exactly what the rider is being shown. Empty when there is nothing to say.
+String driverLiveEtaText(OrderModel order) {
+  final List<String> parts = [];
+  final double? km = order.driverDistanceKm;
+  if (km != null && km > 0) {
+    parts.add(km < 1 ? '${((km * 1000) / 50).round() * 50} m' : '${km.toStringAsFixed(1)} km');
+  }
+  final int? eta = order.driverEtaMinutes;
+  if (eta != null && eta > 0) {
+    parts.add('about @minutes min'.trParams({'minutes': '$eta'}));
+  }
+  return parts.join(' , ');
+}
 
 class LiveTrackingScreen extends StatelessWidget {
   const LiveTrackingScreen({super.key});
@@ -27,7 +46,38 @@ class LiveTrackingScreen extends StatelessWidget {
           appBar: AppBar(
             elevation: 2,
             backgroundColor: AppColors.lightprimary,
-            title: Text(controller.title.value.tr),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(controller.title.value.tr),
+                if (driverLiveEtaText(controller.orderModel.value).isNotEmpty)
+                  Text(
+                    driverLiveEtaText(controller.orderModel.value),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  ),
+              ],
+            ),
+            actions: [
+              // The in-app map shows what is happening; this hands off to
+              // Google Maps for actual turn by turn driving. Losing that was
+              // the reason the live map could not simply be switched on.
+              IconButton(
+                tooltip: 'Navigate'.tr,
+                icon: const Icon(Icons.navigation),
+                onPressed: () {
+                  final OrderModel order = controller.orderModel.value;
+                  final bool toDestination = order.status == Constant.rideInProgress;
+                  final LocationLatLng? target = toDestination ? order.destinationLocationLAtLng : order.sourceLocationLAtLng;
+                  if (target?.latitude == null || target?.longitude == null) return;
+                  Utils.redirectMap(
+                    latitude: target!.latitude!,
+                    longLatitude: target.longitude!,
+                    name: (toDestination ? order.destinationLocationName : order.sourceLocationName).toString(),
+                  );
+                },
+              ),
+            ],
             leading: InkWell(
                 onTap: () {
                   Get.back();

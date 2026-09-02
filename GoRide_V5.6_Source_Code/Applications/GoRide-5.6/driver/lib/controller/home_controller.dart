@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/constant/collection_name.dart';
@@ -186,6 +187,57 @@ class HomeController extends GetxController {
     }
   }
 
+  /// How often the live arrival time is refreshed.
+  ///
+  /// Google bills per Distance Matrix request and the location stream ticks
+  /// every 10 metres, so recomputing on every tick would be thousands of paid
+  /// calls per driver per day for a number that barely moves between them.
+  /// Every 45 seconds reads as live and costs almost nothing.
+  static const Duration _etaRefreshInterval = Duration(seconds: 45);
+  DateTime? _lastEtaAt;
+  String? _etaOrderId;
+
+  /// Publishes how many minutes away the driver still is, so both apps show the
+  /// same arrival time rather than each guessing from the distance.
+  Future<void> _publishEtaToRider(String orderId, GeoFirePoint position, LocationLatLng pickup) async {
+    // A different ride means the previous timing is meaningless.
+    if (_etaOrderId != orderId) {
+      _etaOrderId = orderId;
+      _lastEtaAt = null;
+    }
+    final DateTime? last = _lastEtaAt;
+    final DateTime now = DateTime.now();
+    if (last != null && now.difference(last) < _etaRefreshInterval) return;
+    // Stamped before the call, not after, so a slow reply cannot let a second
+    // tick fire the same lookup again while this one is still in flight.
+    _lastEtaAt = now;
+
+    final int? seconds = (await Constant.getEtaQuiet(
+      fromLat: position.latitude,
+      fromLng: position.longitude,
+      toLat: pickup.latitude!,
+      toLng: pickup.longitude!,
+    ))
+        ?.duration
+        ?.value;
+    if (seconds == null) {
+      // Google could not answer. Put the clock back so the next tick retries
+      // instead of waiting out the full interval on a stale figure.
+      _lastEtaAt = last;
+      return;
+    }
+
+    try {
+      await FireStoreUtils.fireStore.collection(CollectionName.orders).doc(orderId).update({
+        'driverEtaMinutes': (seconds / 60).ceil(),
+        'driverEtaUpdatedAt': Timestamp.now(),
+      });
+    } catch (e) {
+      _lastEtaAt = last;
+      log("ETA publish error :: $e");
+    }
+  }
+
   Future<void> _checkArrivalAtPickup(GeoFirePoint position) async {
     final OrderModel? order = pickupRide.value;
     if (order == null || _arrivalCheckInFlight) return;
@@ -199,6 +251,9 @@ class HomeController extends GetxController {
 
     final double km = position.kmDistance(lat: pickup!.latitude!, lng: pickup.longitude!);
     await _publishDistanceToRider(orderId, km);
+    // Not awaited: the arrival check below must not wait on a Google round
+    // trip, or a slow reply would delay telling the rider the driver is here.
+    unawaited(_publishEtaToRider(orderId, position, pickup));
 
     if (km > _arrivalRadiusKm) return;
 

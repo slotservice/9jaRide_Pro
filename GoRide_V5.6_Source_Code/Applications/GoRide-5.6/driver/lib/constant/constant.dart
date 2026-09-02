@@ -227,6 +227,37 @@ class Constant {
     return null;
   }
 
+  /// Travel time and distance between two points, in seconds and metres.
+  ///
+  /// Same Google call as [getDurationDistance] but silent, and it takes plain
+  /// coordinates so callers do not have to pull in the maps package. The live
+  /// ETA runs off the driver's location stream several times a trip, and
+  /// [getDurationDistance] pops a toast whenever Google answers with anything
+  /// other than OK. On a weak connection that would throw toasts at someone who
+  /// is driving. This returns null instead and lets the caller keep the figure
+  /// it already had.
+  static Future<mapModels.Elements?> getEtaQuiet({
+    required double fromLat,
+    required double fromLng,
+    required double toLat,
+    required double toLng,
+  }) async {
+    try {
+      const String url = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+      final http.Response response = await http
+          .get(Uri.parse('$url?units=metric&origins=$fromLat,$fromLng&destinations=$toLat,$toLng&key=${Constant.mapAPIKey}'))
+          .timeout(const Duration(seconds: 15));
+      final mapModels.MapModel mapModel = mapModels.MapModel.fromJson(jsonDecode(response.body));
+      if (mapModel.status != 'OK') return null;
+      final mapModels.Elements? element = mapModel.rows?.first.elements?.first;
+      if (element?.status != 'OK') return null;
+      return element;
+    } catch (e) {
+      debugPrint('ETA lookup failed :: $e');
+      return null;
+    }
+  }
+
   static double amountCalculate(String amount, String distance) {
     double finalAmount = 0.0;
     finalAmount = double.parse(amount) * double.parse(distance);
